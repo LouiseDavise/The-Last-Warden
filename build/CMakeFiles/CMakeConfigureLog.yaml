@@ -1,0 +1,396 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Windows - 10.0.26100 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+      
+      The C compiler identification is Clang, found in:
+        D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/3.27.7/CompilerIdC/a.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang++.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+      
+      The CXX compiler identification is Clang, found in:
+        D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/3.27.7/CompilerIdCXX/a.exe
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi"
+      binary: "D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi'
+        
+        Run Build Command(s): C:/Application/CMake/bin/cmake.exe -E env VERBOSE=1 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe -f Makefile cmTC_6d4b9/fast
+        C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_6d4b9.dir\\build.make CMakeFiles/cmTC_6d4b9.dir/build
+        mingw32-make[1]: Entering directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi'
+        Building C object CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj
+        c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang.exe   -v -MD -MT CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_6d4b9.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles\\cmTC_6d4b9.dir\\CMakeCCompilerABI.c.obj -c C:\\Application\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c
+        clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
+        Target: x86_64-w64-windows-gnu
+        Thread model: posix
+        InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin
+         (in-process)
+         "C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang-18.exe" -cc1 -triple x86_64-w64-windows-gnu -emit-obj -mrelax-all -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=none -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -mms-bitfields -funwind-tables=2 -fno-use-init-array -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi -v -fcoverage-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi -resource-dir C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18 -dependency-file "CMakeFiles\\\\cmTC_6d4b9.dir\\\\CMakeCCompilerABI.c.obj.d" -MT CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj -sys-header-deps -internal-isystem C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include -ferror-limit 19 -fno-use-cxa-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -exception-model=seh -faddrsig -o "CMakeFiles\\\\cmTC_6d4b9.dir\\\\CMakeCCompilerABI.c.obj" -x c "C:\\\\Application\\\\CMake\\\\share\\\\cmake-3.27\\\\Modules\\\\CMakeCCompilerABI.c"
+        clang -cc1 version 18.1.4 based upon LLVM 18.1.4 default target x86_64-w64-mingw32
+        ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include"
+        ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include
+         c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include
+        End of search list.
+        Linking C executable cmTC_6d4b9.exe
+        C:\\Application\\CMake\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_6d4b9.dir\\link.txt --verbose=1
+        C:\\Application\\CMake\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_6d4b9.dir/objects.a
+        C:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\llvm-ar.exe qc CMakeFiles\\cmTC_6d4b9.dir/objects.a @CMakeFiles\\cmTC_6d4b9.dir\\objects1.rsp
+        c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang.exe  -v -Wl,--whole-archive CMakeFiles\\cmTC_6d4b9.dir/objects.a -Wl,--no-whole-archive -o cmTC_6d4b9.exe -Wl,--out-implib,libcmTC_6d4b9.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+        clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
+        Target: x86_64-w64-windows-gnu
+        Thread model: posix
+        InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin
+         "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld" -m i386pep -Bdynamic -o cmTC_6d4b9.exe c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib -LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows --whole-archive "CMakeFiles\\\\cmTC_6d4b9.dir/objects.a" --no-whole-archive --out-implib libcmTC_6d4b9.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -lkernel32 c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o
+        mingw32-make[1]: Leaving directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+          add: [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        end of search list found
+        collapse include dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+        collapse include dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        implicit include dirs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld\\.lld\\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi']
+        ignore line: []
+        ignore line: [Run Build Command(s): C:/Application/CMake/bin/cmake.exe -E env VERBOSE=1 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe -f Makefile cmTC_6d4b9/fast]
+        ignore line: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_6d4b9.dir\\build.make CMakeFiles/cmTC_6d4b9.dir/build]
+        ignore line: [mingw32-make[1]: Entering directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi']
+        ignore line: [Building C object CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj]
+        ignore line: [c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang.exe   -v -MD -MT CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_6d4b9.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles\\cmTC_6d4b9.dir\\CMakeCCompilerABI.c.obj -c C:\\Application\\CMake\\share\\cmake-3.27\\Modules\\CMakeCCompilerABI.c]
+        ignore line: [clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)]
+        ignore line: [Target: x86_64-w64-windows-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin]
+        ignore line: [ (in-process)]
+        ignore line: [ "C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang-18.exe" -cc1 -triple x86_64-w64-windows-gnu -emit-obj -mrelax-all -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=none -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -mms-bitfields -funwind-tables=2 -fno-use-init-array -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi -v -fcoverage-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-kcemdi -resource-dir C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18 -dependency-file "CMakeFiles\\\\cmTC_6d4b9.dir\\\\CMakeCCompilerABI.c.obj.d" -MT CMakeFiles/cmTC_6d4b9.dir/CMakeCCompilerABI.c.obj -sys-header-deps -internal-isystem C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include -ferror-limit 19 -fno-use-cxa-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -exception-model=seh -faddrsig -o "CMakeFiles\\\\cmTC_6d4b9.dir\\\\CMakeCCompilerABI.c.obj" -x c "C:\\\\Application\\\\CMake\\\\share\\\\cmake-3.27\\\\Modules\\\\CMakeCCompilerABI.c"]
+        ignore line: [clang -cc1 version 18.1.4 based upon LLVM 18.1.4 default target x86_64-w64-mingw32]
+        ignore line: [ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include"]
+        ignore line: [ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+        ignore line: [ c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        ignore line: [End of search list.]
+        ignore line: [Linking C executable cmTC_6d4b9.exe]
+        ignore line: [C:\\Application\\CMake\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_6d4b9.dir\\link.txt --verbose=1]
+        ignore line: [C:\\Application\\CMake\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_6d4b9.dir/objects.a]
+        ignore line: [C:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\llvm-ar.exe qc CMakeFiles\\cmTC_6d4b9.dir/objects.a @CMakeFiles\\cmTC_6d4b9.dir\\objects1.rsp]
+        ignore line: [c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang.exe  -v -Wl --whole-archive CMakeFiles\\cmTC_6d4b9.dir/objects.a -Wl --no-whole-archive -o cmTC_6d4b9.exe -Wl --out-implib libcmTC_6d4b9.dll.a -Wl --major-image-version 0 --minor-image-version 0 ]
+        ignore line: [clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)]
+        ignore line: [Target: x86_64-w64-windows-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin]
+        link line: [ "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld" -m i386pep -Bdynamic -o cmTC_6d4b9.exe c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib -LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows --whole-archive "CMakeFiles\\\\cmTC_6d4b9.dir/objects.a" --no-whole-archive --out-implib libcmTC_6d4b9.dll.a --major-image-version 0 --minor-image-version 0 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -lkernel32 c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld] ==> ignore
+          arg [-m] ==> ignore
+          arg [i386pep] ==> ignore
+          arg [-Bdynamic] ==> search dynamic
+          arg [-o] ==> ignore
+          arg [cmTC_6d4b9.exe] ==> ignore
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib]
+          arg [-LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows] ==> dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+          arg [--whole-archive] ==> ignore
+          arg [CMakeFiles\\\\cmTC_6d4b9.dir/objects.a] ==> ignore
+          arg [--no-whole-archive] ==> ignore
+          arg [--out-implib] ==> ignore
+          arg [libcmTC_6d4b9.dll.a] ==> ignore
+          arg [--major-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [--minor-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a] ==> lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+          arg [-lunwind] ==> lib [unwind]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-ladvapi32] ==> lib [advapi32]
+          arg [-lshell32] ==> lib [shell32]
+          arg [-luser32] ==> lib [user32]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a] ==> lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+          arg [-lunwind] ==> lib [unwind]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        remove lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+        remove lib [msvcrt]
+        remove lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+        remove lib [msvcrt]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib]
+        collapse library dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+        implicit libs: [mingw32;unwind;moldname;mingwex;advapi32;shell32;user32;kernel32;mingw32;unwind;moldname;mingwex;kernel32]
+        implicit objs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        implicit dirs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m"
+      binary: "D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m'
+        
+        Run Build Command(s): C:/Application/CMake/bin/cmake.exe -E env VERBOSE=1 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe -f Makefile cmTC_fe017/fast
+        C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_fe017.dir\\build.make CMakeFiles/cmTC_fe017.dir/build
+        mingw32-make[1]: Entering directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m'
+        Building CXX object CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj
+        c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang++.exe   -v -MD -MT CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj -MF CMakeFiles\\cmTC_fe017.dir\\CMakeCXXCompilerABI.cpp.obj.d -o CMakeFiles\\cmTC_fe017.dir\\CMakeCXXCompilerABI.cpp.obj -c C:\\Application\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp
+        clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
+        Target: x86_64-w64-windows-gnu
+        Thread model: posix
+        InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin
+         (in-process)
+         "C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang-18.exe" -cc1 -triple x86_64-w64-windows-gnu -emit-obj -mrelax-all -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -mms-bitfields -funwind-tables=2 -fno-use-init-array -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m -v -fcoverage-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m -resource-dir C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18 -dependency-file "CMakeFiles\\\\cmTC_fe017.dir\\\\CMakeCXXCompilerABI.cpp.obj.d" -MT CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj -sys-header-deps -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include/c++/v1 -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1 -internal-isystem C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -exception-model=seh -faddrsig -o "CMakeFiles\\\\cmTC_fe017.dir\\\\CMakeCXXCompilerABI.cpp.obj" -x c++ "C:\\\\Application\\\\CMake\\\\share\\\\cmake-3.27\\\\Modules\\\\CMakeCXXCompilerABI.cpp"
+        clang -cc1 version 18.1.4 based upon LLVM 18.1.4 default target x86_64-w64-mingw32
+        ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include/c++/v1"
+        ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include"
+        ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1
+         C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include
+         c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include
+        End of search list.
+        Linking CXX executable cmTC_fe017.exe
+        C:\\Application\\CMake\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_fe017.dir\\link.txt --verbose=1
+        C:\\Application\\CMake\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_fe017.dir/objects.a
+        C:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\llvm-ar.exe qc CMakeFiles\\cmTC_fe017.dir/objects.a @CMakeFiles\\cmTC_fe017.dir\\objects1.rsp
+        c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang++.exe  -v -Wl,--whole-archive CMakeFiles\\cmTC_fe017.dir/objects.a -Wl,--no-whole-archive -o cmTC_fe017.exe -Wl,--out-implib,libcmTC_fe017.dll.a -Wl,--major-image-version,0,--minor-image-version,0 
+        clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
+        Target: x86_64-w64-windows-gnu
+        Thread model: posix
+        InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin
+         "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld" -m i386pep -Bdynamic -o cmTC_fe017.exe c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib -LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows --whole-archive "CMakeFiles\\\\cmTC_fe017.dir/objects.a" --no-whole-archive --out-implib libcmTC_fe017.dll.a --major-image-version 0 --minor-image-version 0 -lc++ -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -lkernel32 c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o
+        mingw32-make[1]: Leaving directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1]
+          add: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+          add: [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        end of search list found
+        collapse include dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1]
+        collapse include dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+        collapse include dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        implicit include dirs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "C:/Application/CMake/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld\\.lld\\.exe|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m']
+        ignore line: []
+        ignore line: [Run Build Command(s): C:/Application/CMake/bin/cmake.exe -E env VERBOSE=1 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe -f Makefile cmTC_fe017/fast]
+        ignore line: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/mingw32-make.exe  -f CMakeFiles\\cmTC_fe017.dir\\build.make CMakeFiles/cmTC_fe017.dir/build]
+        ignore line: [mingw32-make[1]: Entering directory 'D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m']
+        ignore line: [Building CXX object CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj]
+        ignore line: [c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang++.exe   -v -MD -MT CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj -MF CMakeFiles\\cmTC_fe017.dir\\CMakeCXXCompilerABI.cpp.obj.d -o CMakeFiles\\cmTC_fe017.dir\\CMakeCXXCompilerABI.cpp.obj -c C:\\Application\\CMake\\share\\cmake-3.27\\Modules\\CMakeCXXCompilerABI.cpp]
+        ignore line: [clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)]
+        ignore line: [Target: x86_64-w64-windows-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin]
+        ignore line: [ (in-process)]
+        ignore line: [ "C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/clang-18.exe" -cc1 -triple x86_64-w64-windows-gnu -emit-obj -mrelax-all -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=none -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -mms-bitfields -funwind-tables=2 -fno-use-init-array -target-cpu x86-64 -tune-cpu generic -debugger-tuning=gdb -fdebug-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m -v -fcoverage-compilation-dir=D:/NTHU/I2P2/2025_I2P2_TowerDefense/build/CMakeFiles/CMakeScratch/TryCompile-tado1m -resource-dir C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18 -dependency-file "CMakeFiles\\\\cmTC_fe017.dir\\\\CMakeCXXCompilerABI.cpp.obj.d" -MT CMakeFiles/cmTC_fe017.dir/CMakeCXXCompilerABI.cpp.obj -sys-header-deps -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include/c++/v1 -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1 -internal-isystem C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include -internal-isystem c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include -fdeprecated-macro -ferror-limit 19 -fno-use-cxa-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -exception-model=seh -faddrsig -o "CMakeFiles\\\\cmTC_fe017.dir\\\\CMakeCXXCompilerABI.cpp.obj" -x c++ "C:\\\\Application\\\\CMake\\\\share\\\\cmake-3.27\\\\Modules\\\\CMakeCXXCompilerABI.cpp"]
+        ignore line: [clang -cc1 version 18.1.4 based upon LLVM 18.1.4 default target x86_64-w64-mingw32]
+        ignore line: [ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include/c++/v1"]
+        ignore line: [ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/include"]
+        ignore line: [ignoring nonexistent directory "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/usr/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include/c++/v1]
+        ignore line: [ C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/include]
+        ignore line: [ c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/include]
+        ignore line: [End of search list.]
+        ignore line: [Linking CXX executable cmTC_fe017.exe]
+        ignore line: [C:\\Application\\CMake\\bin\\cmake.exe -E cmake_link_script CMakeFiles\\cmTC_fe017.dir\\link.txt --verbose=1]
+        ignore line: [C:\\Application\\CMake\\bin\\cmake.exe -E rm -f CMakeFiles\\cmTC_fe017.dir/objects.a]
+        ignore line: [C:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\llvm-ar.exe qc CMakeFiles\\cmTC_fe017.dir/objects.a @CMakeFiles\\cmTC_fe017.dir\\objects1.rsp]
+        ignore line: [c:\\Application\\C++\\LLVM_MINGW\\llvm-mingw-20240417-msvcrt-x86_64\\bin\\clang++.exe  -v -Wl --whole-archive CMakeFiles\\cmTC_fe017.dir/objects.a -Wl --no-whole-archive -o cmTC_fe017.exe -Wl --out-implib libcmTC_fe017.dll.a -Wl --major-image-version 0 --minor-image-version 0 ]
+        ignore line: [clang version 18.1.4 (https://github.com/llvm/llvm-project.git e6c3289804a67ea0bb6a86fadbe454dd93b8d855)]
+        ignore line: [Target: x86_64-w64-windows-gnu]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin]
+        link line: [ "c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld" -m i386pep -Bdynamic -o cmTC_fe017.exe c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib -Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib -LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows --whole-archive "CMakeFiles\\\\cmTC_fe017.dir/objects.a" --no-whole-archive --out-implib libcmTC_fe017.dll.a --major-image-version 0 --minor-image-version 0 -lc++ -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -ladvapi32 -lshell32 -luser32 -lkernel32 -lmingw32 C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a -lunwind -lmoldname -lmingwex -lmsvcrt -lkernel32 c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/bin/ld.lld] ==> ignore
+          arg [-m] ==> ignore
+          arg [i386pep] ==> ignore
+          arg [-Bdynamic] ==> search dynamic
+          arg [-o] ==> ignore
+          arg [cmTC_fe017.exe] ==> ignore
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib]
+          arg [-Lc:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib] ==> dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib]
+          arg [-LC:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows] ==> dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+          arg [--whole-archive] ==> ignore
+          arg [CMakeFiles\\\\cmTC_fe017.dir/objects.a] ==> ignore
+          arg [--no-whole-archive] ==> ignore
+          arg [--out-implib] ==> ignore
+          arg [libcmTC_fe017.dll.a] ==> ignore
+          arg [--major-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [--minor-image-version] ==> ignore
+          arg [0] ==> ignore
+          arg [-lc++] ==> lib [c++]
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a] ==> lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+          arg [-lunwind] ==> lib [unwind]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-ladvapi32] ==> lib [advapi32]
+          arg [-lshell32] ==> lib [shell32]
+          arg [-luser32] ==> lib [user32]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [-lmingw32] ==> lib [mingw32]
+          arg [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a] ==> lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+          arg [-lunwind] ==> lib [unwind]
+          arg [-lmoldname] ==> lib [moldname]
+          arg [-lmingwex] ==> lib [mingwex]
+          arg [-lmsvcrt] ==> lib [msvcrt]
+          arg [-lkernel32] ==> lib [kernel32]
+          arg [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o] ==> obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        remove lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+        remove lib [msvcrt]
+        remove lib [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows/libclang_rt.builtins-x86_64.a]
+        remove lib [msvcrt]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o]
+        collapse obj [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib]
+        collapse library dir [c:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib]
+        collapse library dir [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows] ==> [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+        implicit libs: [c++;mingw32;unwind;moldname;mingwex;advapi32;shell32;user32;kernel32;mingw32;unwind;moldname;mingwex;kernel32]
+        implicit objs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crt2.o;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtbegin.o;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib/crtend.o]
+        implicit dirs: [C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/x86_64-w64-mingw32/mingw/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib;C:/Application/C++/LLVM_MINGW/llvm-mingw-20240417-msvcrt-x86_64/lib/clang/18/lib/windows]
+        implicit fwks: []
+      
+      
+...
