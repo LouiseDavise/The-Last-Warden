@@ -12,7 +12,7 @@
 #include "Engine/GameEngine.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
-#include "StartScene.h"
+#include "StartScene.hpp"
 #include <filesystem>
 #include "player_data.h"
 

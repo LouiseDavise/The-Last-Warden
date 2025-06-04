@@ -485,12 +485,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Scene/StageSelectScene.cpp",
+			"path" : "Scene/ModeSelectScene.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Scene/StageSelectScene.hpp",
+			"path" : "Scene/ModeSelectScene.hpp",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -501,7 +501,7 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Scene/StartScene.h",
+			"path" : "Scene/StartScene.hpp",
 			"sourceGroupIndex" : 1
 		},
 		{

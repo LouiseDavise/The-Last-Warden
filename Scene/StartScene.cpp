@@ -2,7 +2,7 @@
 // Created by Hsuan on 2024/4/10.
 //
 
-#include "StartScene.h"
+#include "StartScene.hpp"
 #include <allegro5/allegro_audio.h>
 #include <functional>
 #include <memory>
@@ -13,7 +13,7 @@
 #include "Engine/Point.hpp"
 #include "Engine/Resources.hpp"
 #include "PlayScene.hpp"
-#include "Scene/StartScene.h"
+#include "Scene/StartScene.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
 #include "UI/Component/Slider.hpp"
@@ -57,7 +57,7 @@ void StartScene::Terminate()
 }
 void StartScene::PlayOnClick(int stage)
 {
-    Engine::GameEngine::GetInstance().ChangeScene("stage-select");
+    Engine::GameEngine::GetInstance().ChangeScene("mode-select");
 }
 void StartScene::LeaderBoardOnClick(int stage)
 {

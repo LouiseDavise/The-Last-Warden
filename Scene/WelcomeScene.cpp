@@ -9,7 +9,7 @@
 #include "Engine/Resources.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
-#include "StartScene.h"
+#include "StartScene.hpp"
 
 void WelcomeScene::LoadPlayerHistory(const std::string &path, const std::string &uid)
 {

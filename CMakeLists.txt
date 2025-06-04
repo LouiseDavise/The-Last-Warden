@@ -66,10 +66,10 @@ add_executable(2025_I2P2_TowerDefense
     Scene/LoseScene.hpp
     Scene/PlayScene.cpp
     Scene/PlayScene.hpp
-    Scene/StageSelectScene.cpp
-    Scene/StageSelectScene.hpp
+    Scene/ModeSelectScene.cpp
+    Scene/ModeSelectScene.hpp
     Scene/StartScene.cpp
-    Scene/StartScene.h
+    Scene/StartScene.hpp
     Scene/WinScene.cpp
     Scene/WinScene.hpp
     Scene/SettingScene.cpp

@@ -5,9 +5,9 @@
 #include "Engine/LOG.hpp"
 #include "Scene/LoseScene.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Scene/StageSelectScene.hpp"
+#include "Scene/ModeSelectScene.hpp"
 #include "Scene/WinScene.hpp"
-#include "Scene/StartScene.h"
+#include "Scene/StartScene.hpp"
 #include "Scene/SettingScene.hpp"
 #include "Scene/LeaderBoardScene.hpp"
 #include "Scene/AuthScene.hpp"
@@ -20,12 +20,11 @@ int main(int argc, char **argv)
 	Engine::LOG::SetConfig(true);
 	Engine::GameEngine &game = Engine::GameEngine::GetInstance();
 
-	// TODO HACKATHON-2 (2/3): Register Scenes here
 	game.AddNewScene("start", new StartScene());
 	game.AddNewScene("play", new PlayScene());
 	game.AddNewScene("lose", new LoseScene());
 	game.AddNewScene("win-scene", new WinScene());
-	game.AddNewScene("stage-select", new StageSelectScene());
+	game.AddNewScene("mode-select", new ModeSelectScene());
 	game.AddNewScene("setting-scene", new SettingScene());
 	game.AddNewScene("leaderboard-scene", new LeaderBoardScene());
 	game.AddNewScene("auth-scene", new AuthScene());
@@ -33,7 +32,6 @@ int main(int argc, char **argv)
 	game.AddNewScene("old-player-scene", new OldPlayerScene());
 	game.AddNewScene("welcome-scene", new WelcomeScene());
 
-	// TODO HACKATHON-1 (1/1): Change the start scene
-	game.Start("auth-scene", 60, 1600, 832);
+	game.Start("mode-select", 60, 1600, 832);
 	return 0;
 }

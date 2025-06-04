@@ -1,9 +1,5 @@
-//
-// Created by Hsuan on 2024/4/10.
-//
-
-#ifndef INC_2025_I2P2_TOWERDEFENSE_WITH_ANSWER_STARTSCENE_H
-#define INC_2025_I2P2_TOWERDEFENSE_WITH_ANSWER_STARTSCENE_H
+#ifndef STARTSCENE_HPP
+#define STARTSCENE_HPP
 
 #include <allegro5/allegro_audio.h>
 #include <iostream>
@@ -20,4 +16,4 @@ public:
     void LeaderBoardOnClick(int stage);
     void SettingsOnClick(int stage);
 };
-#endif // INC_2025_I2P2_TOWERDEFENSE_WITH_ANSWER_STARTSCENE_H
+#endif // STARTSCENE.HPP
