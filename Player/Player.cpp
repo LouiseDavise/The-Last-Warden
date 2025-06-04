@@ -47,7 +47,7 @@ void Player::Update(float deltaTime)
         Position.y += (velocity.y / len) * moveSpeed * deltaTime;
     }
 
-    UpdateAnimation(deltaTime, movingHorizontally);
+    UpdateAnimation(deltaTime, moving);
     Engine::Sprite::Update(deltaTime);
     float mapW = PlayScene::MapWidth * PlayScene::BlockSize;
     float mapH = PlayScene::MapHeight * PlayScene::BlockSize;
@@ -58,10 +58,12 @@ void Player::Update(float deltaTime)
     Position.y = std::max(halfH, std::min(Position.y, mapH - halfH));
 }
 
-void Player::UpdateAnimation(float deltaTime, bool movingHorizontally)
+void Player::UpdateAnimation(float deltaTime, bool isMoving)
 {
-    if (!movingHorizontally)
+    if (!isMoving)
+    {
         return;
+    }
     animationTimer += deltaTime;
     if (animationTimer >= animationInterval)
     {
