@@ -11,23 +11,26 @@
 #include "Engine/Point.hpp"
 
 class Turret;
-namespace Engine {
+namespace Engine
+{
     class Group;
     class Image;
     class Label;
     class Sprite;
-}   // namespace Engine
+} // namespace Engine
 
-class PlayScene final : public Engine::IScene {
+class PlayScene final : public Engine::IScene
+{
 private:
-    enum TileType {
+    enum TileType
+    {
         TILE_DIRT,
         TILE_FLOOR,
         TILE_OCCUPIED,
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
-    Turret* highlightedTurret = nullptr;
+    Turret *highlightedTurret = nullptr;
 
 protected:
     int lives;
@@ -35,15 +38,15 @@ protected:
     int SpeedMult;
 
     int maxLives;
-    Engine::Label* lifeTextLabel;
+    Engine::Label *lifeTextLabel;
 
 public:
-    Player* player;
+    Player *player;
     float matchTime = 0.0f;
     int dangerAlpha = 0;
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
-    static const int MapWidth, MapHeight;
+    static int MapWidth, MapHeight;
     static const int BlockSize;
     static const float DangerTime;
     static Engine::Point SpawnGridPoint;
@@ -82,7 +85,7 @@ public:
     void OnKeyUp(int keyCode) override;
     void Hit();
     int GetMoney() const;
-    int  GetLives()  const;
+    int GetLives() const;
     void EarnMoney(int money);
     void ReadMap();
     void ReadEnemyWave();
@@ -90,7 +93,8 @@ public:
     void UIBtnClicked(int id);
     bool CheckSpaceValid(int x, int y);
     std::vector<std::vector<int>> CalculateBFSDistance();
-    Turret* GetTurretAt(int gx, int gy);
+    Turret *GetTurretAt(int gx, int gy);
     // void ModifyReadMapTiles();
+    Engine::Point camera;
 };
-#endif   // PLAYSCENE_HPP
+#endif // PLAYSCENE_HPP
