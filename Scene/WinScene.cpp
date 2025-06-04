@@ -26,11 +26,11 @@ void WinScene::Initialize()
     AddNewObject(new Engine::Image("win/benjamin-sad.png", halfW, halfH, 0, 0, 0.5, 0.5));
     AddNewObject(new Engine::Label("You Win!", "pirulen.ttf", 48, halfW, halfH / 4 - 10, 255, 255, 255, 255, 0.5, 0.5));
 
-    PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
+    PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
     // Score Calculation
-    int score = scene->enemiesKilled * 500 + scene->coinsEarned * 100 + scene->GetLives() * 100 - scene->matchTime * 10;
+    int score = play->GetLives() * 100 + play->GetMoney();
 
-    std::string summary = "Score: " + std::to_string(score) + " | Time: " + std::to_string(static_cast<int>(scene->matchTime)) + "s";
+    std::string summary = "Score: " + std::to_string(score) + " | Time: " + std::to_string(static_cast<int>(play->matchTime)) + "s";
     AddNewObject(new Engine::Label(summary, "pirulen.ttf", 36, halfW, halfH / 2 - 20, 255, 255, 255, 255, 0.5, 0.5));
 
     std::filesystem::create_directories("Data");
@@ -44,7 +44,7 @@ void WinScene::Initialize()
         std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now));
 
         file << player_uid << "," << nameInput << "," << score << ","
-             << static_cast<int>(scene->matchTime) << "s" << "," << dateStr << "\n";
+             << static_cast<int>(play->matchTime) << "s" << "," << dateStr << "\n";
         file.close();
         std::cout << "Score saved to scoreboard.txt\n";
     }
@@ -53,7 +53,7 @@ void WinScene::Initialize()
         std::cout << "Failed to write score to file.\n";
     }
 
-    if (scene && scene->MapId < 2)
+    if (play && play->MapId < 2)
     {
         Engine::ImageButton *backBtn;
         backBtn = new Engine::ImageButton("win/dirt.png", "win/floor.png", halfW + 50, halfH * 7 / 4 - 50, 400, 100);

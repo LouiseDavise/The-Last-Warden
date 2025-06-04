@@ -13,6 +13,9 @@ file(COPY Resource DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY allegro_monolith-5.2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(2025_I2P2_TowerDefense
+    Player/Player.cpp 
+    Player/Player.hpp 
+
     Bullet/Bullet.cpp
     Bullet/Bullet.hpp
     Bullet/FireBullet.cpp
@@ -33,8 +36,6 @@ add_executable(2025_I2P2_TowerDefense
     Enemy/ExtremeTankEnemy.hpp
     Enemy/PlaneEnemy.cpp
     Enemy/PlaneEnemy.hpp
-    Turret/Bom.cpp
-    Turret/Bom.hpp
 
     Engine/Allegro5Exception.cpp
     Engine/Allegro5Exception.hpp
@@ -85,16 +86,16 @@ add_executable(2025_I2P2_TowerDefense
     Scene/WelcomeScene.cpp
     Scene/WelcomeScene.hpp
 
-    Turret/LaserTurret.cpp
-    Turret/LaserTurret.hpp
-    Turret/MachineGunTurret.cpp
-    Turret/MachineGunTurret.hpp
-    Turret/Turret.cpp
-    Turret/Turret.hpp
-    Turret/TurretButton.cpp
-    Turret/TurretButton.hpp
-    Turret/Shovel.cpp
-    Turret/Shovel.hpp
+    Structure/Turret/LaserTurret.cpp
+    Structure/Turret/LaserTurret.hpp
+    Structure/Turret/MachineGunTurret.cpp
+    Structure/Turret/MachineGunTurret.hpp
+    Structure/Turret/Turret.cpp
+    Structure/Turret/Turret.hpp
+    Structure/Turret/TurretButton.cpp
+    Structure/Turret/TurretButton.hpp
+    Structure/Turret/Shovel.cpp
+    Structure/Turret/Shovel.hpp
 
     UI/Animation/DirtyEffect.cpp
     UI/Animation/DirtyEffect.hpp

@@ -29,5 +29,6 @@ public:
     void Update(float deltaTime) override;
     void Draw() const override;
     int GetPrice() const;
+    virtual bool IsShovel() const { return false; }
 };
 #endif   // TURRET_HPP

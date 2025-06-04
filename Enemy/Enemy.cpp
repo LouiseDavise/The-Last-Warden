@@ -13,7 +13,7 @@
 #include "Engine/IScene.hpp"
 #include "Engine/LOG.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Turret/Turret.hpp"
+#include "Structure/Turret/Turret.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
@@ -46,8 +46,6 @@ void Enemy::Hit(float damage)
     if (hp <= 0)
     {
         OnExplode();
-        getPlayScene()->enemiesKilled++;
-        getPlayScene()->coinsEarned += money;
         for (auto &it : lockedTurrets)
             it->Target = nullptr;
         for (auto &it : lockedBullets)

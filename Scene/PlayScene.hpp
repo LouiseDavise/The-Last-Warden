@@ -6,47 +6,48 @@
 #include <utility>
 #include <vector>
 
+#include "Player/Player.hpp"
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
 
 class Turret;
-namespace Engine
-{
+namespace Engine {
     class Group;
     class Image;
     class Label;
     class Sprite;
-} // namespace Engine
+}   // namespace Engine
 
-class PlayScene final : public Engine::IScene
-{
+class PlayScene final : public Engine::IScene {
 private:
-    enum TileType
-    {
+    enum TileType {
         TILE_DIRT,
         TILE_FLOOR,
         TILE_OCCUPIED,
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
+    Turret* highlightedTurret = nullptr;
 
 protected:
     int lives;
     int money;
     int SpeedMult;
 
+    int maxLives;
+    Engine::Label* lifeTextLabel;
+
 public:
-    static bool DebugMode;
-    int enemiesKilled = 0;
-    int coinsEarned = 0;
+    Player* player;
     float matchTime = 0.0f;
-    int selectedTurretId;
+    int dangerAlpha = 0;
+    static bool DebugMode;
     static const std::vector<Engine::Point> directions;
     static const int MapWidth, MapHeight;
     static const int BlockSize;
     static const float DangerTime;
-    static const Engine::Point SpawnGridPoint;
-    static const Engine::Point EndGridPoint;
+    static Engine::Point SpawnGridPoint;
+    static Engine::Point EndGridPoint;
     static const std::vector<int> code;
     int MapId;
     float ticks;
@@ -63,8 +64,7 @@ public:
     Engine::Label *UIMoney;
     Engine::Label *UILives;
     Engine::Image *imgTarget;
-    Engine::Sprite *dangerIndicator;
-    Engine::Sprite *preview;
+    Turret *preview;
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
     std::list<std::pair<int, float>> enemyWaveData;
@@ -79,18 +79,18 @@ public:
     void OnMouseMove(int mx, int my) override;
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
+    void OnKeyUp(int keyCode) override;
     void Hit();
     int GetMoney() const;
+    int  GetLives()  const;
     void EarnMoney(int money);
-    int GetLives() const;
     void ReadMap();
     void ReadEnemyWave();
     void ConstructUI();
     void UIBtnClicked(int id);
     bool CheckSpaceValid(int x, int y);
     std::vector<std::vector<int>> CalculateBFSDistance();
-    void RemovePreviewIfMatched(Engine::IObject *obj);
-    bool CheckBomSpaceValid(int x, int y);
-    static TileType GetFloorTile() { return TILE_FLOOR; }
+    Turret* GetTurretAt(int gx, int gy);
+    // void ModifyReadMapTiles();
 };
-#endif // PLAYSCENE_HPP
+#endif   // PLAYSCENE_HPP

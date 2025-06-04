@@ -32,6 +32,6 @@ int main(int argc, char **argv)
 	game.AddNewScene("old-player-scene", new OldPlayerScene());
 	game.AddNewScene("welcome-scene", new WelcomeScene());
 
-	game.Start("mode-select", 60, 1600, 832);
+	game.Start("mode-select", 60, 1920, 1280);
 	return 0;
 }

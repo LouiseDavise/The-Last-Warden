@@ -5,7 +5,7 @@
 #include "Engine/GameEngine.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Engine/AudioHelper.hpp"
-#include "Turret/Turret.hpp"
+#include "Structure/Turret/Turret.hpp"
 #include "Bullet/Bullet.hpp"
 
 ExtremeTankEnemy::ExtremeTankEnemy(int x, int y)
@@ -28,8 +28,6 @@ void ExtremeTankEnemy::Hit(float damage)
     {
         OnExplode();
         auto *scene = getPlayScene();
-        scene->enemiesKilled++;
-        scene->coinsEarned += money;
 
         for (auto &it : lockedTurrets)
             it->Target = nullptr;

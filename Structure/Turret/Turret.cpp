@@ -101,7 +101,4 @@ void Turret::Draw() const
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
     }
 }
-int Turret::GetPrice() const
-{
-    return price;
-}
+int Turret::GetPrice() const{return price;}
