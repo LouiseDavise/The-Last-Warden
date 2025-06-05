@@ -119,7 +119,7 @@ void PlayScene::Initialize()
     // ReadEnemyWave();
     // mapDistance = CalculateBFSDistance();
     // ConstructUI();
-    imgTarget = new Engine::Image("play/target.png", 0, 0);
+    imgTarget = new Engine::Image("UI/target.png", 0, 0);
     imgTarget->Visible = false;
     preview = nullptr;
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
@@ -127,7 +127,6 @@ void PlayScene::Initialize()
     UIGroup->AddNewObject(imgTarget);
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
-    Engine::Resources::GetInstance().GetBitmap("lose/benjamin-happy.png");
     // Start BGM.
     bgmId = AudioHelper::PlayBGM("play.ogg");
 }
@@ -532,15 +531,15 @@ void PlayScene::ReadMap()
             {
             case '0':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             case '1':
                 mapState[i][j] = TILE_FLOOR;
-                TileMapGroup->AddNewObject(new Engine::Image("play/floor.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/floor.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             case 'S':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 switch (MapId)
                 {
                 case 1:
@@ -554,7 +553,7 @@ void PlayScene::ReadMap()
                 break;
             case 'E':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 EndGridPoint = Engine::Point(j, i);
                 break;
             default:

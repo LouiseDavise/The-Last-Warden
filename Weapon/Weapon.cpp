@@ -40,7 +40,7 @@ void Weapon::Draw() const {
 void Weapon::Reclaim() {
     if (!owner) return;
     available = true;
-    Position  = owner->Position;   // snap into player’s hand
+    Position  = owner->Position;
 }
 
 PlayScene* Weapon::GetPlayScene() const {

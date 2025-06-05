@@ -87,17 +87,17 @@ void WelcomeScene::Initialize()
         RenderPage();
     }
 
-    auto *btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", cx - 200, 650, 400, 100);
+    auto *btn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", cx - 200, 650, 400, 100);
     btn->SetOnClickCallback(std::bind(&WelcomeScene::OnContinueClicked, this));
     AddNewControlObject(btn);
     AddNewObject(btn);
     AddNewObject(new Engine::Label("CONTINUE", "pirulen.ttf", 36, cx, 700, 225, 225, 225, 255, 0.5, 0.5));
-    auto *nextBtn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", cx + 150, 570, 100, 40);
+    auto *nextBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", cx + 150, 570, 100, 40);
     nextBtn->SetOnClickCallback(std::bind(&WelcomeScene::OnNextClick, this));
     AddNewControlObject(nextBtn);
     AddNewObject(new Engine::Label("Next", "pirulen.ttf", 20, cx + 200, 590, 0, 0, 0, 255, 0.5, 0.5));
 
-    auto *prevBtn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", cx - 250, 570, 100, 40);
+    auto *prevBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", cx - 250, 570, 100, 40);
     prevBtn->SetOnClickCallback(std::bind(&WelcomeScene::OnBackClick, this));
     AddNewControlObject(prevBtn);
     AddNewObject(new Engine::Label("Prev", "pirulen.ttf", 20, cx - 200, 590, 0, 0, 0, 255, 0.5, 0.5));

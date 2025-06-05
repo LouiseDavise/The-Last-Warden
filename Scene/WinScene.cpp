@@ -23,7 +23,6 @@ void WinScene::Initialize()
     int halfW = w / 2;
     int halfH = h / 2;
 
-    AddNewObject(new Engine::Image("win/benjamin-sad.png", halfW, halfH, 0, 0, 0.5, 0.5));
     AddNewObject(new Engine::Label("You Win!", "pirulen.ttf", 48, halfW, halfH / 4 - 10, 255, 255, 255, 255, 0.5, 0.5));
 
     PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
@@ -56,12 +55,12 @@ void WinScene::Initialize()
     if (play && play->MapId < 2)
     {
         Engine::ImageButton *backBtn;
-        backBtn = new Engine::ImageButton("win/dirt.png", "win/floor.png", halfW + 50, halfH * 7 / 4 - 50, 400, 100);
+        backBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW + 50, halfH * 7 / 4 - 50, 400, 100);
         backBtn->SetOnClickCallback(std::bind(&WinScene::BackOnClick, this, 2));
         AddNewControlObject(backBtn);
         AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW + 250, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
         Engine::ImageButton *nextBtn;
-        nextBtn = new Engine::ImageButton("win/dirt.png", "win/floor.png", halfW - 440, halfH * 7 / 4 - 50, 400, 100);
+        nextBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 440, halfH * 7 / 4 - 50, 400, 100);
         nextBtn->SetOnClickCallback([this]()
                                     {
         PlayScene* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetScene("play"));
@@ -77,7 +76,7 @@ void WinScene::Initialize()
     else
     {
         Engine::ImageButton *backBtn;
-        backBtn = new Engine::ImageButton("win/dirt.png", "win/floor.png", halfW - 200, halfH * 7 / 4 - 50, 400, 100);
+        backBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH * 7 / 4 - 50, 400, 100);
         backBtn->SetOnClickCallback(std::bind(&WinScene::BackOnClick, this, 2));
         AddNewControlObject(backBtn);
         AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));

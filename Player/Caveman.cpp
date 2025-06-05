@@ -6,8 +6,9 @@
 
 using Engine::Point;
 
+// x, y, maxhp, speed, path, frames, animfps
 Caveman::Caveman(float x, float y)
-    : Player(x, y, 100.0f, 190.0f, "play/player_1/image1x1.png", 7, 10.0f)
+    : Player(x, y, 100.0f, 190.0f, "Characters/Mage1x1.png", "Mage", 7, 10.0f)
 {
     spear = std::make_unique<SpearWeapon>(PositionWeapon(), this);
 

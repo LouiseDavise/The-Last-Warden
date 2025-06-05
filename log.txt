@@ -8,9 +8,9 @@
 [INFO] Created<sample_instance>: Resource/audios/select.ogg
 [INFO] Loaded Resource<font>: Resource/fonts/pirulen.ttf with size 48
 [INFO] Loaded Resource<font>: Resource/fonts/pirulen.ttf with size 32
-[INFO] Loaded Resource<image>: Resource/images/stage-select/dirt.png scaled to 400x100
-[INFO] Loaded Resource<image>: Resource/images/stage-select/dirt.png
-[INFO] Loaded Resource<image>: Resource/images/stage-select/floor.png
+[INFO] Loaded Resource<image>: Resource/images/Tileset/dirt.png scaled to 400x100
+[INFO] Loaded Resource<image>: Resource/images/Tileset/dirt.png
+[INFO] Loaded Resource<image>: Resource/images/Tileset/floor.png
 [INFO] Loaded Resource<font>: Resource/fonts/pirulen.ttf with size 36
 [INFO] Game initialized
 [INFO] Game start event loop

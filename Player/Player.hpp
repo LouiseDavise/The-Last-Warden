@@ -12,7 +12,7 @@ namespace Engine { struct Point; }
 class Player : public Engine::Sprite {
 public:
     Player(float x, float y, float hp, float moveSpeed,
-           const std::string& firstFramePath, int frames, float animFPS);
+           const std::string& firstFramePath, const std::string& namePrefix, int frames, float animFPS);
 
     void   TakeDamage(float dmg);
     void   OnKeyDown(int keyCode);

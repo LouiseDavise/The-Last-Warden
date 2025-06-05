@@ -21,13 +21,13 @@ void AuthScene::Initialize()
     AddNewObject(new Engine::Label("Please select your option", "pirulen.ttf", 32, halfW, halfH - 190, 160, 160, 160, 255, 0.5, 0.5));
 
     // NEW PLAYER Button
-    auto *btnNew = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH - 50, 400, 100);
+    auto *btnNew = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH - 50, 400, 100);
     btnNew->SetOnClickCallback(std::bind(&AuthScene::OnNewPlayerClick, this, 0));
     AddNewControlObject(btnNew);
     AddNewObject(new Engine::Label("NEW PLAYER", "pirulen.ttf", 36, halfW, halfH + 0, 66, 76, 110, 255, 0.5, 0.5));
 
     // OLD PLAYER Button
-    auto *btnOld = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH + 90, 400, 100);
+    auto *btnOld = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH + 90, 400, 100);
     btnOld->SetOnClickCallback(std::bind(&AuthScene::OnOldPlayerClick, this, 0));
     AddNewControlObject(btnOld);
     AddNewObject(new Engine::Label("OLD PLAYER", "pirulen.ttf", 36, halfW, halfH + 140, 66, 76, 110, 255, 0.5, 0.5));

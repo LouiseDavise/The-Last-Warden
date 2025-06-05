@@ -22,7 +22,7 @@ private:
     bool            isFlying    = false;
     Engine::Point   velocity;
     float           flightDist  = 0.f;
-    float           maxDistance = 320.f;   // pixels
+    float           maxDistance = 500.f;   // pixels
 
     // helpers
     void TryHitEnemies();

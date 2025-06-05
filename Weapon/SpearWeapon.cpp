@@ -1,6 +1,4 @@
 #include "SpearWeapon.hpp"
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/color.h>
 #include <cmath>
 #include "Engine/GameEngine.hpp"
 #include "Scene/PlayScene.hpp"
@@ -12,13 +10,14 @@ using Engine::Point;
 
 static constexpr float PI = 3.1415926f;
 
+// weap_path, dmg, speed, startPos, owner
 SpearWeapon::SpearWeapon(const Point& startPos, Player* owner)
-    : Weapon("play/weapon/Spear.png", 40.f, 600.f, startPos, owner)
+    : Weapon("Weapons/Spear.png", 40.f, 750.f, startPos, owner)
 {
     CollisionRadius = 0;
     Anchor          = Point(0.5f, 0.5f);
-    Size.x = 64;
-    Size.y = 64;
+    Size.x = 80;
+    Size.y = 80;
 }
 
 void SpearWeapon::Use(float tx, float ty)
@@ -42,12 +41,14 @@ void SpearWeapon::Update(float dt)
         Point disp   = velocity * dt;
         Position     = Position + disp;
         flightDist  += disp.Magnitude();
-        al_draw_line(owner->Position.x, owner->Position.y, Position.x, Position.y, al_map_rgb(255,0,0), 2);
         TryHitEnemies();
 
-        if (flightDist >= maxDistance) {
-            isFlying = false;   // spear drops
-            velocity = Point{0,0};
+        float mapW = PlayScene::MapWidth * PlayScene::BlockSize;
+        float mapH = (PlayScene::MapHeight + 3) * PlayScene::BlockSize;  // +3 from PlayScene
+        if (flightDist >= maxDistance || Position.x < 0 || Position.x > mapW || Position.y < 0 || Position.y > mapH) {
+            isFlying = false;
+            velocity = Point{0, 0};
+            return;
         }
     } else {
         TryReclaim();          // lying on ground or already in hand
@@ -77,7 +78,7 @@ void SpearWeapon::TryReclaim()
     PlayScene* scene = GetPlayScene();
     if (!scene || !owner) return;
 
-    const float pickR = 24.f;
+    const float pickR = 35.f;
     if ((owner->Position - Position).MagnitudeSquared() <= pickR*pickR) {
         Reclaim();                // base-class sets available=true and snaps to hand
         isFlying = false;

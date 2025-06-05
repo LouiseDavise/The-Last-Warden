@@ -24,12 +24,12 @@ void OldPlayerScene::Initialize()
     AddNewObject(new Engine::Label("Enter Your UID", "pirulen.ttf", 48, halfW, 100, 255, 255, 255, 255, 0.5, 0.5));
     AddNewObject(new Engine::Label("Enter your UID to access your game data.", "pirulen.ttf", 24, halfW, 160, 180, 180, 180, 255, 0.5, 0.5));
 
-    auto *submit = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, 520, 400, 100);
+    auto *submit = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 520, 400, 100);
     submit->SetOnClickCallback(std::bind(&OldPlayerScene::OnSubmitClick, this, 0));
     AddNewControlObject(submit);
     AddNewObject(new Engine::Label("NEXT", "pirulen.ttf", 36, halfW, 570, 66, 76, 110, 255, 0.5, 0.5));
 
-    auto *back = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, 650, 400, 100);
+    auto *back = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 650, 400, 100);
     back->SetOnClickCallback(std::bind(&OldPlayerScene::OnBackClick, this, 0));
     AddNewControlObject(back);
     AddNewObject(new Engine::Label("BACK", "pirulen.ttf", 36, halfW, 700, 66, 76, 110, 255, 0.5, 0.5));

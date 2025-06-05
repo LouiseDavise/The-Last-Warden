@@ -7,14 +7,14 @@
 using Engine::Point;
 using Res = Engine::Resources;
 
-Player::Player(float x, float y,float hp,float moveSpeed, const std::string& firstFramePath, int frames, float animFPS)
+Player::Player(float x, float y,float hp,float moveSpeed, const std::string& firstFramePath, const std::string& namePrefix, int frames, float animFPS)
     : Sprite(firstFramePath, x, y),
       hp(hp), moveSpeed(moveSpeed)
 {
     Anchor = Point(0.5f, 0.5f);
     animInterval = 1.0f / animFPS;
     LoadAnimation(firstFramePath.substr(0,
-                  firstFramePath.find_last_of('/') + 1) + "image", frames);
+                  firstFramePath.find_last_of('/') + 1) + namePrefix, frames);
     currentBitmap = framesRight[0];
 }
 
@@ -37,8 +37,8 @@ void Player::Update(float dt)
     float mapH = PlayScene::MapHeight * PlayScene::BlockSize;
     float halfW = GetBitmapWidth() / 2.0f;
     float halfH = GetBitmapHeight() / 2.0f;
-    Position.x = std::clamp(Position.x, halfW, mapW - halfW);
-    Position.y = std::clamp(Position.y, halfH, mapH - halfH);
+    Position.x = std::clamp(Position.x, halfW, mapW - halfW + 8);
+    Position.y = std::clamp(Position.y, halfH, mapH - halfH - 8);
 }
 
 void Player::UpdateMovement(float dt)
