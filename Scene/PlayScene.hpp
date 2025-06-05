@@ -63,6 +63,7 @@ public:
     Group *TowerGroup;
     Group *EnemyGroup;
     Group *EffectGroup;
+    Group *WeaponGroup;
     Group *UIGroup;
     Engine::Label *UIMoney;
     Engine::Label *UILives;

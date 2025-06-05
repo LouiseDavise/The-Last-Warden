@@ -5,10 +5,10 @@
 #include "Slider.hpp"
 
 Slider::Slider(float x, float y, float w, float h)
-    : ImageButton("stage-select/slider.png", "stage-select/slider-blue.png", x, y),
-      Bar("stage-select/bar.png", x, y, w, h),
-      End1("stage-select/end.png", x, y + h / 2, 0, 0, 0.5, 0.5),
-      End2("stage-select/end.png", x + w, y + h / 2, 0, 0, 0.5, 0.5)
+    : ImageButton("UI/slider.png", "UI/slider-blue.png", x, y),
+      Bar("UI/bar.png", x, y, w, h),
+      End1("UI/end.png", x, y + h / 2, 0, 0, 0.5, 0.5),
+      End2("UI/end.png", x + w, y + h / 2, 0, 0, 0.5, 0.5)
 {
     Position.x += w;
     Position.y += h / 2;

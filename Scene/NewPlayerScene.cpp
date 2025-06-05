@@ -70,13 +70,13 @@ void NewPlayerScene::Initialize()
     AddNewObject(new Engine::Label("This will be displayed in the game.", "pirulen.ttf", 24, halfW, h / 6 + 60, 180, 180, 180, 255, 0.5, 0.5));
 
     // NEXT Button
-    auto *btnNext = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, 520, 400, 100);
+    auto *btnNext = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 520, 400, 100);
     btnNext->SetOnClickCallback(std::bind(&NewPlayerScene::OnNextClick, this, 0));
     AddNewControlObject(btnNext);
     AddNewObject(new Engine::Label("NEXT", "pirulen.ttf", 36, halfW, 570, 66, 76, 110, 255, 0.5, 0.5));
 
     // BACK Button
-    auto *btnBack = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, 650, 400, 100);
+    auto *btnBack = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 650, 400, 100);
     btnBack->SetOnClickCallback(std::bind(&NewPlayerScene::OnBackClick, this, 0));
     AddNewControlObject(btnBack);
     AddNewObject(new Engine::Label("BACK", "pirulen.ttf", 36, halfW, 700, 66, 76, 110, 255, 0.5, 0.5));

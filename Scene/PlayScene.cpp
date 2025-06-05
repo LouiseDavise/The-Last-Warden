@@ -10,6 +10,9 @@
 #include <vector>
 
 #include "Player/Player.hpp"
+#include "Player/Caveman.hpp"
+#include "Weapon/Weapon.hpp"
+#include "Weapon/SpearWeapon.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Enemy/SoldierEnemy.hpp"
 #include "Enemy/TankEnemy.hpp"
@@ -82,6 +85,7 @@ void PlayScene::Initialize()
     AddNewObject(EnemyGroup = new Group());
     AddNewObject(BulletGroup = new Group());
     AddNewObject(EffectGroup = new Group());
+    AddNewObject(WeaponGroup = new Group());
     // Should support buttons.
     AddNewControlObject(UIGroup = new Group());
     // Read Map
@@ -110,12 +114,12 @@ void PlayScene::Initialize()
     ReadMap();
     float centerX = MapWidth * BlockSize / 2.0f;
     float centerY = ((MapHeight + 3) * BlockSize / 2.0f);
-    player = new Player(centerX, centerY);
+    player = new Caveman(centerX, centerY);
     AddNewObject(player);
     // ReadEnemyWave();
     // mapDistance = CalculateBFSDistance();
     // ConstructUI();
-    imgTarget = new Engine::Image("play/target.png", 0, 0);
+    imgTarget = new Engine::Image("UI/target.png", 0, 0);
     imgTarget->Visible = false;
     preview = nullptr;
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
@@ -123,7 +127,6 @@ void PlayScene::Initialize()
     UIGroup->AddNewObject(imgTarget);
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
-    Engine::Resources::GetInstance().GetBitmap("lose/benjamin-happy.png");
     // Start BGM.
     bgmId = AudioHelper::PlayBGM("play.ogg");
 }
@@ -250,6 +253,9 @@ void PlayScene::Draw() const
 
     IScene::Draw();
     player->Draw();
+    for (auto* obj : WeaponGroup->GetObjects()) {
+        obj->Draw();
+    }
     if (dangerAlpha > 0)
     {
         float t = al_get_time();
@@ -326,6 +332,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         preview = nullptr;
     }
     IScene::OnMouseDown(button, mx, my);
+    player->OnMouseDown(button, mx, my);
 }
 
 void PlayScene::OnMouseMove(int mx, int my)
@@ -524,15 +531,15 @@ void PlayScene::ReadMap()
             {
             case '0':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             case '1':
                 mapState[i][j] = TILE_FLOOR;
-                TileMapGroup->AddNewObject(new Engine::Image("play/floor.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/floor.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             case 'S':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 switch (MapId)
                 {
                 case 1:
@@ -546,7 +553,7 @@ void PlayScene::ReadMap()
                 break;
             case 'E':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("play/dirt.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 EndGridPoint = Engine::Point(j, i);
                 break;
             default:

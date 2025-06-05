@@ -26,17 +26,17 @@ void LeaderBoardScene::Initialize()
 
     AddNewObject(new Engine::Label("LEADERBOARD", "pirulen.ttf", 48, halfW, h / 8 + 20, 255, 255, 255, 255, 0.5, 0.5));
 
-    Engine::ImageButton *nextBtn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW + 250, halfH / 2 + 375, 100, 50);
+    Engine::ImageButton *nextBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW + 250, halfH / 2 + 375, 100, 50);
     nextBtn->SetOnClickCallback(std::bind(&LeaderBoardScene::OnNextClick, this));
     AddNewControlObject(nextBtn);
     AddNewObject(new Engine::Label("Next", "pirulen.ttf", 24, halfW + 300, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
 
-    Engine::ImageButton *btn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 200, halfH / 2 + 350, 400, 100);
+    Engine::ImageButton *btn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH / 2 + 350, 400, 100);
     btn->SetOnClickCallback(std::bind(&LeaderBoardScene::BackOnClick, this, 2));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "pirulen.ttf", 36, halfW, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
 
-    Engine::ImageButton *prevBtn = new Engine::ImageButton("stage-select/dirt.png", "stage-select/floor.png", halfW - 350, halfH / 2 + 375, 100, 50);
+    Engine::ImageButton *prevBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 350, halfH / 2 + 375, 100, 50);
     prevBtn->SetOnClickCallback(std::bind(&LeaderBoardScene::OnBackClick, this));
     AddNewControlObject(prevBtn);
     AddNewObject(new Engine::Label("Prev", "pirulen.ttf", 24, halfW - 300, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
