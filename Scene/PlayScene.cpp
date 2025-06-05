@@ -10,6 +10,9 @@
 #include <vector>
 
 #include "Player/Player.hpp"
+#include "Player/Caveman.hpp"
+#include "Weapon/Weapon.hpp"
+#include "Weapon/SpearWeapon.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Enemy/SoldierEnemy.hpp"
 #include "Enemy/TankEnemy.hpp"
@@ -82,6 +85,7 @@ void PlayScene::Initialize()
     AddNewObject(EnemyGroup = new Group());
     AddNewObject(BulletGroup = new Group());
     AddNewObject(EffectGroup = new Group());
+    AddNewObject(WeaponGroup = new Group());
     // Should support buttons.
     AddNewControlObject(UIGroup = new Group());
     // Read Map
@@ -110,7 +114,7 @@ void PlayScene::Initialize()
     ReadMap();
     float centerX = MapWidth * BlockSize / 2.0f;
     float centerY = ((MapHeight + 3) * BlockSize / 2.0f);
-    player = new Player(centerX, centerY);
+    player = new Caveman(centerX, centerY);
     AddNewObject(player);
     // ReadEnemyWave();
     // mapDistance = CalculateBFSDistance();
@@ -250,6 +254,9 @@ void PlayScene::Draw() const
 
     IScene::Draw();
     player->Draw();
+    for (auto* obj : WeaponGroup->GetObjects()) {
+        obj->Draw();
+    }
     if (dangerAlpha > 0)
     {
         float t = al_get_time();
@@ -326,6 +333,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         preview = nullptr;
     }
     IScene::OnMouseDown(button, mx, my);
+    player->OnMouseDown(button, mx, my);
 }
 
 void PlayScene::OnMouseMove(int mx, int my)

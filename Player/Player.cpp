@@ -4,119 +4,94 @@
 #include <allegro5/allegro_primitives.h>
 #include <cmath>
 
-Player::Player(float x, float y)
-    : Engine::Sprite("play/player_1/image1x1.png", x, y),
-      moveSpeed(200.0f), keyW(false), keyA(false), keyS(false), keyD(false),
-      faceRight(true), animationTimer(0), currentFrame(0), animationInterval(0.1f)
-{
-    Anchor = Engine::Point(0.5f, 0.5f);
+using Engine::Point;
+using Res = Engine::Resources;
 
-    for (int i = 1; i <= 7; ++i)
-    {
-        std::string path = "play/player_1/image" + std::to_string(i) + "x1.png";
-        animationsRight.push_back(Engine::Resources::GetInstance().GetBitmap(path));
-    }
-    currentBitmap = animationsRight[0];
+Player::Player(float x, float y,float hp,float moveSpeed, const std::string& firstFramePath, int frames, float animFPS)
+    : Sprite(firstFramePath, x, y),
+      hp(hp), moveSpeed(moveSpeed)
+{
+    Anchor = Point(0.5f, 0.5f);
+    animInterval = 1.0f / animFPS;
+    LoadAnimation(firstFramePath.substr(0,
+                  firstFramePath.find_last_of('/') + 1) + "image", frames);
+    currentBitmap = framesRight[0];
 }
 
-void Player::Update(float deltaTime)
+void Player::LoadAnimation(const std::string& prefix, int frames)
 {
-    Engine::Point velocity(0, 0);
-    if (keyW)
-        velocity.y -= 1;
-    if (keyS)
-        velocity.y += 1;
-    if (keyA)
-    {
-        velocity.x -= 1;
-        faceRight = false;
+    framesRight.clear();
+    for (int i = 1; i <= frames; ++i) {
+        std::string path = prefix + std::to_string(i) + "x1.png";
+        framesRight.push_back(Res::GetInstance().GetBitmap(path));
     }
-    if (keyD)
-    {
-        velocity.x += 1;
-        faceRight = true;
-    }
+}
 
-    bool moving = (velocity.x != 0 || velocity.y != 0);
-    bool movingHorizontally = (velocity.x != 0);
+void Player::Update(float dt)
+{
+    UpdateMovement(dt);
+    UpdateAnimation(dt);
+    Sprite::Update(dt);
 
-    if (moving)
-    {
-        float len = std::sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-        Position.x += (velocity.x / len) * moveSpeed * deltaTime;
-        Position.y += (velocity.y / len) * moveSpeed * deltaTime;
-    }
-
-    UpdateAnimation(deltaTime, moving);
-    Engine::Sprite::Update(deltaTime);
-    float mapW = PlayScene::MapWidth * PlayScene::BlockSize;
+    float mapW = PlayScene::MapWidth  * PlayScene::BlockSize;
     float mapH = PlayScene::MapHeight * PlayScene::BlockSize;
     float halfW = GetBitmapWidth() / 2.0f;
     float halfH = GetBitmapHeight() / 2.0f;
-
-    Position.x = std::max(halfW, std::min(Position.x, mapW - halfW));
-    Position.y = std::max(halfH, std::min(Position.y, mapH - halfH));
+    Position.x = std::clamp(Position.x, halfW, mapW - halfW);
+    Position.y = std::clamp(Position.y, halfH, mapH - halfH);
 }
 
-void Player::UpdateAnimation(float deltaTime, bool isMoving)
+void Player::UpdateMovement(float dt)
 {
-    if (!isMoving)
-    {
-        return;
-    }
-    animationTimer += deltaTime;
-    if (animationTimer >= animationInterval)
-    {
-        animationTimer = 0;
-        currentFrame = (currentFrame + 1) % animationsRight.size();
-        currentBitmap = animationsRight[currentFrame];
+    Point v(0,0);
+    if (keyW) v.y -= 1;
+    if (keyS) v.y += 1;
+    if (keyA){ v.x -= 1; faceRight=false; }
+    if (keyD){ v.x += 1; faceRight=true;  }
+
+    movingFlag = (v.x||v.y);
+    if (!movingFlag) return;
+
+    float len = std::sqrt(v.x*v.x + v.y*v.y);
+    Position.x += (v.x/len) * moveSpeed * dt;
+    Position.y += (v.y/len) * moveSpeed * dt;
+}
+
+void Player::UpdateAnimation(float dt)
+{
+    if (!movingFlag) return;
+    animTimer += dt;
+    if (animTimer >= animInterval) {
+        animTimer = 0;
+        currentFrame = (currentFrame+1) % framesRight.size();
+        currentBitmap = framesRight[currentFrame];
     }
 }
 
 void Player::Draw() const
 {
-    if (!currentBitmap)
-        return;
-
-    ALLEGRO_BITMAP *bmp = currentBitmap.get();
-    float bmpW = al_get_bitmap_width(bmp);
-    float bmpH = al_get_bitmap_height(bmp);
+    if (!currentBitmap) return;
+    ALLEGRO_BITMAP* bmp = currentBitmap.get();
+    float w = al_get_bitmap_width(bmp);
+    float h = al_get_bitmap_height(bmp);
     float scaleX = faceRight ? 1.0f : -1.0f;
-    float anchorOffsetX = faceRight ? Anchor.x : (1.0f - Anchor.x);
+    float anchorX = faceRight ? Anchor.x : (1.0f - Anchor.x);
 
     al_draw_tinted_scaled_rotated_bitmap(
-        bmp,
-        Tint,
-        anchorOffsetX * bmpW,
-        Anchor.y * bmpH,
-        Position.x,
-        Position.y,
-        scaleX * (Size.x / bmpW),
-        Size.y / bmpH,
-        Rotation,
-        0);
+        bmp, Tint,
+        anchorX * w, Anchor.y * h,
+        Position.x, Position.y,
+        scaleX * (Size.x / w),
+        Size.y  / h,
+        Rotation, 0);
 }
 
-void Player::OnKeyDown(int keyCode)
-{
-    if (keyCode == ALLEGRO_KEY_W)
-        keyW = true;
-    if (keyCode == ALLEGRO_KEY_A)
-        keyA = true;
-    if (keyCode == ALLEGRO_KEY_S)
-        keyS = true;
-    if (keyCode == ALLEGRO_KEY_D)
-        keyD = true;
-}
+void Player::OnKeyDown(int k){ if(k==ALLEGRO_KEY_W)keyW=true; if(k==ALLEGRO_KEY_A)keyA=true;
+                               if(k==ALLEGRO_KEY_S)keyS=true; if(k==ALLEGRO_KEY_D)keyD=true; }
+void Player::OnKeyUp  (int k){ if(k==ALLEGRO_KEY_W)keyW=false;if(k==ALLEGRO_KEY_A)keyA=false;
+                               if(k==ALLEGRO_KEY_S)keyS=false;if(k==ALLEGRO_KEY_D)keyD=false; }
 
-void Player::OnKeyUp(int keyCode)
-{
-    if (keyCode == ALLEGRO_KEY_W)
-        keyW = false;
-    if (keyCode == ALLEGRO_KEY_A)
-        keyA = false;
-    if (keyCode == ALLEGRO_KEY_S)
-        keyS = false;
-    if (keyCode == ALLEGRO_KEY_D)
-        keyD = false;
+void Player::TakeDamage(float d){ hp = std::max(0.0f, hp - d); }
+
+void Player::OnMouseDown(int button, int mx, int my) {
 }
