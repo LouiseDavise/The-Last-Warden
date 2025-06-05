@@ -38,7 +38,6 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
 {
     reachedEnd = false;
     CollisionRadius = radius;
-    reachEndTime = 0;
 }
 void Enemy::Hit(float damage)
 {
@@ -102,17 +101,17 @@ void Enemy::Update(float deltaTime)
     float remainSpeed = speed * deltaTime;
     while (remainSpeed != 0)
     {
-        if (path.empty())
-        {
-            if (!reachedEnd)
-            {
-                reachedEnd = true;
-                Enemy::Hit(hp);
-                getPlayScene()->Hit();
-            }
-            reachEndTime = 0;
-            return;
-        }
+        if (path.empty()) return;
+        // if (path.empty())
+        // {
+        //     if (!reachedEnd)
+        //     {
+        //         reachedEnd = true;
+        //         // Enemy::Hit(hp);
+        //         getPlayScene()->Hit();
+        //     }
+        //     return;
+        // }
         Engine::Point target = path.back() * PlayScene::BlockSize + Engine::Point(PlayScene::BlockSize / 2, PlayScene::BlockSize / 2);
         Engine::Point vec = target - Position;
         // Add up the distances:
@@ -120,7 +119,7 @@ void Enemy::Update(float deltaTime)
         // 2. path.back() to border
         // 3. All intermediate block size
         // 4. to end point
-        reachEndTime = (vec.Magnitude() + (path.size() - 1) * PlayScene::BlockSize - remainSpeed) / speed;
+        // reachEndTime = (vec.Magnitude() + (path.size() - 1) * PlayScene::BlockSize - remainSpeed) / speed;
         Engine::Point normalized = vec.Normalize();
         if (remainSpeed - vec.Magnitude() > 0)
         {

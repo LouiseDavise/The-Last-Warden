@@ -8,6 +8,7 @@
 #include <queue>
 #include <string>
 #include <vector>
+#include <random>
 
 #include "Player/Player.hpp"
 #include "Player/Caveman.hpp"
@@ -36,12 +37,12 @@
 #include "player_data.h"
 #include "UI/Animation/ExplosionEffect.hpp"
 #include "Structure/Turret/Shovel.hpp"
+#include "Enemy/SlimeEnemy.hpp"
 
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = {Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1)};
 int PlayScene::MapWidth = 40, PlayScene::MapHeight = 23;
 const int PlayScene::BlockSize = 64;
-const float PlayScene::DangerTime = 7.61;
 Engine::Point PlayScene::SpawnGridPoint;
 Engine::Point PlayScene::EndGridPoint;
 const std::vector<int> PlayScene::code = {
@@ -57,10 +58,10 @@ void PlayScene::Initialize()
     mapState.clear();
     keyStrokes.clear();
     ticks = 0;
-    deathCountDown = -1;
     lives = 10;
     maxLives = 10;
     SpeedMult = 1;
+    totalTime = 0;
 
     switch (MapId)
     {
@@ -116,6 +117,7 @@ void PlayScene::Initialize()
     float centerY = ((MapHeight + 3) * BlockSize / 2.0f);
     player = new Caveman(centerX, centerY);
     AddNewObject(player);
+    LoadEnemyWaves("Resource/enemy1.txt");
     // ReadEnemyWave();
     // mapDistance = CalculateBFSDistance();
     // ConstructUI();
@@ -140,53 +142,14 @@ void PlayScene::Terminate()
 void PlayScene::Update(float deltaTime)
 {
     matchTime += deltaTime;
-    if (SpeedMult == 0)
-        deathCountDown = -1;
-    else if (deathCountDown != -1)
-        SpeedMult = 1;
-    // Calculate danger zone.
-    std::vector<float> reachEndTimes;
-    for (auto &it : EnemyGroup->GetObjects())
+    for (auto &wave : enemyWaves)
     {
-        reachEndTimes.push_back(dynamic_cast<Enemy *>(it)->reachEndTime);
-    }
-    // Can use Heap / Priority-Queue instead. But since we won't have too many enemies, sorting is fast enough.
-    std::sort(reachEndTimes.begin(), reachEndTimes.end());
-    float newDeathCountDown = -1;
-    int danger = lives;
-    for (auto &it : reachEndTimes)
-    {
-        if (it <= DangerTime)
+        if (!wave.spawned && matchTime >= wave.delay)
         {
-            danger--;
-            if (danger <= 0)
-            {
-                // Death Countdown
-                float pos = DangerTime - it;
-                if (it > deathCountDown)
-                {
-                    // Restart Death Count Down BGM.
-                    AudioHelper::StopSample(deathBGMInstance);
-                    if (SpeedMult != 0)
-                        deathBGMInstance = AudioHelper::PlaySample("astronomia.ogg", false, AudioHelper::BGMVolume, pos);
-                }
-                float alpha = pos / DangerTime;
-                dangerAlpha = std::max(0, std::min(255, static_cast<int>(alpha * alpha * 255)));
-                newDeathCountDown = it;
-                break;
-            }
+            SpawnEnemy(wave);
+            wave.spawned = true;
         }
     }
-    deathCountDown = newDeathCountDown;
-    if (SpeedMult == 0)
-        AudioHelper::StopSample(deathBGMInstance);
-    if (deathCountDown == -1 && lives > 0)
-    {
-        AudioHelper::StopSample(deathBGMInstance);
-        dangerAlpha = 0;
-    }
-    if (SpeedMult == 0)
-        deathCountDown = -1;
     for (int i = 0; i < SpeedMult; i++)
     {
         IScene::Update(deltaTime);
@@ -255,28 +218,6 @@ void PlayScene::Draw() const
     player->Draw();
     for (auto* obj : WeaponGroup->GetObjects()) {
         obj->Draw();
-    }
-    if (dangerAlpha > 0)
-    {
-        float t = al_get_time();
-        float pulse = 0.5f * (1.0f + std::sin(t * 6)); // 3 Hz heartbeat
-        int a = static_cast<int>(dangerAlpha * pulse);
-
-        // full-screen red overlay
-        al_draw_filled_rectangle(0, 0,
-                                 PlayScene::MapWidth * BlockSize,
-                                 PlayScene::MapHeight * BlockSize,
-                                 al_map_rgba(255, 0, 0, a));
-
-        // punch a transparent hole in the centre to create vignette
-        al_set_blender(ALLEGRO_DEST_MINUS_SRC, ALLEGRO_ONE, ALLEGRO_ONE); // subtractive
-        float margin = 80;                                                // width of visible rim
-        al_draw_filled_rounded_rectangle(margin, margin,
-                                         PlayScene::MapWidth * BlockSize - margin,
-                                         PlayScene::MapHeight * BlockSize - margin,
-                                         30, 30,
-                                         al_map_rgba(0, 0, 0, a));         // subtract same alpha
-        al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA); // default
     }
 
     // al_draw_filled_rectangle(
@@ -578,6 +519,60 @@ void PlayScene::ReadEnemyWave()
     fin.close();
 }
 
+void PlayScene::LoadEnemyWaves(const std::string &filename)
+{
+    std::ifstream fin(filename);
+    if (!fin.is_open())
+    {
+        std::cerr << "Failed to open enemy file\n";
+        return;
+    }
+
+    int type;
+    float delay, count;
+    while (fin >> type >> delay >> count)
+    {
+        enemyWaves.push_back({type, delay, count, false});
+    }
+}
+
+void PlayScene::SpawnEnemy(const EnemyWave &wave)
+{
+    if (wave.type == 0)
+    {
+        Engine::Point playerPos = player->Position;
+
+        static std::default_random_engine rng((std::random_device())());
+        std::uniform_real_distribution<float> angleDist(0, 2 * 3.1415926f);
+        float radius = 400.0f;
+
+        for (int i = 0; i < wave.count; ++i)
+        {
+            float angle = angleDist(rng);
+            float spawnX = playerPos.x + std::cos(angle) * radius;
+            float spawnY = playerPos.y + std::sin(angle) * radius;
+
+            // Convert to grid coordinates
+            int gx = static_cast<int>(spawnX) / BlockSize;
+            int gy = static_cast<int>(spawnY) / BlockSize;
+
+            // Check if inside map and valid tile
+            if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
+                continue;
+            if (mapState[gy][gx] != TILE_DIRT)
+                continue;
+
+            SlimeEnemy *slime = new SlimeEnemy(spawnX, spawnY, 40);
+            if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
+            {
+                slime->UpdatePath(mapDistance);
+            }
+
+            EnemyGroup->AddNewObject(slime);
+        }
+    }
+}
+
 void PlayScene::ConstructUI()
 {
     auto scr = Engine::GameEngine::GetInstance().GetScreenSize();
@@ -618,7 +613,6 @@ void PlayScene::ConstructUI()
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int shift = 135 + 25;
-    dangerAlpha = 0;
 }
 
 void PlayScene::UIBtnClicked(int id)

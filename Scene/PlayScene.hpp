@@ -10,6 +10,14 @@
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
 
+struct EnemyWave
+{
+    int type;
+    float delay;
+    float count;
+    bool spawned = false;
+};
+
 class Turret;
 namespace Engine
 {
@@ -43,18 +51,15 @@ protected:
 public:
     Player *player;
     float matchTime = 0.0f;
-    int dangerAlpha = 0;
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
     static int MapWidth, MapHeight;
     static const int BlockSize;
-    static const float DangerTime;
     static Engine::Point SpawnGridPoint;
     static Engine::Point EndGridPoint;
     static const std::vector<int> code;
     int MapId;
     float ticks;
-    float deathCountDown;
     // Map tiles.
     Group *TileMapGroup;
     Group *GroundEffectGroup;
@@ -97,5 +102,10 @@ public:
     Turret *GetTurretAt(int gx, int gy);
     // void ModifyReadMapTiles();
     Engine::Point camera;
+    // Enemy
+    std::vector<EnemyWave> enemyWaves;
+    float totalTime;
+    void LoadEnemyWaves(const std::string &filename);
+    void SpawnEnemy(const EnemyWave &wave);
 };
 #endif // PLAYSCENE_HPP

@@ -43,6 +43,8 @@ add_executable(2025_I2P2_TowerDefense
     Enemy/ExtremeTankEnemy.hpp
     Enemy/PlaneEnemy.cpp
     Enemy/PlaneEnemy.hpp
+    Enemy/SlimeEnemy.cpp
+    Enemy/SlimeEnemy.hpp
 
     Engine/Allegro5Exception.cpp
     Engine/Allegro5Exception.hpp
