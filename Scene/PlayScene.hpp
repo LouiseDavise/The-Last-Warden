@@ -41,16 +41,12 @@ private:
     Turret *highlightedTurret = nullptr;
 
 protected:
-    int lives;
     int money;
     int SpeedMult;
-
-    int maxLives;
     Engine::Label *lifeTextLabel;
 
 public:
-    Player *player;
-    float matchTime = 0.0f;
+    float matchTime;
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
     static int MapWidth, MapHeight;
@@ -67,6 +63,7 @@ public:
     Group *BulletGroup;
     Group *TowerGroup;
     Group *EnemyGroup;
+    Group *PlayerGroup;
     Group *EffectGroup;
     Group *WeaponGroup;
     Group *UIGroup;
@@ -89,16 +86,19 @@ public:
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
     void OnKeyUp(int keyCode) override;
-    void Hit();
+
     int GetMoney() const;
-    int GetLives() const;
+    inline Player* GetPlayer() const {
+        if (PlayerGroup->GetObjects().empty()) return nullptr;
+        return dynamic_cast<Player*>(PlayerGroup->GetObjects().front());
+    }
+    
     void EarnMoney(int money);
     void ReadMap();
     void ReadEnemyWave();
     void ConstructUI();
     void UIBtnClicked(int id);
-    bool CheckSpaceValid(int x, int y);
-    std::vector<std::vector<int>> CalculateBFSDistance();
+    
     Turret *GetTurretAt(int gx, int gy);
     // void ModifyReadMapTiles();
     Engine::Point camera;

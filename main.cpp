@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
 	game.AddNewScene("start", new StartScene());
 	game.AddNewScene("play", new PlayScene());
-	game.AddNewScene("lose", new LoseScene());
+	game.AddNewScene("lose-scene", new LoseScene());
 	game.AddNewScene("win-scene", new WinScene());
 	game.AddNewScene("mode-select", new ModeSelectScene());
 	game.AddNewScene("setting-scene", new SettingScene());

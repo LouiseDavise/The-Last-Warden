@@ -43,10 +43,11 @@ namespace Engine {
         void insertObject(bool shouldDelete, IObject *obj, std::list<std::pair<bool, IObject *>>::iterator it);
 
     public:
+        std::string groupName;
         /// <summary>
         /// Create an empty group.
         /// </summary>
-        explicit Group() = default;
+        explicit Group(std::string name = "UnnamedGroup");
         /// <summary>
         /// Copy constructor is deleted, no copying allowed.
         /// </summary>

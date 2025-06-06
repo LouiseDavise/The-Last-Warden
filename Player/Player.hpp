@@ -14,7 +14,7 @@ public:
     Player(float x, float y, float hp, float moveSpeed,
            const std::string& firstFramePath, const std::string& namePrefix, int frames, float animFPS);
 
-    void   TakeDamage(float dmg);
+    void   TakeDamage(float dmg, const Engine::Point& from);
     void   OnKeyDown(int keyCode);
     void   OnKeyUp  (int keyCode);
 
@@ -22,10 +22,13 @@ public:
     virtual void Draw()   const  override;
     virtual void OnMouseDown(int button, int mx, int my);
 
+    bool  FacingRight() const { return faceRight; }
+    bool  IsDead() const {return hp <= 0.0f;}
+    virtual Engine::Point PositionWeapon() const {return Position;}
+
     float  GetHP()    const { return hp; }
     float  GetSpeed() const { return moveSpeed; }
-    bool  FacingRight() const { return faceRight; }
-    virtual Engine::Point PositionWeapon() const {return Position;}
+    float GetRadius() const { return CollisionRadius; }  
 
 protected:
     void UpdateMovement(float dt);
@@ -39,6 +42,9 @@ protected:
 private:
     float  hp;
     float  moveSpeed;
+    float  radius;
+    Engine::Point knockbackVelocity = Engine::Point{0, 0};
+    float knockbackTime = 0.0f; // duration left
 
     //---------------- Animation ----------------
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> framesRight;

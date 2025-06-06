@@ -4,8 +4,10 @@
 #include "Group.hpp"
 #include "IControl.hpp"
 #include "IObject.hpp"
+#include "Engine/LOG.hpp"
 
 namespace Engine {
+    Group::Group(std::string name) : groupName(std::move(name)) {}
     void Group::addObject(bool shouldDelete, IObject *obj) {
         objects.emplace_back(shouldDelete, obj);
         obj->objectIterator = std::prev(objects.end());
@@ -22,15 +24,28 @@ namespace Engine {
         Clear();
     }
     void Group::Clear() {
+        Engine::LOG(Engine::INFO) << "Clearing group: " << groupName;
         for (auto &it : objects) {
-            if (it.first) delete it.second;
+            // IObject* obj = it.second;
+            // if (it.first) {
+            //     Engine::LOG(Engine::INFO) << "Clearing object: " << typeid(*it.second).name() << " at " << it.second;
+            //     delete obj;
+            // } else Engine::LOG(Engine::INFO) << "SKIP OBJECT!";
+            if(it.first) delete it.second;
         }
         objects.clear();
+
         for (auto &it : controls) {
-            if (it.first) delete it.second;
+            // IControl* ctrl = it.second;
+            // if (it.first) {
+            //     Engine::LOG(Engine::INFO) << "Clearing control: " << typeid(*it.second).name() << " at " << it.second;
+            //     delete ctrl;
+            // } else Engine::LOG(Engine::INFO) << "SKIP CONTROL!";
+            if(it.first) delete it.second;
         }
         controls.clear();
     }
+
     void Group::Update(float deltaTime) {
         for (auto it = objects.begin(); it != objects.end();) {
             auto preIt = it++;

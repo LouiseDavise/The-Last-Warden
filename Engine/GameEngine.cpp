@@ -168,6 +168,9 @@ namespace Engine {
         activeScene->Update(deltaTime);
     }
     void GameEngine::draw() const {
+        ALLEGRO_TRANSFORM transform;
+        al_identity_transform(&transform);
+        al_use_transform(&transform);
         activeScene->Draw();
         al_flip_display();
     }

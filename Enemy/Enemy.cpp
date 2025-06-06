@@ -17,34 +17,20 @@
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
-PlayScene *Enemy::getPlayScene()
-{
+PlayScene *Enemy::getPlayScene(){
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
-void Enemy::OnExplode()
+
+Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), damage(damage), money(money)
 {
-    getPlayScene()->EffectGroup->AddNewObject(new ExplosionEffect(Position.x, Position.y));
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> distId(1, 3);
-    std::uniform_int_distribution<std::mt19937::result_type> dist(1, 20);
-    for (int i = 0; i < 10; i++)
-    {
-        // Random add 10 dirty effects.
-        getPlayScene()->GroundEffectGroup->AddNewObject(new DirtyEffect("play/dirty-" + std::to_string(distId(rng)) + ".png", dist(rng), Position.x, Position.y));
-    }
-}
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), money(money)
-{
-    reachedEnd = false;
     CollisionRadius = radius;
 }
+
 void Enemy::Hit(float damage)
 {
     hp -= damage;
     if (hp <= 0)
     {
-        OnExplode();
         for (auto &it : lockedTurrets)
             it->Target = nullptr;
         for (auto &it : lockedBullets)
@@ -54,47 +40,17 @@ void Enemy::Hit(float damage)
         AudioHelper::PlayAudio("explosion.wav");
     }
 }
+
 void Enemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
 {
     int x = static_cast<int>(floor(Position.x / PlayScene::BlockSize));
     int y = static_cast<int>(floor(Position.y / PlayScene::BlockSize));
-    if (x < 0)
-        x = 0;
-    if (x >= PlayScene::MapWidth)
-        x = PlayScene::MapWidth - 1;
-    if (y < 0)
-        y = 0;
-    if (y >= PlayScene::MapHeight)
-        y = PlayScene::MapHeight - 1;
-    Engine::Point pos(x, y);
-    int num = mapDistance[y][x];
-    if (num == -1)
-    {
-        num = 0;
-        Engine::LOG(Engine::ERROR) << "Enemy path finding error";
-    }
-    path = std::vector<Engine::Point>(num + 1);
-    while (num != 0)
-    {
-        std::vector<Engine::Point> nextHops;
-        for (auto &dir : PlayScene::directions)
-        {
-            int x = pos.x + dir.x;
-            int y = pos.y + dir.y;
-            if (x < 0 || x >= PlayScene::MapWidth || y < 0 || y >= PlayScene::MapHeight || mapDistance[y][x] != num - 1)
-                continue;
-            nextHops.emplace_back(x, y);
-        }
-        // Choose arbitrary one.
-        std::random_device dev;
-        std::mt19937 rng(dev());
-        std::uniform_int_distribution<std::mt19937::result_type> dist(0, nextHops.size() - 1);
-        pos = nextHops[dist(rng)];
-        path[num] = pos;
-        num--;
-    }
-    path[0] = PlayScene::EndGridPoint;
+    if (x < 0) x = 0;
+    if (x >= PlayScene::MapWidth) x = PlayScene::MapWidth - 1;
+    if (y < 0) y = 0;
+    if (y >= PlayScene::MapHeight) y = PlayScene::MapHeight - 1;
 }
+
 void Enemy::Update(float deltaTime)
 {
     // Pre-calculate the velocity.
@@ -102,16 +58,6 @@ void Enemy::Update(float deltaTime)
     while (remainSpeed != 0)
     {
         if (path.empty()) return;
-        // if (path.empty())
-        // {
-        //     if (!reachedEnd)
-        //     {
-        //         reachedEnd = true;
-        //         // Enemy::Hit(hp);
-        //         getPlayScene()->Hit();
-        //     }
-        //     return;
-        // }
         Engine::Point target = path.back() * PlayScene::BlockSize + Engine::Point(PlayScene::BlockSize / 2, PlayScene::BlockSize / 2);
         Engine::Point vec = target - Position;
         // Add up the distances:

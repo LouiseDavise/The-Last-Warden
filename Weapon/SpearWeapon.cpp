@@ -85,16 +85,13 @@ void SpearWeapon::TryReclaim()
     }
 }
 
-bool SpearWeapon::PointInsideRotatedRect(const Point& p, const Point& c,
-                                         float halfL, float halfW, float rotRad) const
+bool SpearWeapon::PointInsideRotatedRect(const Point& p, const Point& c, float halfL, float halfW, float rotRad) const
 {
     float cosR =  std::cos(-rotRad);
     float sinR =  std::sin(-rotRad);
     float dx   =  p.x - c.x;
     float dy   =  p.y - c.y;
-
     float lx =  dx * cosR - dy * sinR;
     float ly =  dx * sinR + dy * cosR;
-
     return std::abs(lx) <= halfL && std::abs(ly) <= halfW;
 }

@@ -16,7 +16,7 @@ protected:
     int currentFrame;
 
 public:
-    SlimeEnemy(float x, float y, float speed);
+    SlimeEnemy(float x, float y);
     void Update(float deltaTime) override;
     void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
 };

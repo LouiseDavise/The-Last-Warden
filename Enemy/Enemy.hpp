@@ -17,19 +17,21 @@ protected:
     std::vector<Engine::Point> path;
     float speed;
     float hp;
+    float damage;
     int money;
-    bool reachedEnd = false;
     PlayScene *getPlayScene();
-    virtual void OnExplode();
 
 public:
     std::list<Turret *> lockedTurrets;
     std::list<Bullet *> lockedBullets;
-    Enemy(std::string img, float x, float y, float radius, float speed, float hp, int money);
+    Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money);
     virtual void Hit(float damage);
     void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
     void Update(float deltaTime) override;
     void Draw() const override;
     virtual bool IsTargetable() const { return true; }
+
+    float GetRadius() const { return CollisionRadius; }
+    float GetDamage() const { return damage; }
 };
 #endif // ENEMY_HPP

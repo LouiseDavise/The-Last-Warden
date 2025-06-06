@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include "Engine/Resources.hpp"
+#include "Engine/GameEngine.hpp"
 #include "Scene/PlayScene.hpp"
+#include "Engine/LOG.hpp"
 #include <allegro5/allegro_primitives.h>
 #include <cmath>
 
@@ -29,6 +31,7 @@ void Player::LoadAnimation(const std::string& prefix, int frames)
 
 void Player::Update(float dt)
 {
+    if (IsDead()) return;
     UpdateMovement(dt);
     UpdateAnimation(dt);
     Sprite::Update(dt);
@@ -43,6 +46,18 @@ void Player::Update(float dt)
 
 void Player::UpdateMovement(float dt)
 {
+    if (knockbackTime > 0) {
+        Position.x += knockbackVelocity.x * dt;
+        Position.y += knockbackVelocity.y * dt;
+
+        knockbackTime -= dt;
+
+        // Gradually reduce knockback (optional damping)
+        knockbackVelocity.x *= 0.9f;
+        knockbackVelocity.y *= 0.9f;
+        return; // skip normal movement while knocked back
+    }
+
     Point v(0,0);
     if (keyW) v.y -= 1;
     if (keyS) v.y += 1;
@@ -68,8 +83,7 @@ void Player::UpdateAnimation(float dt)
     }
 }
 
-void Player::Draw() const
-{
+void Player::Draw() const {
     if (!currentBitmap) return;
     ALLEGRO_BITMAP* bmp = currentBitmap.get();
     float w = al_get_bitmap_width(bmp);
@@ -77,12 +91,15 @@ void Player::Draw() const
     float scaleX = faceRight ? 1.0f : -1.0f;
     float anchorX = faceRight ? Anchor.x : (1.0f - Anchor.x);
 
+    ALLEGRO_COLOR tintColor = knockbackTime > 0 ?
+        al_map_rgba_f(1.0f, 0.2f, 0.2f, 1.0f) : Tint;
+
     al_draw_tinted_scaled_rotated_bitmap(
-        bmp, Tint,
+        bmp, tintColor,
         anchorX * w, Anchor.y * h,
         Position.x, Position.y,
         scaleX * (Size.x / w),
-        Size.y  / h,
+        Size.y / h,
         Rotation, 0);
 }
 
@@ -91,7 +108,21 @@ void Player::OnKeyDown(int k){ if(k==ALLEGRO_KEY_W)keyW=true; if(k==ALLEGRO_KEY_
 void Player::OnKeyUp  (int k){ if(k==ALLEGRO_KEY_W)keyW=false;if(k==ALLEGRO_KEY_A)keyA=false;
                                if(k==ALLEGRO_KEY_S)keyS=false;if(k==ALLEGRO_KEY_D)keyD=false; }
 
-void Player::TakeDamage(float d){ hp = std::max(0.0f, hp - d); }
+void Player::TakeDamage(float dmg, const Engine::Point& from) {
+    hp -= dmg;
+    if (hp < 0) hp = 0;
+
+    Engine::Point dir = Position - from;
+    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+    if (len > 0) {
+        dir.x /= len;
+        dir.y /= len;
+
+        float force = 600; // adjust strength
+        knockbackVelocity = Engine::Point(dir.x * force, dir.y * force);
+        knockbackTime = 0.2f; // 0.2 seconds of knockback
+    }
+}
 
 void Player::OnMouseDown(int button, int mx, int my) {
 }

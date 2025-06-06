@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.hpp"
+#include "Weapon/SpearWeapon.hpp"
 #include <memory>
 
 class SpearWeapon;
@@ -15,5 +16,5 @@ public:
     Engine::Point PositionWeapon() const override;
 
 private:
-    std::unique_ptr<SpearWeapon> spear;
+    SpearWeapon* spear = nullptr;
 };

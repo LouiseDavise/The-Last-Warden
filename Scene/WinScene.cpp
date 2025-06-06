@@ -27,7 +27,7 @@ void WinScene::Initialize()
 
     PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
     // Score Calculation
-    int score = play->GetLives() * 100 + play->GetMoney();
+    int score = play->GetMoney();
 
     std::string summary = "Score: " + std::to_string(score) + " | Time: " + std::to_string(static_cast<int>(play->matchTime)) + "s";
     AddNewObject(new Engine::Label(summary, "pirulen.ttf", 36, halfW, halfH / 2 - 20, 255, 255, 255, 255, 0.5, 0.5));

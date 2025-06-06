@@ -3,8 +3,8 @@
 #include "Scene/PlayScene.hpp"
 #include <cmath>
 
-SlimeEnemy::SlimeEnemy(float x, float y, float speed)
-    : Enemy("play/enemy/slime_walking/image1x1.png", x, y, 0, 0, 1, 0),
+SlimeEnemy::SlimeEnemy(float x, float y)
+    : Enemy("play/enemy/slime_walking/image1x1.png", x, y, 48, 40, 20, 1, 1),
       animationTimer(0), animationInterval(0.1f), currentFrame(0)
 {
     Size.x = 48;
@@ -18,7 +18,6 @@ SlimeEnemy::SlimeEnemy(float x, float y, float speed)
     // Initial image
     bmp = animationFrames[0];
     Velocity = Engine::Point(0, 0);
-    this->speed = speed;
 }
 
 void SlimeEnemy::Update(float deltaTime)
@@ -34,16 +33,20 @@ void SlimeEnemy::Update(float deltaTime)
 
     // Move toward player
     auto *scene = getPlayScene();
-    Engine::Point playerPos = scene->player->Position;
-    Engine::Point dir = playerPos - Position;
-    float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-    if (len != 0)
-    {
-        dir.x /= len;
-        dir.y /= len;
-        Velocity = dir * speed;
-        Position.x += Velocity.x * deltaTime;
-        Position.y += Velocity.y * deltaTime;
+    auto* target = scene->GetPlayer();
+
+    if(target){
+        Engine::Point playerPos = target->Position;
+        Engine::Point dir = playerPos - Position;
+        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+        if (len != 0)
+        {
+            dir.x /= len;
+            dir.y /= len;
+            Velocity = dir * speed;
+            Position.x += Velocity.x * deltaTime;
+            Position.y += Velocity.y * deltaTime;
+        }
     }
 
     Enemy::Update(deltaTime);
@@ -54,15 +57,8 @@ void SlimeEnemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
     int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
     int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
 
-    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
-    {
-        return;
-    }
-
-    if (mapDistance[gy][gx] == -1)
-    {
-        return;
-    }
+    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight) return;
+    if (mapDistance[gy][gx] == -1) return;
 
     Enemy::UpdatePath(mapDistance); // Only call if valid
 }
