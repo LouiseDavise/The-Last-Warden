@@ -138,7 +138,7 @@ void PlayScene::Terminate()
 
 void PlayScene::Update(float deltaTime)
 {
-    Player* player = GetPlayer();
+    Player *player = GetPlayer();
     matchTime += deltaTime;
     for (auto &wave : enemyWaves)
     {
@@ -151,22 +151,26 @@ void PlayScene::Update(float deltaTime)
 
     for (int i = 0; i < SpeedMult; i++)
     {
-        for (auto* obj : EnemyGroup->GetObjects()) {
-            Enemy* enemy = dynamic_cast<Enemy*>(obj);
-            if (!enemy) continue;
+        for (auto *obj : EnemyGroup->GetObjects())
+        {
+            Enemy *enemy = dynamic_cast<Enemy *>(obj);
+            if (!enemy)
+                continue;
 
             if (!Engine::Collider::IsCircleOverlap(player->Position, player->GetRadius(), enemy->Position, enemy->GetRadius()))
                 continue;
 
-            if(player->GetHP() > 0) player->TakeDamage(enemy->GetDamage(), enemy->Position);
+            if (player->GetHP() > 0)
+                player->TakeDamage(enemy->GetDamage(), enemy->Position);
         }
         IScene::Update(deltaTime);
         ticks += deltaTime;
-        if (player && player->IsDead()) {
+        if (player && player->IsDead())
+        {
             Engine::GameEngine::GetInstance().ChangeScene("lose-scene");
-            return;                // stop further updates this frame
+            return; // stop further updates this frame
         }
-    // Enemy Collision
+        // Enemy Collision
     }
 
     if (preview)
@@ -201,7 +205,8 @@ void PlayScene::Draw() const
     al_use_transform(&transform);
 
     IScene::Draw();
-    for (auto* obj : WeaponGroup->GetObjects()) {
+    for (auto *obj : WeaponGroup->GetObjects())
+    {
         obj->Draw();
     }
 
@@ -251,7 +256,7 @@ void PlayScene::Draw() const
 }
 void PlayScene::OnMouseDown(int button, int mx, int my)
 {
-    Player* player = GetPlayer();
+    Player *player = GetPlayer();
     if ((button & 1) && !imgTarget->Visible && preview)
     {
         // Cancel turret construct.
@@ -364,7 +369,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
 }
 void PlayScene::OnKeyDown(int keyCode)
 {
-    Player* player = GetPlayer();
+    Player *player = GetPlayer();
     IScene::OnKeyDown(keyCode);
     player->OnKeyDown(keyCode);
     if (keyCode == ALLEGRO_KEY_TAB)
@@ -415,7 +420,7 @@ void PlayScene::OnKeyDown(int keyCode)
 
 void PlayScene::OnKeyUp(int keyCode)
 {
-    Player* player = GetPlayer();
+    Player *player = GetPlayer();
     player->OnKeyUp(keyCode);
 }
 
@@ -428,6 +433,11 @@ void PlayScene::EarnMoney(int money)
 
 void PlayScene::ReadMap()
 {
+    static std::default_random_engine rng((std::random_device())());
+    std::uniform_int_distribution<int> dist(1, 9);
+    std::uniform_int_distribution<int> baseDist(1, 9);
+    std::uniform_int_distribution<int> treeDist(1, 12);
+
     std::string filename = std::string("Resource/map") + std::to_string(MapId) + ".txt";
     std::ifstream fin(filename);
     if (!fin.is_open())
@@ -444,37 +454,38 @@ void PlayScene::ReadMap()
         {
             char tileChar;
             fin >> tileChar;
+
+            // Always draw base tile
+            int baseIdx = dist(rng);
+            std::string basePath = "Tileset/base/image1x" + std::to_string(baseIdx) + ".png";
+            TileMapGroup->AddNewObject(new Engine::Image(basePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+
+            // Now process logic tile
             switch (tileChar)
             {
             case '0':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             case '1':
-                mapState[i][j] = TILE_FLOOR;
-                TileMapGroup->AddNewObject(new Engine::Image("Tileset/floor.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                mapState[i][j] = TILE_DIRT;
+                {
+                    int treeIdx = treeDist(rng);
+                    std::string treePath = "Tileset/tree/image1x" + std::to_string(treeIdx) + ".png";
+                    TileMapGroup->AddNewObject(new Engine::Image(treePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                }
                 break;
             case 'S':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
-                switch (MapId)
-                {
-                case 1:
-                case 2:
-                    SpawnGridPoint = Engine::Point(j - 1, i);
-                    break;
-                case 3:
-                    SpawnGridPoint = Engine::Point(j, i);
-                    break;
-                }
+                SpawnGridPoint = (MapId == 3) ? Engine::Point(j, i) : Engine::Point(j - 1, i);
                 break;
             case 'E':
                 mapState[i][j] = TILE_DIRT;
-                TileMapGroup->AddNewObject(new Engine::Image("Tileset/sand.png", j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 EndGridPoint = Engine::Point(j, i);
                 break;
             default:
-                throw std::ios_base::failure("Unknown cell in map.");
+                // You can add more cases like '2', '3' here if needed
+                mapState[i][j] = TILE_DIRT;
+                break;
             }
         }
     }
@@ -516,7 +527,7 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 {
     if (wave.type == 0)
     {
-        Player* player = GetPlayer();
+        Player *player = GetPlayer();
         Engine::Point playerPos = player->Position;
 
         static std::default_random_engine rng((std::random_device())());
@@ -534,11 +545,14 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
             int gy = static_cast<int>(spawnY) / BlockSize;
 
             // Check if inside map and valid tile
-            if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight) continue;
-            if (mapState[gy][gx] != TILE_DIRT) continue;
+            if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
+                continue;
+            if (mapState[gy][gx] != TILE_DIRT)
+                continue;
 
             SlimeEnemy *slime = new SlimeEnemy(spawnX, spawnY);
-            if (!mapDistance.empty() && mapDistance[gy][gx] != -1){
+            if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
+            {
                 slime->UpdatePath(mapDistance);
             }
 
