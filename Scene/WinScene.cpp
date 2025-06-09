@@ -52,7 +52,7 @@ void WinScene::Initialize()
         std::cout << "Failed to write score to file.\n";
     }
 
-    if (play && play->MapId < 2)
+    if (play)
     {
         Engine::ImageButton *backBtn;
         backBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW + 50, halfH * 7 / 4 - 50, 400, 100);
@@ -61,15 +61,7 @@ void WinScene::Initialize()
         AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW + 250, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
         Engine::ImageButton *nextBtn;
         nextBtn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 440, halfH * 7 / 4 - 50, 400, 100);
-        nextBtn->SetOnClickCallback([this]()
-                                    {
-        PlayScene* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetScene("play"));
-        if (scene && scene->MapId < 3) {
-            scene->MapId++;
-            Engine::GameEngine::GetInstance().ChangeScene("play");
-        } else {
-            Engine::GameEngine::GetInstance().ChangeScene("stage-select");
-        } });
+        nextBtn->SetOnClickCallback([this](){Engine::GameEngine::GetInstance().ChangeScene("stage-select");});
         AddNewControlObject(nextBtn);
         AddNewObject(new Engine::Label("Next Stage", "pirulen.ttf", 36, halfW - 240, halfH * 7 / 4, 0, 0, 0, 255, 0.5, 0.5));
     }
@@ -93,8 +85,7 @@ void WinScene::Terminate()
 void WinScene::Update(float deltaTime)
 {
     ticks += deltaTime;
-    if (ticks > 4 && ticks < 100 &&
-        dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"))->MapId == 2)
+    if (ticks > 4 && ticks < 100)
     {
         ticks = 100;
         bgmId = AudioHelper::PlayBGM("happy.ogg");

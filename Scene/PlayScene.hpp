@@ -23,9 +23,10 @@ namespace Engine
 {
     class Group;
     class Image;
+    class ImageButton;
     class Label;
     class Sprite;
-} // namespace Engine
+}
 
 class PlayScene final : public Engine::IScene
 {
@@ -54,8 +55,7 @@ public:
     static const int BlockSize;
     static Engine::Point SpawnGridPoint;
     static Engine::Point EndGridPoint;
-    static const std::vector<int> code;
-    int MapId;
+    static const std::vector<int> CheatCode;
     float ticks;
     // Map tiles.
     Group *TileMapGroup;
@@ -68,10 +68,13 @@ public:
     Group *EffectGroup;
     Group *WeaponGroup;
     Group *UIGroup;
+
     Engine::Label *UIMoney;
     Engine::Label *UILives;
-    Engine::Image *imgTarget;
+    Engine::Image *TargetTile;
+    Engine::Image *StructurePanel;
     Turret *preview;
+
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
     std::list<std::pair<int, float>> enemyWaveData;
@@ -101,8 +104,8 @@ public:
     void UIBtnClicked(int id);
     
     Turret *GetTurretAt(int gx, int gy);
-    // void ModifyReadMapTiles();
     Engine::Point camera;
+
     // Enemy
     std::vector<EnemyWave> enemyWaves;
     float totalTime;

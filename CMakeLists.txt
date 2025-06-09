@@ -30,7 +30,6 @@ add_executable(2025_I2P2_TowerDefense
     Bullet/LaserBullet.cpp
     Bullet/LaserBullet.hpp
 
-    # TODO HACKATHON-3 (3/3): Add the new enemy source files here
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp
     Enemy/SlimeEnemy.cpp
@@ -84,16 +83,16 @@ add_executable(2025_I2P2_TowerDefense
     Scene/WelcomeScene.cpp
     Scene/WelcomeScene.hpp
 
-    Structure/Turret/LaserTurret.cpp
-    Structure/Turret/LaserTurret.hpp
-    Structure/Turret/MachineGunTurret.cpp
-    Structure/Turret/MachineGunTurret.hpp
-    Structure/Turret/Turret.cpp
-    Structure/Turret/Turret.hpp
-    Structure/Turret/TurretButton.cpp
-    Structure/Turret/TurretButton.hpp
-    Structure/Turret/Shovel.cpp
-    Structure/Turret/Shovel.hpp
+    Structure/Defense/LaserTurret.cpp
+    Structure/Defense/LaserTurret.hpp
+    Structure/Defense/MachineGunTurret.cpp
+    Structure/Defense/MachineGunTurret.hpp
+    Structure/Defense/Turret.cpp
+    Structure/Defense/Turret.hpp
+    Structure/StructureButton.cpp
+    Structure/StructureButton.hpp
+    Structure/Shovel.cpp
+    Structure/Shovel.hpp
 
     UI/Animation/DirtyEffect.cpp
     UI/Animation/DirtyEffect.hpp

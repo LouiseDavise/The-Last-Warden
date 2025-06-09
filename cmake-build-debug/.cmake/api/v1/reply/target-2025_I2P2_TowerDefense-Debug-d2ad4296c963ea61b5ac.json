@@ -551,12 +551,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "Turret/TurretButton.cpp",
+			"path" : "Turret/StructureButton.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Turret/TurretButton.hpp",
+			"path" : "Turret/StructureButton.hpp",
 			"sourceGroupIndex" : 1
 		},
 		{

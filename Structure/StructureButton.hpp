@@ -1,5 +1,5 @@
-#ifndef TURRETBUTTON_HPP
-#define TURRETBUTTON_HPP
+#ifndef STRUCTUREBUTTON_HPP
+#define STRUCTUREBUTTON_HPP
 #include <string>
 
 #include "Engine/Sprite.hpp"
@@ -7,7 +7,7 @@
 
 class PlayScene;
 
-class TurretButton : public Engine::ImageButton {
+class StructureButton : public Engine::ImageButton {
 protected:
     PlayScene *getPlayScene();
 
@@ -15,8 +15,8 @@ public:
     int money;
     Engine::Sprite Base;
     Engine::Sprite Turret;
-    TurretButton(std::string img, std::string imgIn, Engine::Sprite Base, Engine::Sprite Turret, float x, float y, int money);
+    StructureButton(std::string img, std::string imgIn, Engine::Sprite Base, Engine::Sprite Turret, float x, float y, int money);
     void Update(float deltaTime) override;
     void Draw() const override;
 };
-#endif   // TURRETBUTTON_HPP
+#endif   // STRUCTUREBUTTON_HPP

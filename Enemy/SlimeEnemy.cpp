@@ -4,14 +4,14 @@
 #include <cmath>
 
 SlimeEnemy::SlimeEnemy(float x, float y)
-    : Enemy("play/enemy/slime_walking/image1x1.png", x, y, 48, 40, 20, 1, 1),
+    : Enemy("Enemies/Slime/slime_walking/image1x1.png", x, y, 48, 40, 20, 1, 1),
       animationTimer(0), animationInterval(0.1f), currentFrame(0)
 {
     Size.x = 48;
     Size.y = 48;
     for (int i = 1; i <= 8; ++i)
     {
-        std::string path = "play/enemy/slime_walking/image" + std::to_string(i) + "x1.png";
+        std::string path = "Enemies/Slime/slime_walking/image" + std::to_string(i) + "x1.png";
         animationFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
