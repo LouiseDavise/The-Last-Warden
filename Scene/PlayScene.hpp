@@ -119,5 +119,6 @@ public:
     Engine::Point lastPlayerGrid = Engine::Point(-1, -1);
     void UpdateBFSFromPlayer();
     void GenerateFlowField();
+    bool validLine(Engine::Point from, Engine::Point to);
 };
 #endif // PLAYSCENE_HPP

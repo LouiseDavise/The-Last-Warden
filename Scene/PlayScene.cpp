@@ -35,7 +35,16 @@
 #include "Enemy/SlimeEnemy.hpp"
 
 bool PlayScene::DebugMode = false;
-const std::vector<Engine::Point> PlayScene::directions = {Engine::Point(-1, 0), Engine::Point(0, -1), Engine::Point(1, 0), Engine::Point(0, 1)};
+const std::vector<Engine::Point> PlayScene::directions = {
+    Engine::Point(-1, 0),
+    Engine::Point(1, 0),
+    Engine::Point(0, -1),
+    Engine::Point(0, 1),
+    Engine::Point(-1, -1),
+    Engine::Point(1, -1),
+    Engine::Point(-1, 1),
+    Engine::Point(1, 1),
+};
 int PlayScene::MapWidth, PlayScene::MapHeight;
 const int PlayScene::BlockSize = 64;
 const std::vector<int> PlayScene::CheatCode = {
@@ -132,14 +141,17 @@ void PlayScene::Terminate()
 void PlayScene::Update(float deltaTime)
 {
     Player *player = GetPlayer();
-    int currGX = static_cast<int>(player->Position.x) / BlockSize;
-    int currGY = static_cast<int>(player->Position.y) / BlockSize;
-
-    if (currGX != lastPlayerGrid.x || currGY != lastPlayerGrid.y)
+    if (player)
     {
-        lastPlayerGrid = Engine::Point(currGX, currGY);
-        UpdateBFSFromPlayer();
-        GenerateFlowField();
+        int gx = static_cast<int>(player->Position.x) / BlockSize;
+        int gy = static_cast<int>(player->Position.y) / BlockSize;
+
+        if (gx != lastPlayerGrid.x || gy != lastPlayerGrid.y)
+        {
+            lastPlayerGrid = Engine::Point(gx, gy);
+            UpdateBFSFromPlayer();
+            GenerateFlowField();
+        }
     }
 
     matchTime += deltaTime;
@@ -691,6 +703,30 @@ void PlayScene::ReadMap()
     }
 }
 
+bool PlayScene::validLine(Engine::Point from, Engine::Point to) {
+    int x0 = from.x / BlockSize;
+    int y0 = from.y / BlockSize;
+    int x1 = to.x / BlockSize;
+    int y1 = to.y / BlockSize;
+
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int sx = x0 < x1 ? 1 : -1;
+    int sy = y0 < y1 ? 1 : -1;
+    int err = dx - dy;
+
+    while (true) {
+        if (!IsWalkable(x0, y0)) return false;
+        if (x0 == x1 && y0 == y1) break;
+
+        int e2 = 2 * err;
+        if (e2 > -dy) { err -= dy; x0 += sx; }
+        if (e2 < dx)  { err += dx; y0 += sy; }
+    }
+
+    return true;
+}
+
 void PlayScene::GenerateFlowField()
 {
     // Initialize with zero vectors
@@ -759,13 +795,18 @@ void PlayScene::UpdateBFSFromPlayer()
         {
             int nx = x + dir.x;
             int ny = y + dir.y;
-
-            if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+            if (nx < 0 || ny < 0 || nx >= MapWidth || ny >= MapHeight)
                 continue;
             if (!IsWalkable(nx, ny))
                 continue;
             if (mapDistance[ny][nx] != -1)
                 continue;
+
+            if (abs(dir.x) == 1 && abs(dir.y) == 1)
+            {
+                if (!IsWalkable(x + dir.x, y) || !IsWalkable(x, y + dir.y))
+                    continue;
+            }
 
             mapDistance[ny][nx] = mapDistance[y][x] + 1;
             q.emplace(nx, ny);

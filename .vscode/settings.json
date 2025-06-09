@@ -92,6 +92,7 @@
         "xutility": "cpp",
         "condition_variable": "cpp",
         "memory_resource": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "set": "cpp"
     }
 }

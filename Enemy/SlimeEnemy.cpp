@@ -31,37 +31,110 @@ void SlimeEnemy::Update(float deltaTime)
     }
 
     auto *scene = getPlayScene();
-    int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
-    int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
+    if (!scene || !scene->GetPlayer())
+        return;
 
-    if (gx >= 0 && gx < PlayScene::MapWidth && gy >= 0 && gy < PlayScene::MapHeight)
+    Engine::Point playerPos = scene->GetPlayer()->Position;
+    float distToPlayer = (playerPos - Position).Magnitude();
+
+    if (distToPlayer <= PlayScene::BlockSize * 1.2f || scene->validLine(Position, playerPos))
     {
-        Engine::Point flowDir = scene->flowField[gy][gx];
-        if (flowDir.x != 0 || flowDir.y != 0)
+        Engine::Point dir = (playerPos - Position).Normalize();
+        Velocity = dir * speed;
+    }
+    else
+    {
+        int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
+        int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
+
+        if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
+            return;
+
+        int currDist = scene->mapDistance[gy][gx];
+        if (currDist <= 0)
+            return;
+
+        Engine::Point avgDir(0, 0);
+        int count = 0;
+
+        for (const auto &dir : PlayScene::directions)
         {
-            Velocity = flowDir * speed;
-            float nextX = Position.x + Velocity.x * deltaTime;
-            float nextY = Position.y + Velocity.y * deltaTime;
+            int nx = gx + dir.x;
+            int ny = gy + dir.y;
+            if (nx < 0 || nx >= PlayScene::MapWidth || ny < 0 || ny >= PlayScene::MapHeight)
+                continue;
+            if (!scene->IsWalkable(nx, ny))
+                continue;
 
-            int tileX = static_cast<int>(nextX) / PlayScene::BlockSize;
-            int tileY = static_cast<int>(nextY) / PlayScene::BlockSize;
-
-            if (tileX >= 0 && tileX < PlayScene::MapWidth &&
-                tileY >= 0 && tileY < PlayScene::MapHeight &&
-                scene->IsWalkable(tileX, tileY))
+            int neighborDist = scene->mapDistance[ny][nx];
+            if (neighborDist >= 0 && neighborDist < currDist)
             {
-                Position.x = nextX;
-                Position.y = nextY;
+                avgDir.x += dir.x;
+                avgDir.y += dir.y;
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            avgDir.x /= count;
+            avgDir.y /= count;
+
+            float len = std::sqrt(avgDir.x * avgDir.x + avgDir.y * avgDir.y);
+            if (len > 0)
+            {
+                Engine::Point norm = avgDir / len;
+                Velocity = norm * speed;
             }
             else
             {
-                Velocity = Engine::Point(0, 0); // Stop if blocked
+                Velocity = Engine::Point(0, 0);
             }
         }
     }
 
+    // Movement with slide-along-wall fallback
+    float nextX = Position.x + Velocity.x * deltaTime;
+    float nextY = Position.y + Velocity.y * deltaTime;
+
+    int tileX = static_cast<int>(nextX) / PlayScene::BlockSize;
+    int tileY = static_cast<int>(nextY) / PlayScene::BlockSize;
+
+    bool moved = false;
+
+    if (scene->IsWalkable(tileX, tileY))
+    {
+        Position.x = nextX;
+        Position.y = nextY;
+        moved = true;
+    }
+    else
+    {
+        // Try moving only X
+        float testX = Position.x + Velocity.x * deltaTime;
+        int testTileX = static_cast<int>(testX) / PlayScene::BlockSize;
+        if (scene->IsWalkable(testTileX, static_cast<int>(Position.y) / PlayScene::BlockSize))
+        {
+            Position.x = testX;
+            moved = true;
+        }
+
+        // Try moving only Y
+        float testY = Position.y + Velocity.y * deltaTime;
+        int testTileY = static_cast<int>(testY) / PlayScene::BlockSize;
+        if (scene->IsWalkable(static_cast<int>(Position.x) / PlayScene::BlockSize, testTileY))
+        {
+            Position.y = testY;
+            moved = true;
+        }
+    }
+
+    if (!moved)
+        Velocity = Engine::Point(0, 0);
+
     Enemy::Update(deltaTime);
 }
+
 
 void SlimeEnemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
 {
