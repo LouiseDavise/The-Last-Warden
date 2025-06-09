@@ -71,6 +71,7 @@ void PlayScene::Initialize()
         std::cerr << "Failed to open map file\n";
         return;
     }
+
     std::string line;
     int scanWidth = 0, scanHeight = 0;
     while (std::getline(fin, line)){
@@ -89,7 +90,6 @@ void PlayScene::Initialize()
 
     int w = al_get_display_width(al_get_current_display());
     int h = al_get_display_height(al_get_current_display());
-    ConstructUI();
 
     preview = nullptr;
     TargetTile = new Engine::Image("UI/target.png", 0, 0);
@@ -102,7 +102,7 @@ void PlayScene::Initialize()
 
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
     // UIGroup->AddNewObject(lifeTextLabel);
-
+    ConstructUI();
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
     // Start BGM.
@@ -769,7 +769,28 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 
 void PlayScene::ConstructUI()
 {
-    
+    int w = al_get_display_width(al_get_current_display());
+    int h = al_get_display_height(al_get_current_display());
+    struct BtnInfo { int x,y; int price; int btnId; const char* sprite; };
+    std::vector<BtnInfo> btns = {
+        {w/2 - 332 + 6, h - 82, MachineGunTurret::Price,    1, "Structures/turret-1.png"},
+        {w/2 - 332 + 6 + 74, h - 82, LaserTurret::Price,    2, "Structures/turret-2.png"}
+    };
+
+    for (auto &b : btns) {
+        StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
+            Engine::Sprite("Structures/tower-base.png", b.x, b.y, 0,0,0,0),
+            Engine::Sprite(b.sprite,                    b.x, b.y - 8, 0,0,0,0),
+            b.x, b.y, b.price
+        );
+        btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, b.btnId));
+        UIGroup->AddNewControlObject(btn);
+
+        auto *priceLbl = new Engine::Label(
+            std::string("$") + std::to_string(b.price), "pirulen.ttf", 20, b.x + 30, b.y + 63);
+        priceLbl->Anchor = Engine::Point(0.5f, 0.0f);  // center‐horizontally
+        UIGroup->AddNewObject(priceLbl);
+    }
 }
 
 void PlayScene::UIBtnClicked(int id)
