@@ -50,6 +50,9 @@ void Player::Update(float dt)
 
 void Player::UpdateMovement(float dt)
 {
+    if (IsDead())
+        return;
+
     if (knockbackTime > 0)
     {
         float nextX = Position.x + knockbackVelocity.x * dt;
@@ -92,20 +95,51 @@ void Player::UpdateMovement(float dt)
         return;
 
     float len = std::sqrt(v.x * v.x + v.y * v.y);
+    if (len == 0)
+        return;
+
+    v = v / len * moveSpeed * dt;
+
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!scene)
         return;
 
-    float newX = Position.x + (v.x / len) * moveSpeed * dt;
-    float newY = Position.y + (v.y / len) * moveSpeed * dt;
-
-    int gridX = static_cast<int>(newX / PlayScene::BlockSize);
-    int gridY = static_cast<int>(newY / PlayScene::BlockSize);
+    float nextX = Position.x + v.x;
+    float nextY = Position.y + v.y;
+    int gridX = static_cast<int>(nextX / PlayScene::BlockSize);
+    int gridY = static_cast<int>(nextY / PlayScene::BlockSize);
 
     if (scene->IsWalkable(gridX, gridY))
     {
-        Position.x = newX;
-        Position.y = newY;
+        Position.x = nextX;
+        Position.y = nextY;
+    }
+    else
+    {
+        bool moved = false;
+
+        // Try X only
+        float testX = Position.x + v.x;
+        int testGridX = static_cast<int>(testX / PlayScene::BlockSize);
+        if (scene->IsWalkable(testGridX, static_cast<int>(Position.y / PlayScene::BlockSize)))
+        {
+            Position.x = testX;
+            moved = true;
+        }
+
+        // Try Y only
+        float testY = Position.y + v.y;
+        int testGridY = static_cast<int>(testY / PlayScene::BlockSize);
+        if (scene->IsWalkable(static_cast<int>(Position.x / PlayScene::BlockSize), testGridY))
+        {
+            Position.y = testY;
+            moved = true;
+        }
+
+        if (!moved)
+        {
+            // stuck
+        }
     }
 }
 
