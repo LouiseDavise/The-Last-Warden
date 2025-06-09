@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <random>
+#include <limits>
 
 #include "Player/Player.hpp"
 #include "Player/Caveman.hpp"
@@ -68,15 +69,18 @@ void PlayScene::Initialize()
     AddNewControlObject(UIGroup = new Group("UIGroup"));
 
     std::ifstream fin("Resource/map1.txt");
-    if (!fin.is_open()){
+    if (!fin.is_open())
+    {
         std::cerr << "Failed to open map file\n";
         return;
     }
 
     std::string line;
     int scanWidth = 0, scanHeight = 0;
-    while (std::getline(fin, line)){
-        if ((int)line.length() > scanWidth) scanWidth = line.length();
+    while (std::getline(fin, line))
+    {
+        if ((int)line.length() > scanWidth)
+            scanWidth = line.length();
         scanHeight++;
     }
     fin.close();
@@ -85,8 +89,15 @@ void PlayScene::Initialize()
     ReadMap();
     float centerX = MapWidth * BlockSize / 2.0f;
     float centerY = ((MapHeight + 3) * BlockSize / 2.0f);
-    PlayerGroup->AddNewObject(new Caveman(centerX, centerY));
 
+    Player *player = new Caveman(centerX, centerY);
+    PlayerGroup->AddNewObject(player);
+
+    // Calculate distances from player
+    // Use BFS to fill mapDistance (already in your code, assumed)
+    UpdateBFSFromPlayer(); // <- You might already have this.
+    // Then:
+    GenerateFlowField();
     LoadEnemyWaves("Resource/single_wave.txt");
 
     int w = al_get_display_width(al_get_current_display());
@@ -97,7 +108,7 @@ void PlayScene::Initialize()
     TargetTile->Visible = false;
     UIGroup->AddNewObject(TargetTile);
 
-    StructurePanel = new Engine::Image("UI/Structure_panel.png", w/2 - 332, h - 88, 664, 88, 0, 0);
+    StructurePanel = new Engine::Image("UI/Structure_panel.png", w / 2 - 332, h - 88, 664, 88, 0, 0);
     StructurePanel->Visible = true;
     UIGroup->AddNewObject(StructurePanel);
 
@@ -121,6 +132,16 @@ void PlayScene::Terminate()
 void PlayScene::Update(float deltaTime)
 {
     Player *player = GetPlayer();
+    int currGX = static_cast<int>(player->Position.x) / BlockSize;
+    int currGY = static_cast<int>(player->Position.y) / BlockSize;
+
+    if (currGX != lastPlayerGrid.x || currGY != lastPlayerGrid.y)
+    {
+        lastPlayerGrid = Engine::Point(currGX, currGY);
+        UpdateBFSFromPlayer();
+        GenerateFlowField();
+    }
+
     matchTime += deltaTime;
     for (auto &wave : enemyWaves)
     {
@@ -337,7 +358,7 @@ void PlayScene::OnKeyDown(int keyCode)
     keyStrokes.push_back(keyCode);
     if (keyStrokes.size() > CheatCode.size())
         keyStrokes.pop_front();
-    
+
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
     else if (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsShovel())
@@ -670,6 +691,88 @@ void PlayScene::ReadMap()
     }
 }
 
+void PlayScene::GenerateFlowField()
+{
+    // Initialize with zero vectors
+    flowField = std::vector<std::vector<Engine::Point>>(MapHeight, std::vector<Engine::Point>(MapWidth, Engine::Point(0, 0)));
+
+    for (int y = 0; y < MapHeight; ++y)
+    {
+        for (int x = 0; x < MapWidth; ++x)
+        {
+            if (mapDistance[y][x] == -1)
+                continue;
+
+            int bestDist = mapDistance[y][x];
+            Engine::Point bestDir(0, 0);
+
+            // Check 4 directions
+            for (const Engine::Point &d : directions)
+            {
+                int nx = x + d.x;
+                int ny = y + d.y;
+                if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                    continue;
+                if (mapDistance[ny][nx] == -1)
+                    continue;
+                if (mapDistance[ny][nx] < bestDist)
+                {
+                    bestDist = mapDistance[ny][nx];
+                    bestDir = Engine::Point(d.x, d.y);
+                }
+            }
+
+            if (bestDir.x != 0 || bestDir.y != 0)
+            {
+                float len = std::sqrt(bestDir.x * bestDir.x + bestDir.y * bestDir.y);
+                flowField[y][x] = Engine::Point(bestDir.x / len, bestDir.y / len);
+            }
+        }
+    }
+}
+
+void PlayScene::UpdateBFSFromPlayer()
+{
+    // Reset distance map
+    mapDistance = std::vector<std::vector<int>>(MapHeight, std::vector<int>(MapWidth, -1));
+
+    Player *player = GetPlayer();
+    if (!player)
+        return;
+
+    int px = static_cast<int>(player->Position.x) / BlockSize;
+    int py = static_cast<int>(player->Position.y) / BlockSize;
+
+    if (px < 0 || px >= MapWidth || py < 0 || py >= MapHeight)
+        return;
+
+    std::queue<std::pair<int, int>> q;
+    mapDistance[py][px] = 0;
+    q.emplace(px, py);
+
+    while (!q.empty())
+    {
+        auto [x, y] = q.front();
+        q.pop();
+
+        for (const auto &dir : directions)
+        {
+            int nx = x + dir.x;
+            int ny = y + dir.y;
+
+            if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                continue;
+            if (!IsWalkable(nx, ny))
+                continue;
+            if (mapDistance[ny][nx] != -1)
+                continue;
+
+            mapDistance[ny][nx] = mapDistance[y][x] + 1;
+            q.emplace(nx, ny);
+        }
+    }
+}
+
 bool PlayScene::IsWalkable(int x, int y)
 {
     return mapState[y][x] != TILE_WALL;
@@ -749,24 +852,29 @@ void PlayScene::ConstructUI()
 {
     int w = al_get_display_width(al_get_current_display());
     int h = al_get_display_height(al_get_current_display());
-    struct BtnInfo { int x,y; int price; int btnId; const char* sprite; };
-    std::vector<BtnInfo> btns = {
-        {w/2 - 332 + 6, h - 82, MachineGunTurret::Price,    1, "Structures/turret-1.png"},
-        {w/2 - 332 + 6 + 74, h - 82, LaserTurret::Price,    2, "Structures/turret-2.png"}
+    struct BtnInfo
+    {
+        int x, y;
+        int price;
+        int btnId;
+        const char *sprite;
     };
+    std::vector<BtnInfo> btns = {
+        {w / 2 - 332 + 6, h - 82, MachineGunTurret::Price, 1, "Structures/turret-1.png"},
+        {w / 2 - 332 + 6 + 74, h - 82, LaserTurret::Price, 2, "Structures/turret-2.png"}};
 
-    for (auto &b : btns) {
+    for (auto &b : btns)
+    {
         StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-            Engine::Sprite("Structures/tower-base.png", b.x + 37, b.y + 38, 0,0,0.5,0.5),
-            Engine::Sprite(b.sprite,                    b.x + 37, b.y + 30, 0,0,0.5,0.5),
-            b.x, b.y, b.price
-        );
+                                                   Engine::Sprite("Structures/tower-base.png", b.x + 37, b.y + 38, 0, 0, 0.5, 0.5),
+                                                   Engine::Sprite(b.sprite, b.x + 37, b.y + 30, 0, 0, 0.5, 0.5),
+                                                   b.x, b.y, b.price);
         btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, b.btnId));
         UIGroup->AddNewControlObject(btn);
 
         auto *priceLbl = new Engine::Label(
             std::string("$") + std::to_string(b.price), "pirulen.ttf", 17, b.x + 34, b.y + 62);
-        priceLbl->Anchor = Engine::Point(0.5f, 0.0f);  // center‐horizontally
+        priceLbl->Anchor = Engine::Point(0.5f, 0.0f); // center‐horizontally
         UIGroup->AddNewObject(priceLbl);
     }
 }
@@ -803,7 +911,8 @@ void PlayScene::UIBtnClicked(int id)
     OnMouseMove(Engine::GameEngine::GetInstance().GetMousePosition().x, Engine::GameEngine::GetInstance().GetMousePosition().y);
 }
 
-bool PlayScene::CheckSpaceValid(int x, int y) {
+bool PlayScene::CheckSpaceValid(int x, int y)
+{
     if (x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
         return false;
 

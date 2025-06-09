@@ -22,7 +22,6 @@ SlimeEnemy::SlimeEnemy(float x, float y)
 
 void SlimeEnemy::Update(float deltaTime)
 {
-    // Update animation
     animationTimer += deltaTime;
     if (animationTimer >= animationInterval)
     {
@@ -31,20 +30,16 @@ void SlimeEnemy::Update(float deltaTime)
         bmp = animationFrames[currentFrame];
     }
 
-    // Move toward player
     auto *scene = getPlayScene();
-    auto *target = scene->GetPlayer();
+    int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
+    int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
 
-    if (target)
+    if (gx >= 0 && gx < PlayScene::MapWidth && gy >= 0 && gy < PlayScene::MapHeight)
     {
-        Engine::Point playerPos = target->Position;
-        Engine::Point dir = playerPos - Position;
-        float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
-        if (len != 0)
+        Engine::Point flowDir = scene->flowField[gy][gx];
+        if (flowDir.x != 0 || flowDir.y != 0)
         {
-            dir.x /= len;
-            dir.y /= len;
-            Velocity = dir * speed;
+            Velocity = flowDir * speed;
             float nextX = Position.x + Velocity.x * deltaTime;
             float nextY = Position.y + Velocity.y * deltaTime;
 
@@ -60,7 +55,7 @@ void SlimeEnemy::Update(float deltaTime)
             }
             else
             {
-                Velocity = Engine::Point(0, 0); // Stop movement if not walkable
+                Velocity = Engine::Point(0, 0); // Stop if blocked
             }
         }
     }

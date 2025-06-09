@@ -77,6 +77,7 @@ public:
 
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
+    std::vector<std::vector<Engine::Point>> flowField;
     std::list<std::pair<int, float>> enemyWaveData;
     std::list<int> keyStrokes;
     static Engine::Point GetClientSize();
@@ -92,17 +93,19 @@ public:
     void OnKeyUp(int keyCode) override;
 
     int GetMoney() const;
-    inline Player* GetPlayer() const {
-        if (PlayerGroup->GetObjects().empty()) return nullptr;
-        return dynamic_cast<Player*>(PlayerGroup->GetObjects().front());
+    inline Player *GetPlayer() const
+    {
+        if (PlayerGroup->GetObjects().empty())
+            return nullptr;
+        return dynamic_cast<Player *>(PlayerGroup->GetObjects().front());
     }
-    
+
     void EarnMoney(int money);
     void ReadMap();
     void ReadEnemyWave();
     void ConstructUI();
     void UIBtnClicked(int id);
-    
+
     bool CheckSpaceValid(int x, int y);
     Turret *GetTurretAt(int gx, int gy);
     Engine::Point camera;
@@ -113,5 +116,8 @@ public:
     void LoadEnemyWaves(const std::string &filename);
     void SpawnEnemy(const EnemyWave &wave);
     bool IsWalkable(int x, int y);
+    Engine::Point lastPlayerGrid = Engine::Point(-1, -1);
+    void UpdateBFSFromPlayer();
+    void GenerateFlowField();
 };
 #endif // PLAYSCENE_HPP
