@@ -520,7 +520,14 @@ void PlayScene::ReadMap()
                     if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
                         return false;
                     char c = mapChar[ny][nx];
-                    return c == '1' || c == '3';
+                    return c == '1' || c == '3' || c == '4';
+                };
+
+                auto isDirt = [&](int nx, int ny)
+                {
+                    if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                        return false;
+                    return mapChar[ny][nx] == '0';
                 };
 
                 bool up = isRiverLike(j, i - 1);
@@ -530,8 +537,17 @@ void PlayScene::ReadMap()
 
                 std::string riverPath;
 
+                if (isDirt(j - 1, i) && right && !up && !down) // left is dirt
+                    riverPath = "Tileset/river/image1x8.png";
+                else if (isDirt(j + 1, i) && left && !up && !down) // right is dirt
+                    riverPath = "Tileset/river/image1x16.png";
+                else if (isDirt(j, i - 1) && !left && !right && down) // up is dirt
+                    riverPath = "Tileset/river/image1x1.png";
+                else if (isDirt(j, i + 1) && !left && !right && up) // down is dirt
+                    riverPath = "Tileset/river/image1x3.png";
+
                 // 4-way cross
-                if (up && down && left && right)
+                else if (up && down && left && right)
                     riverPath = "Tileset/river/image1x10.png"; // 4-way
 
                 // 3-way branches
@@ -674,7 +690,35 @@ void PlayScene::ReadMap()
                 TileMapGroup->AddNewObject(new Engine::Image(riverPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             }
+            case '4':
+            {
+                mapState[i][j] = TILE_FLOOR;
 
+                auto isRiverLike = [&](int nx, int ny)
+                {
+                    if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                        return false;
+                    char c = mapChar[ny][nx];
+                    return c == '1' || c == '3';
+                };
+
+                bool left = isRiverLike(j - 1, i);
+                bool right = isRiverLike(j + 1, i);
+                bool up = isRiverLike(j, i - 1);
+                bool down = isRiverLike(j, i + 1);
+
+                std::string bridgePath;
+
+                if (left || right)
+                    bridgePath = "Tileset/bridge/image1x1.png"; // horizontal bridge
+                else if (up || down)
+                    bridgePath = "Tileset/bridge/image1x2.png"; // vertical bridge
+                else
+                    bridgePath = "Tileset/bridge/image1x1.png"; // fallback
+
+                TileMapGroup->AddNewObject(new Engine::Image(bridgePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                break;
+            }
             case 'S':
                 mapState[i][j] = TILE_DIRT;
                 SpawnGridPoint = (MapId == 3) ? Engine::Point(j, i) : Engine::Point(j - 1, i);
