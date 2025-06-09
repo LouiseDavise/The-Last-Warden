@@ -103,6 +103,7 @@ public:
     void ConstructUI();
     void UIBtnClicked(int id);
     
+    bool CheckSpaceValid(int x, int y);
     Turret *GetTurretAt(int gx, int gy);
     Engine::Point camera;
 

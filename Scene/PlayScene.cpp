@@ -55,7 +55,7 @@ void PlayScene::Initialize()
     totalTime = 0;
     matchTime = 0;
     money = 10000;
-    
+
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
     AddNewObject(DebugIndicatorGroup = new Group("DebugGroup"));
@@ -229,8 +229,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 void PlayScene::OnMouseMove(int mx, int my)
 {
     IScene::OnMouseMove(mx, my);
-    const int x = mx / BlockSize;
-    const int y = my / BlockSize;
+    int x = (mx + camera.x) / BlockSize;
+    int y = (my + camera.y) / BlockSize;
 
     if (preview && preview->IsShovel())
     {
@@ -266,7 +266,8 @@ void PlayScene::OnMouseMove(int mx, int my)
 void PlayScene::OnMouseUp(int button, int mx, int my)
 {
     IScene::OnMouseUp(button, mx, my);
-    int gx = mx / BlockSize, gy = my / BlockSize;
+    int gx = (mx + camera.x) / BlockSize;
+    int gy = (my + camera.y) / BlockSize;
     if (preview && preview->IsShovel())
     {
         if (button & 1)
@@ -289,78 +290,54 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
 
     if (!TargetTile->Visible)
         return;
-    const int x = mx / BlockSize;
-    const int y = my / BlockSize;
-    // if (button & 1)
-    // {
-    //     if (mapState[y][x] != TILE_OCCUPIED)
-    //     {
-    //         if (!preview)
-    //             return;
-    //         // Check if valid.
-    //         if (!CheckSpaceValid(x, y))
-    //         {
-    //             Engine::Sprite *sprite;
-    //             GroundEffectGroup->AddNewObject(sprite = new DirtyEffect("play/target-invalid.png", 1, x * BlockSize + BlockSize / 2, y * BlockSize + BlockSize / 2));
-    //             sprite->Rotation = 0;
-    //             return;
-    //         }
-    //         // Purchase.
-    //         EarnMoney(-preview->GetPrice());
-    //         // Remove Preview.
-    //         preview->GetObjectIterator()->first = false;
-    //         UIGroup->RemoveObject(preview->GetObjectIterator());
-    //         // Construct real turret.
-    //         preview->Position.x = x * BlockSize + BlockSize / 2;
-    //         preview->Position.y = y * BlockSize + BlockSize / 2;
-    //         preview->Enabled = true;
-    //         preview->Preview = false;
-    //         preview->Tint = al_map_rgba(255, 255, 255, 255);
-    //         TowerGroup->AddNewObject(preview);
-    //         // To keep responding when paused.
-    //         preview->Update(0);
-    //         // Remove Preview.
-    //         preview = nullptr;
+    int x = (mx + camera.x) / BlockSize;
+    int y = (my + camera.y) / BlockSize;
+    if (button & 1)
+    {
+        if (mapState[y][x] != TILE_OCCUPIED)
+        {
+            if (!preview)
+                return;
+            // Check if valid.
+            if (!CheckSpaceValid(x, y))
+            {
+                Engine::Sprite *sprite;
+                GroundEffectGroup->AddNewObject(sprite = new DirtyEffect("UI/target-invalid.png", 1, x * BlockSize + BlockSize / 2, y * BlockSize + BlockSize / 2));
+                sprite->Rotation = 0;
+                return;
+            }
+            // Purchase.
+            EarnMoney(-preview->GetPrice());
+            // Remove Preview.
+            preview->GetObjectIterator()->first = false;
+            UIGroup->RemoveObject(preview->GetObjectIterator());
+            // Construct real turret.
+            preview->Position.x = x * BlockSize + BlockSize / 2;
+            preview->Position.y = y * BlockSize + BlockSize / 2;
+            preview->Enabled = true;
+            preview->Preview = false;
+            preview->Tint = al_map_rgba(255, 255, 255, 255);
+            TowerGroup->AddNewObject(preview);
+            // To keep responding when paused.
+            preview->Update(0);
+            // Remove Preview.
+            preview = nullptr;
 
-    //         mapState[y][x] = TILE_OCCUPIED;
-    //         OnMouseMove(mx, my);
-    //     }
-    // }
+            mapState[y][x] = TILE_OCCUPIED;
+            OnMouseMove(mx, my);
+        }
+    }
 }
 void PlayScene::OnKeyDown(int keyCode)
 {
     Player *player = GetPlayer();
     IScene::OnKeyDown(keyCode);
     player->OnKeyDown(keyCode);
-    if (keyCode == ALLEGRO_KEY_TAB)
-    {
-        DebugMode = !DebugMode;
-    }
-    else
-    {
-        keyStrokes.push_back(keyCode);
-        if (keyStrokes.size() > CheatCode.size())
-            keyStrokes.pop_front();
-    }
 
-    switch (keyCode)
-    {
-    case ALLEGRO_KEY_Q:
-        UIBtnClicked(1);
-        break;
-    case ALLEGRO_KEY_W:
-        UIBtnClicked(2);
-        break;
-    case ALLEGRO_KEY_E:
-        UIBtnClicked(3);
-        break;
-    case ALLEGRO_KEY_SPACE:
-        UIBtnClicked(0);
-        break;
-    default:
-        break;
-    }
-
+    keyStrokes.push_back(keyCode);
+    if (keyStrokes.size() > CheatCode.size())
+        keyStrokes.pop_front();
+    
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
     else if (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsShovel())
@@ -824,6 +801,20 @@ void PlayScene::UIBtnClicked(int id)
     preview->Preview = true;
     UIGroup->AddNewObject(preview);
     OnMouseMove(Engine::GameEngine::GetInstance().GetMousePosition().x, Engine::GameEngine::GetInstance().GetMousePosition().y);
+}
+
+bool PlayScene::CheckSpaceValid(int x, int y) {
+    if (x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
+        return false;
+
+    if (mapState[y][x] == TILE_OCCUPIED || mapState[y][x] == TILE_WALL)
+        return false;
+
+    // Only allow placement on TILE_DIRT or TILE_FLOOR
+    if (mapState[y][x] != TILE_DIRT && mapState[y][x] != TILE_FLOOR)
+        return false;
+
+    return true;
 }
 
 Turret *PlayScene::GetTurretAt(int gx, int gy)
