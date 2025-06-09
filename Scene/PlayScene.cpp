@@ -396,15 +396,12 @@ void PlayScene::ReadMap()
     std::uniform_int_distribution<int> baseDist(1, 9);
     std::uniform_int_distribution<int> treeDist(1, 12);
 
-<<<<<<< Updated upstream
     std::uniform_real_distribution<float> prob(0.0f, 1.0f);
     float treeChance = 0.1f;
 
     int dx[4] = {0, -1, 0, 1}; // up, left, down, right
     int dy[4] = {-1, 0, 1, 0};
 
-=======
->>>>>>> Stashed changes
     std::string filename = std::string("Resource/map1.txt");
     std::ifstream fin(filename);
     if (!fin.is_open())
@@ -543,7 +540,6 @@ void PlayScene::ReadMap()
 
                 TileMapGroup->AddNewObject(new Engine::Image(riverPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
-<<<<<<< Updated upstream
             }
 
             case '2':
@@ -681,18 +677,7 @@ void PlayScene::ReadMap()
                 TileMapGroup->AddNewObject(new Engine::Image(bridgePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
             }
-            case 'S':
-                mapState[i][j] = TILE_DIRT;
-                SpawnGridPoint = (MapId == 3) ? Engine::Point(j, i) : Engine::Point(j - 1, i);
-                break;
 
-            case 'E':
-                mapState[i][j] = TILE_DIRT;
-                EndGridPoint = Engine::Point(j, i);
-                break;
-
-=======
->>>>>>> Stashed changes
             default:
                 mapState[i][j] = TILE_DIRT;
                 break;
