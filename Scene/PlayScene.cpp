@@ -48,6 +48,7 @@ Engine::Point PlayScene::GetClientSize()
 {
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
+
 void PlayScene::Initialize()
 {
     mapState.clear();
@@ -434,9 +435,14 @@ void PlayScene::EarnMoney(int money)
 void PlayScene::ReadMap()
 {
     static std::default_random_engine rng((std::random_device())());
-    std::uniform_int_distribution<int> dist(1, 9);
     std::uniform_int_distribution<int> baseDist(1, 9);
     std::uniform_int_distribution<int> treeDist(1, 12);
+
+    std::uniform_real_distribution<float> prob(0.0f, 1.0f);
+    float treeChance = 0.1f;
+
+    int dx[4] = {0, -1, 0, 1}; // up, left, down, right
+    int dy[4] = {-1, 0, 1, 0};
 
     std::string filename = std::string("Resource/map") + std::to_string(MapId) + ".txt";
     std::ifstream fin(filename);
@@ -446,49 +452,175 @@ void PlayScene::ReadMap()
         return;
     }
 
-    // Store map in 2d array.
-    mapState = std::vector<std::vector<TileType>>(MapHeight, std::vector<TileType>(MapWidth));
-    for (int i = 0; i < MapHeight; i++)
+    std::vector<std::string> mapChar(MapHeight);
+    for (int i = 0; i < MapHeight; ++i)
     {
-        for (int j = 0; j < MapWidth; j++)
-        {
-            char tileChar;
-            fin >> tileChar;
+        std::getline(fin, mapChar[i]);
+    }
 
-            // Always draw base tile
-            int baseIdx = dist(rng);
+    auto isSameRiver = [&](int cx, int cy, int nx, int ny)
+    {
+        if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+            return false;
+        return mapChar[cy][cx] == mapChar[ny][nx];
+    };
+
+    // For center tile detection (non-edge)
+    auto isRiverEdge = [&](int x, int y)
+    {
+        if (mapChar[y][x] != '2' && mapChar[y][x] != '3')
+            return false;
+        for (int d = 0; d < 4; ++d)
+        {
+            int nx = x + dx[d];
+            int ny = y + dy[d];
+            if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                return true;
+            if (mapChar[ny][nx] != mapChar[y][x])
+                return true;
+        }
+        return false;
+    };
+
+    // Prepare map state
+    mapState = std::vector<std::vector<TileType>>(MapHeight, std::vector<TileType>(MapWidth));
+
+    for (int i = 0; i < MapHeight; ++i)
+    {
+        for (int j = 0; j < MapWidth; ++j)
+        {
+            char tileChar = mapChar[i][j];
+
+            // Base tile
+            int baseIdx = baseDist(rng);
             std::string basePath = "Tileset/base/image1x" + std::to_string(baseIdx) + ".png";
             TileMapGroup->AddNewObject(new Engine::Image(basePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
 
-            // Now process logic tile
             switch (tileChar)
             {
             case '0':
                 mapState[i][j] = TILE_DIRT;
                 break;
-            case '1':
-                mapState[i][j] = TILE_DIRT;
+
+                // case '1':
+                // {
+                //     mapState[i][j] = TILE_DIRT;
+                //     int treeIdx = treeDist(rng);
+                //     std::string treePath = "Tileset/tree/image1x" + std::to_string(treeIdx) + ".png";
+                //     TileMapGroup->AddNewObject(new Engine::Image(treePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                //     break;
+                // }
+
+            case '2':
+            {
+                mapState[i][j] = TILE_WALL;
+
+                auto isSameWall = [&](int cx, int cy, int nx, int ny)
                 {
-                    int treeIdx = treeDist(rng);
-                    std::string treePath = "Tileset/tree/image1x" + std::to_string(treeIdx) + ".png";
-                    TileMapGroup->AddNewObject(new Engine::Image(treePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
-                }
+                    if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                        return false;
+                    return mapChar[cy][cx] == '2';
+                };
+
+                bool hasUp = isSameWall(j, i, j, i - 1);
+                bool hasDown = isSameWall(j, i, j, i + 1);
+                bool hasLeft = isSameWall(j, i, j - 1, i);
+                bool hasRight = isSameWall(j, i, j + 1, i);
+
+                std::string wallPath;
+
+                if (!hasUp && !hasLeft && hasDown && hasRight)
+                    wallPath = "Tileset/wall/image1x1.png"; // top-left
+                else if (!hasUp && !hasRight && hasDown && hasLeft)
+                    wallPath = "Tileset/wall/image1x2.png"; // top-right
+                else if (!hasDown && !hasLeft && hasUp && hasRight)
+                    wallPath = "Tileset/wall/image1x3.png"; // bottom-left
+                else if (!hasDown && !hasRight && hasUp && hasLeft)
+                    wallPath = "Tileset/wall/image1x4.png"; // bottom-right
+
+                // Edges
+                else if (!hasUp)
+                    wallPath = "Tileset/wall/image1x5.png"; // top edge
+                else if (!hasDown)
+                    wallPath = "Tileset/wall/image1x6.png"; // bottom edge
+                else if (!hasLeft)
+                    wallPath = "Tileset/wall/image1x7.png"; // left edge
+                else if (!hasRight)
+                    wallPath = "Tileset/wall/image1x8.png"; // right edge
+                else
+                    wallPath = "Tileset/wall/image1x7.png"; // generic wall
+
+                TileMapGroup->AddNewObject(new Engine::Image(wallPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
                 break;
+            }
+
+            case '3':
+            {
+                mapState[i][j] = TILE_WALL;
+
+                // Neighbor analysis
+                bool up = isSameRiver(j, i, j, i - 1);
+                bool down = isSameRiver(j, i, j, i + 1);
+                bool left = isSameRiver(j, i, j - 1, i);
+                bool right = isSameRiver(j, i, j + 1, i);
+
+                std::string riverPath;
+
+                // Edge tiles
+                if (isRiverEdge(j, i))
+                {
+                    if (!up && !left && down && right)
+                        riverPath = "Tileset/river/image1x5.png"; // top-left
+                    else if (!up && !right && down && left)
+                        riverPath = "Tileset/river/image1x13.png"; // top-right
+                    else if (!down && !left && up && right)
+                        riverPath = "Tileset/river/image1x17.png"; // bottom-left
+                    else if (!down && !right && up && left)
+                        riverPath = "Tileset/river/image1x15.png"; // bottom-right
+                    else if (left && right && !up && !down)
+                        riverPath = "Tileset/river/image1x12.png"; // horizontal
+                    else if (up && down && !left && !right)
+                        riverPath = "Tileset/river/image1x2.png"; // vertical
+                    else
+                        riverPath = "Tileset/river/image1x12.png"; // fallback
+                }
+                else
+                {
+                    // Center (non-edge) fill
+                    riverPath = "Tileset/river/image1x8.png"; // default river fill
+                }
+
+                TileMapGroup->AddNewObject(new Engine::Image(riverPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                break;
+            }
+
             case 'S':
                 mapState[i][j] = TILE_DIRT;
                 SpawnGridPoint = (MapId == 3) ? Engine::Point(j, i) : Engine::Point(j - 1, i);
                 break;
+
             case 'E':
                 mapState[i][j] = TILE_DIRT;
                 EndGridPoint = Engine::Point(j, i);
                 break;
+
             default:
-                // You can add more cases like '2', '3' here if needed
                 mapState[i][j] = TILE_DIRT;
                 break;
             }
+            if (tileChar == '0' && prob(rng) < treeChance)
+            {
+                int treeIdx = treeDist(rng);
+                std::string treePath = "Tileset/tree/image1x" + std::to_string(treeIdx) + ".png";
+                TileMapGroup->AddNewObject(new Engine::Image(treePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+            }
         }
     }
+}
+
+bool PlayScene::IsWalkable(int x, int y)
+{
+    return mapState[y][x] != TILE_WALL;
 }
 
 void PlayScene::ReadEnemyWave()

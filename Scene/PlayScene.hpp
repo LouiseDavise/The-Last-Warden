@@ -35,6 +35,7 @@ private:
         TILE_DIRT,
         TILE_FLOOR,
         TILE_OCCUPIED,
+        TILE_WALL
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
@@ -107,5 +108,6 @@ public:
     float totalTime;
     void LoadEnemyWaves(const std::string &filename);
     void SpawnEnemy(const EnemyWave &wave);
+    bool IsWalkable(int x, int y);
 };
 #endif // PLAYSCENE_HPP

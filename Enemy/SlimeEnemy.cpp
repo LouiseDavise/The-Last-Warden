@@ -33,9 +33,10 @@ void SlimeEnemy::Update(float deltaTime)
 
     // Move toward player
     auto *scene = getPlayScene();
-    auto* target = scene->GetPlayer();
+    auto *target = scene->GetPlayer();
 
-    if(target){
+    if (target)
+    {
         Engine::Point playerPos = target->Position;
         Engine::Point dir = playerPos - Position;
         float len = std::sqrt(dir.x * dir.x + dir.y * dir.y);
@@ -44,8 +45,23 @@ void SlimeEnemy::Update(float deltaTime)
             dir.x /= len;
             dir.y /= len;
             Velocity = dir * speed;
-            Position.x += Velocity.x * deltaTime;
-            Position.y += Velocity.y * deltaTime;
+            float nextX = Position.x + Velocity.x * deltaTime;
+            float nextY = Position.y + Velocity.y * deltaTime;
+
+            int tileX = static_cast<int>(nextX) / PlayScene::BlockSize;
+            int tileY = static_cast<int>(nextY) / PlayScene::BlockSize;
+
+            if (tileX >= 0 && tileX < PlayScene::MapWidth &&
+                tileY >= 0 && tileY < PlayScene::MapHeight &&
+                scene->IsWalkable(tileX, tileY))
+            {
+                Position.x = nextX;
+                Position.y = nextY;
+            }
+            else
+            {
+                Velocity = Engine::Point(0, 0); // Stop movement if not walkable
+            }
         }
     }
 
@@ -57,8 +73,10 @@ void SlimeEnemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
     int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
     int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
 
-    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight) return;
-    if (mapDistance[gy][gx] == -1) return;
+    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
+        return;
+    if (mapDistance[gy][gx] == -1)
+        return;
 
     Enemy::UpdatePath(mapDistance); // Only call if valid
 }
