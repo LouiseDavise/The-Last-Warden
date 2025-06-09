@@ -54,7 +54,8 @@ void PlayScene::Initialize()
     SpeedMult = 1;
     totalTime = 0;
     matchTime = 0;
-
+    money = 10000;
+    
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
     AddNewObject(DebugIndicatorGroup = new Group("DebugGroup"));
@@ -779,15 +780,15 @@ void PlayScene::ConstructUI()
 
     for (auto &b : btns) {
         StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-            Engine::Sprite("Structures/tower-base.png", b.x, b.y, 0,0,0,0),
-            Engine::Sprite(b.sprite,                    b.x, b.y - 8, 0,0,0,0),
+            Engine::Sprite("Structures/tower-base.png", b.x + 37, b.y + 38, 0,0,0.5,0.5),
+            Engine::Sprite(b.sprite,                    b.x + 37, b.y + 30, 0,0,0.5,0.5),
             b.x, b.y, b.price
         );
         btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, b.btnId));
         UIGroup->AddNewControlObject(btn);
 
         auto *priceLbl = new Engine::Label(
-            std::string("$") + std::to_string(b.price), "pirulen.ttf", 20, b.x + 30, b.y + 63);
+            std::string("$") + std::to_string(b.price), "pirulen.ttf", 17, b.x + 34, b.y + 62);
         priceLbl->Anchor = Engine::Point(0.5f, 0.0f);  // center‐horizontally
         UIGroup->AddNewObject(priceLbl);
     }

@@ -11,7 +11,7 @@
 
 const int MachineGunTurret::Price = 50;
 MachineGunTurret::MachineGunTurret(float x, float y)
-    : Turret("play/tower-base.png", "play/turret-1.png", x, y, 200, Price, 0.25) {
+    : Turret("Structures/tower-base.png", "Structures/turret-1.png", x, y, 200, Price, 0.25) {
     // Move center downward, since we the turret head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }
