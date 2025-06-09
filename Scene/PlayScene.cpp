@@ -511,6 +511,63 @@ void PlayScene::ReadMap()
                 //     break;
                 // }
 
+            case '1':
+            {
+                mapState[i][j] = TILE_WALL;
+
+                auto isRiverLike = [&](int nx, int ny)
+                {
+                    if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                        return false;
+                    char c = mapChar[ny][nx];
+                    return c == '1' || c == '3';
+                };
+
+                bool up = isRiverLike(j, i - 1);
+                bool down = isRiverLike(j, i + 1);
+                bool left = isRiverLike(j - 1, i);
+                bool right = isRiverLike(j + 1, i);
+
+                std::string riverPath;
+
+                // 4-way cross
+                if (up && down && left && right)
+                    riverPath = "Tileset/river/image1x10.png"; // 4-way
+
+                // 3-way branches
+                else if (up && left && down)
+                    riverPath = "Tileset/river/image1x14.png"; // top + left + down
+                else if (up && left && right)
+                    riverPath = "Tileset/river/image1x11.png"; // top + left + right
+                else if (up && right && down)
+                    riverPath = "Tileset/river/image1x6.png"; // top + right + down
+                else if (left && right && down)
+                    riverPath = "Tileset/river/image1x9.png"; // left + right + down
+
+                // Corners
+                else if (left && down)
+                    riverPath = "Tileset/river/image1x13.png"; // left + down
+                else if (right && down)
+                    riverPath = "Tileset/river/image1x5.png"; // right + down
+                else if (up && right)
+                    riverPath = "Tileset/river/image1x17.png"; // top + right
+                else if (up && left)
+                    riverPath = "Tileset/river/image1x15.png"; // top + left
+
+                // Straight paths
+                else if (left && right && !up && !down)
+                    riverPath = "Tileset/river/image1x12.png"; // horizontal
+                else if (up && down && !left && !right)
+                    riverPath = "Tileset/river/image1x2.png"; // vertical
+
+                // Fallback
+                else
+                    riverPath = "Tileset/river/image1x12.png"; // center / fill
+
+                TileMapGroup->AddNewObject(new Engine::Image(riverPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
+                break;
+            }
+
             case '2':
             {
                 mapState[i][j] = TILE_WALL;
@@ -558,18 +615,38 @@ void PlayScene::ReadMap()
             {
                 mapState[i][j] = TILE_WALL;
 
-                // Neighbor analysis
-                bool up = isSameRiver(j, i, j, i - 1);
-                bool down = isSameRiver(j, i, j, i + 1);
-                bool left = isSameRiver(j, i, j - 1, i);
-                bool right = isSameRiver(j, i, j + 1, i);
+                auto isRiverLike = [&](int nx, int ny)
+                {
+                    if (nx < 0 || nx >= MapWidth || ny < 0 || ny >= MapHeight)
+                        return false;
+                    char c = mapChar[ny][nx];
+                    return c == '1' || c == '3';
+                };
+
+                bool up = isRiverLike(j, i - 1);
+                bool down = isRiverLike(j, i + 1);
+                bool left = isRiverLike(j - 1, i);
+                bool right = isRiverLike(j + 1, i);
 
                 std::string riverPath;
 
-                // Edge tiles
                 if (isRiverEdge(j, i))
                 {
-                    if (!up && !left && down && right)
+                    // 4-way cross
+                    if (up && down && left && right)
+                        riverPath = "Tileset/river/image1x10.png";
+                    // 3-way branches
+                    else if (up && left && down)
+                        riverPath = "Tileset/river/image1x14.png";
+                    else if (up && left && right)
+                        riverPath = "Tileset/river/image1x11.png";
+                    else if (up && right && down)
+                        riverPath = "Tileset/river/image1x6.png";
+                    else if (left && right && down)
+                        riverPath = "Tileset/river/image1x9.png";
+
+                    // Corners
+                    else if (!up && !left && down && right)
                         riverPath = "Tileset/river/image1x5.png"; // top-left
                     else if (!up && !right && down && left)
                         riverPath = "Tileset/river/image1x13.png"; // top-right
@@ -577,17 +654,21 @@ void PlayScene::ReadMap()
                         riverPath = "Tileset/river/image1x17.png"; // bottom-left
                     else if (!down && !right && up && left)
                         riverPath = "Tileset/river/image1x15.png"; // bottom-right
+
+                    // Straight lines
                     else if (left && right && !up && !down)
                         riverPath = "Tileset/river/image1x12.png"; // horizontal
                     else if (up && down && !left && !right)
                         riverPath = "Tileset/river/image1x2.png"; // vertical
+
+                    // Fallback
                     else
-                        riverPath = "Tileset/river/image1x12.png"; // fallback
+                        riverPath = "Tileset/river/image1x12.png";
                 }
                 else
                 {
-                    // Center (non-edge) fill
-                    riverPath = "Tileset/river/image1x8.png"; // default river fill
+                    // Center tile fill
+                    riverPath = "Tileset/river/image1x8.png";
                 }
 
                 TileMapGroup->AddNewObject(new Engine::Image(riverPath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
