@@ -24,33 +24,48 @@ PlayScene *Enemy::getPlayScene(){
 Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), damage(damage), money(money)
 {
     CollisionRadius = radius;
-    animationTimer = 0;
-    animationInterval = 0.12f;
-    currentFrame = 0;
 }
 
 void Enemy::Hit(float damage)
 {
     hp -= damage;
-    if (hp <= 0)
+    if (hp <= 0 && state != State::Dying)
     {
+        state = State::Dying;
+        currentFrame = 0;
+        runTimer = 0;
+        deathTimer = 0;
+        Velocity = Engine::Point(0, 0);  // Stop movement
         for (auto &it : lockedTowers)
             it->Target = nullptr;
         for (auto &it : lockedProjectiles)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
-        getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
         AudioHelper::PlayAudio("explosion.wav");
     }
 }
 
 
 void Enemy::Update(float deltaTime)
-{
-    animationTimer += deltaTime;
-    if (animationTimer >= animationInterval)
+{   
+    if (state == State::Dying) {
+        deathTimer += deltaTime;
+        if (deathTimer >= deathInterval && deathFrames.size() > 0) {
+            deathTimer = 0;
+            currentFrame++;
+            if (currentFrame >= deathFrames.size()) {
+                getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+                return;
+            }
+        }
+        bmp = deathFrames[currentFrame];  // Set death frame
+        return;
+    }
+
+    runTimer += deltaTime;
+    if (runTimer >= runInterval)
     {
-        animationTimer = 0;
+        runTimer = 0;
         currentFrame = (currentFrame + 1) % runFrames.size();
         bmp = runFrames[currentFrame];
     }
@@ -175,7 +190,11 @@ void Enemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
 }
 
 void Enemy::Draw() const {
-    ALLEGRO_BITMAP* frame = runFrames[currentFrame].get();
+    ALLEGRO_BITMAP* frame;
+    switch(state){
+        case State::Run : frame = runFrames[currentFrame].get(); break;
+        case State::Dying : frame = deathFrames[currentFrame].get(); break;
+    }
     float cx = Anchor.x * al_get_bitmap_width(frame);
     float cy = Anchor.y * al_get_bitmap_height(frame);
     float scaleX = Size.x / al_get_bitmap_width(frame);

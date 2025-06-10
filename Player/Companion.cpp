@@ -1,4 +1,4 @@
-#include "SupportPlayer.hpp"
+#include "Companion.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Weapon/SpearWeapon.hpp"
 #include "Enemy/Enemy.hpp"
@@ -9,7 +9,7 @@
 
 using Res = Engine::Resources;
 
-SupportPlayer::SupportPlayer(float x, float y)
+Companion::Companion(float x, float y)
     : Player(x, y, 100.0f, 190.0f, "Characters/Support/image1x1.png", "image", 10, 10.0f), damage(1)
 {
     for (int i = 1; i <= 4; ++i)
@@ -23,7 +23,7 @@ SupportPlayer::SupportPlayer(float x, float y)
     currentBitmap = idleFrames[0];
 }
 
-void SupportPlayer::Update(float dt)
+void Companion::Update(float dt)
 {
     if (IsDead())
         return;
@@ -118,13 +118,13 @@ void SupportPlayer::Update(float dt)
     Sprite::Update(dt);
 }
 
-Engine::Point SupportPlayer::PositionWeapon() const
+Engine::Point Companion::PositionWeapon() const
 {
     float offX = FacingRight() ? 2 : -2;
     return Engine::Point{Position.x + offX, Position.y + 7};
 }
 
-void SupportPlayer::OnKeyDown(int k)
+void Companion::OnKeyDown(int k)
 {
     if (k == ALLEGRO_KEY_UP)
         keyUp = true;
@@ -139,7 +139,7 @@ void SupportPlayer::OnKeyDown(int k)
     {
         for (auto *obj : scene->PlayerGroup->GetObjects())
         {
-            if (SupportPlayer *sp = dynamic_cast<SupportPlayer *>(obj))
+            if (Companion *sp = dynamic_cast<Companion *>(obj))
             {
                 sp->TeleportToPlayer();
             }
@@ -147,7 +147,7 @@ void SupportPlayer::OnKeyDown(int k)
     }
 }
 
-void SupportPlayer::OnKeyUp(int k)
+void Companion::OnKeyUp(int k)
 {
     if (k == ALLEGRO_KEY_UP)
         keyUp = false;
@@ -159,12 +159,12 @@ void SupportPlayer::OnKeyUp(int k)
         keyRight = false;
 }
 
-float SupportPlayer::GetRadius() const
+float Companion::GetRadius() const
 {
     return 32.0f;
 }
 
-void SupportPlayer::TeleportToPlayer()
+void Companion::TeleportToPlayer()
 {
     auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!scene)

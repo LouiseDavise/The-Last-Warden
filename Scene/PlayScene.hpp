@@ -9,7 +9,7 @@
 #include "Player/Player.hpp"
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
-#include "Player/SupportPlayer.hpp"
+#include "Player/Companion.hpp"
 
 struct EnemyWave
 {
@@ -98,7 +98,7 @@ public:
     {
         if (PlayerGroup->GetObjects().empty())
             return nullptr;
-        return dynamic_cast<Player *>(PlayerGroup->GetObjects().front());
+        return dynamic_cast<Player *>(PlayerGroup->GetObjects().back());
     }
 
     void EarnMoney(int money);
@@ -128,6 +128,6 @@ public:
 
     bool isTwoPlayer = false;
     void SetTwoPlayerMode(bool twoP);
-    SupportPlayer* supportPlayer = nullptr;
+    Companion* companion = nullptr;
 };
 #endif // PLAYSCENE_HPP

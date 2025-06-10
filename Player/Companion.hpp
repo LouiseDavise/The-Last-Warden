@@ -2,10 +2,10 @@
 #include "Player.hpp"
 #include "Weapon/SpearWeapon.hpp"
 
-class SupportPlayer : public Player
+class Companion : public Player
 {
 public:
-    explicit SupportPlayer(float x, float y);
+    explicit Companion(float x, float y);
     void Update(float dt) override;
     Engine::Point PositionWeapon() const override;
     void OnKeyDown(int keyCode);

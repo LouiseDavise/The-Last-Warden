@@ -28,8 +28,10 @@ protected:
 
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;
-    float animationTimer;
-    float animationInterval;
+    float runTimer;
+    float runInterval;
+    float deathTimer;
+    float deathInterval;
     int currentFrame;
     bool faceRight;
 

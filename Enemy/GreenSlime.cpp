@@ -19,11 +19,16 @@ GreenSlime::GreenSlime(float x, float y)
     for (int i = 1; i <= 10; ++i)
     {
         std::string path = "Enemies/GreenSlime/Death/image" + std::to_string(i) + "x1.png";
-        runFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+        deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
     // Initial image
     bmp = runFrames[0];
     Velocity = Engine::Point(0, 0);
     state = State::Run;
+    runTimer = 0;
+    runInterval = 0.12f;
+    deathTimer = 0;
+    deathInterval = 0.12f;
+    currentFrame = 0;
 }

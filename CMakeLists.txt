@@ -17,8 +17,8 @@ add_executable(The_Last_Warden
     Player/Player.hpp 
     Player/Caveman.cpp 
     Player/Caveman.hpp 
-    Player/SupportPlayer.cpp
-    Player/SupportPlayer.hpp
+    Player/Companion.cpp
+    Player/Companion.hpp
 
     Weapon/Weapon.cpp 
     Weapon/Weapon.hpp 

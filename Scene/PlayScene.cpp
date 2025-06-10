@@ -35,7 +35,7 @@
 #include "Enemy/Enemy.hpp"
 #include "Enemy/GreenSlime.hpp"
 #include "Enemy/ToxicSlime.hpp"
-#include "Player/SupportPlayer.hpp"
+#include "Player/Companion.hpp"
 
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = {
@@ -102,14 +102,14 @@ void PlayScene::Initialize()
     float centerX = MapWidth * BlockSize / 2.0f;
     float centerY = ((MapHeight + 3) * BlockSize / 2.0f);
 
-    Player *player = new Caveman(centerX, centerY);
-    PlayerGroup->AddNewObject(player);
-
     if (isTwoPlayer)
     {
-        supportPlayer = new SupportPlayer(centerX + 64, centerY);
-        PlayerGroup->AddNewObject(supportPlayer);
+        companion = new Companion(centerX + 64, centerY);
+        PlayerGroup->AddNewObject(companion);
     }
+
+    Player *player = new Caveman(centerX, centerY);
+    PlayerGroup->AddNewObject(player);
 
     // Calculate distances from player
     // Use BFS to fill mapDistance (already in your code, assumed)
@@ -365,8 +365,8 @@ void PlayScene::OnKeyDown(int keyCode)
         }
     }
 
-    if (supportPlayer)
-        supportPlayer->OnKeyDown(keyCode);
+    if (companion)
+        companion->OnKeyDown(keyCode);
 
     if (keyCode == ALLEGRO_KEY_TAB)
     {
@@ -404,8 +404,8 @@ void PlayScene::OnKeyUp(int keyCode)
             p->OnKeyUp(keyCode);
         }
     }
-    if (supportPlayer)
-        supportPlayer->OnKeyUp(keyCode);
+    if (companion)
+        companion->OnKeyUp(keyCode);
 }
 
 int PlayScene::GetMoney() const { return money; }
