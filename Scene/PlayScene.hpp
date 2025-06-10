@@ -120,5 +120,7 @@ public:
     void UpdateBFSFromPlayer();
     void GenerateFlowField();
     bool validLine(Engine::Point from, Engine::Point to);
+    std::string mapFile = "Resource/map1.txt";
+    void SetMapFile(const std::string &filename);
 };
 #endif // PLAYSCENE_HPP

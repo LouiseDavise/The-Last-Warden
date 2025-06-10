@@ -13,7 +13,8 @@
 #include "UI/Component/Label.hpp"
 #include "UI/Component/Slider.hpp"
 
-void ModeSelectScene::Initialize() {
+void ModeSelectScene::Initialize()
+{
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
@@ -39,19 +40,36 @@ void ModeSelectScene::Initialize() {
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::BackOnClick, this, 2));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
-
 }
-void ModeSelectScene::Terminate() {
+void ModeSelectScene::Terminate()
+{
     AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
-void ModeSelectScene::BackOnClick(int stage) {
+void ModeSelectScene::BackOnClick(int stage)
+{
     Engine::GameEngine::GetInstance().ChangeScene("start");
 }
-void ModeSelectScene::PlayOnClick(int stage) {
-    Engine::GameEngine::GetInstance().ChangeScene("play");
+void ModeSelectScene::PlayOnClick(int stage)
+{
+    auto &engine = Engine::GameEngine::GetInstance();
+    PlayScene *scene = dynamic_cast<PlayScene *>(engine.GetScene("play"));
+    if (scene)
+    {
+        if (stage == 1)
+        {
+            scene->SetMapFile("Resource/map1.txt");
+        }
+        else if (stage == 2)
+        {
+            scene->SetMapFile("Resource/map2.txt");
+        }
+    }
+    engine.ChangeScene("play");
 }
-void ModeSelectScene::ScoreboardOnClick() {
+
+void ModeSelectScene::ScoreboardOnClick()
+{
     Engine::GameEngine::GetInstance().ChangeScene("scoreboard-scene");
 }

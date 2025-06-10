@@ -402,6 +402,11 @@ void PlayScene::EarnMoney(int money)
     this->money += money;
 }
 
+void PlayScene::SetMapFile(const std::string &filename)
+{
+    mapFile = filename;
+}
+
 void PlayScene::ReadMap()
 {
     static std::default_random_engine rng((std::random_device())());
@@ -414,7 +419,7 @@ void PlayScene::ReadMap()
     int dx[4] = {0, -1, 0, 1}; // up, left, down, right
     int dy[4] = {-1, 0, 1, 0};
 
-    std::string filename = std::string("Resource/map1.txt");
+    std::string filename = mapFile;
     std::ifstream fin(filename);
     if (!fin.is_open())
     {
@@ -704,7 +709,8 @@ void PlayScene::ReadMap()
     }
 }
 
-bool PlayScene::validLine(Engine::Point from, Engine::Point to) {
+bool PlayScene::validLine(Engine::Point from, Engine::Point to)
+{
     int x0 = from.x / BlockSize;
     int y0 = from.y / BlockSize;
     int x1 = to.x / BlockSize;
@@ -716,13 +722,24 @@ bool PlayScene::validLine(Engine::Point from, Engine::Point to) {
     int sy = y0 < y1 ? 1 : -1;
     int err = dx - dy;
 
-    while (true) {
-        if (!IsWalkable(x0, y0)) return false;
-        if (x0 == x1 && y0 == y1) break;
+    while (true)
+    {
+        if (!IsWalkable(x0, y0))
+            return false;
+        if (x0 == x1 && y0 == y1)
+            break;
 
         int e2 = 2 * err;
-        if (e2 > -dy) { err -= dy; x0 += sx; }
-        if (e2 < dx)  { err += dx; y0 += sy; }
+        if (e2 > -dy)
+        {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx)
+        {
+            err += dx;
+            y0 += sy;
+        }
     }
 
     return true;
@@ -902,10 +919,9 @@ void PlayScene::ConstructUI()
         const char *sprite;
     };
     std::vector<BtnInfo> btns = {
-        {w / 2 - 332 + 6 + 74*0, h - 82, BowTower::Price, 1, "Structures/BowTower.png"},
-        {w / 2 - 332 + 6 + 74*1, h - 82, MachineGunTurret::Price, 2, "Structures/turret-1.png"},
-        {w / 2 - 332 + 6 + 74*2, h - 82, LaserTurret::Price, 3, "Structures/turret-2.png"}
-    };
+        {w / 2 - 332 + 6 + 74 * 0, h - 82, BowTower::Price, 1, "Structures/BowTower.png"},
+        {w / 2 - 332 + 6 + 74 * 1, h - 82, MachineGunTurret::Price, 2, "Structures/turret-1.png"},
+        {w / 2 - 332 + 6 + 74 * 2, h - 82, LaserTurret::Price, 3, "Structures/turret-2.png"}};
 
     for (auto &b : btns)
     {
