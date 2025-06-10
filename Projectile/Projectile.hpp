@@ -1,5 +1,5 @@
-#ifndef BULLET_HPP
-#define BULLET_HPP
+#ifndef Projectile_HPP
+#define Projectile_HPP
 #include <string>
 
 #include "Engine/Sprite.hpp"
@@ -11,7 +11,7 @@ namespace Engine {
     struct Point;
 }   // namespace Engine
 
-class Bullet : public Engine::Sprite {
+class Projectile : public Engine::Sprite {
 protected:
     float speed;
     float damage;
@@ -21,7 +21,7 @@ protected:
 
 public:
     Enemy *Target = nullptr;
-    explicit Bullet(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret *parent);
+    explicit Projectile(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret *parent);
     void Update(float deltaTime) override;
 };
-#endif   // BULLET_HPP
+#endif   // Projectile_HPP

@@ -1,6 +1,6 @@
-#ifndef FIREBULLET_HPP
-#define FIREBULLET_HPP
-#include "Bullet.hpp"
+#ifndef FireBullet_HPP
+#define FireBullet_HPP
+#include "Projectile.hpp"
 
 class Enemy;
 class Turret;
@@ -8,9 +8,9 @@ namespace Engine {
     struct Point;
 }   // namespace Engine
 
-class FireBullet : public Bullet {
+class FireBullet : public Projectile {
 public:
     explicit FireBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret *parent);
     void OnExplode(Enemy *enemy) override;
 };
-#endif   // FIREBULLET_HPP
+#endif   // FireBullet_HPP

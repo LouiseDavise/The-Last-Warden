@@ -162,7 +162,7 @@ namespace Engine {
             changeScene(nextScene);
             nextScene = "";
         }
-        // Force lag to avoid bullet-through-paper issue.
+        // Force lag to avoid Projectile-through-paper issue.
         if (deltaTime >= deltaTimeThreshold)
             deltaTime = deltaTimeThreshold;
         activeScene->Update(deltaTime);

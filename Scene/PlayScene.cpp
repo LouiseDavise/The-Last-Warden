@@ -73,7 +73,7 @@ void PlayScene::Initialize()
     AddNewObject(EnemyGroup = new Group("EnemyGroup"));
     AddNewObject(PlayerGroup = new Group("PlayerGroup"));
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
-    AddNewObject(BulletGroup = new Group("BulletGroup"));
+    AddNewObject(ProjectileGroup = new Group("ProjectileGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
 
@@ -220,7 +220,7 @@ void PlayScene::Draw() const
     EnemyGroup->Draw();
     PlayerGroup->Draw();
     WeaponGroup->Draw();
-    BulletGroup->Draw();
+    ProjectileGroup->Draw();
     EffectGroup->Draw();
     TowerGroup->Draw();
 

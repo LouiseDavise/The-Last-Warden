@@ -51,7 +51,7 @@
 [INFO] Loaded Resource<audio>: Resource/audios/play.ogg
 [INFO] Changed to play scene
 [INFO] Loaded Resource<image>: Resource/images/play/enemy-2.png
-[INFO] Loaded Resource<image>: Resource/images/play/bullet-1.png
+[INFO] Loaded Resource<image>: Resource/images/play/Projectile-1.png
 [INFO] Loaded Resource<audio>: Resource/audios/gun.wav
 [INFO] Loaded Resource<image>: Resource/images/play/plane.png
 [INFO] Loaded Resource<image>: Resource/images/play/light-1.png
@@ -66,7 +66,7 @@
 [INFO] Loaded Resource<image>: Resource/images/play/light-10.png
 [INFO] Loaded Resource<image>: Resource/images/play/shockwave.png
 [INFO] Created<sample_instance>: Resource/audios/gun.wav
-[INFO] Loaded Resource<image>: Resource/images/play/bullet-2.png
+[INFO] Loaded Resource<image>: Resource/images/play/Projectile-2.png
 [INFO] Loaded Resource<audio>: Resource/audios/laser.wav
 [INFO] Loaded Resource<audio>: Resource/audios/shockwave.ogg
 [INFO] Loaded Resource<image>: Resource/images/play/explosion-1.png

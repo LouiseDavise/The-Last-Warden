@@ -61,7 +61,7 @@ public:
     Group *TileMapGroup;
     Group *GroundEffectGroup;
     Group *DebugIndicatorGroup;
-    Group *BulletGroup;
+    Group *ProjectileGroup;
     Group *TowerGroup;
     Group *EnemyGroup;
     Group *PlayerGroup;

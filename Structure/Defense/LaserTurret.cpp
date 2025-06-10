@@ -2,7 +2,7 @@
 #include <cmath>
 #include <string>
 
-#include "Bullet/LaserBullet.hpp"
+#include "Projectile/LaserBullet.hpp"
 #include "Engine/AudioHelper.hpp"
 #include "Engine/Group.hpp"
 #include "Engine/Point.hpp"
@@ -14,13 +14,13 @@ LaserTurret::LaserTurret(float x, float y) : Turret("Structures/tower-base.png",
     // Move center downward, since we the turret head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }
-void LaserTurret::CreateBullet() {
+void LaserTurret::CreateProjectile() {
     Engine::Point diff = Engine::Point(cos(Rotation - ALLEGRO_PI / 2), sin(Rotation - ALLEGRO_PI / 2));
     float rotation = atan2(diff.y, diff.x);
     Engine::Point normalized = diff.Normalize();
     Engine::Point normal = Engine::Point(-normalized.y, normalized.x);
-    // Change bullet position to the front of the gun barrel.
-    getPlayScene()->BulletGroup->AddNewObject(new LaserBullet(Position + normalized * 36 - normal * 6, diff, rotation, this));
-    getPlayScene()->BulletGroup->AddNewObject(new LaserBullet(Position + normalized * 36 + normal * 6, diff, rotation, this));
+    // Change Projectile position to the front of the gun barrel.
+    getPlayScene()->ProjectileGroup->AddNewObject(new LaserBullet(Position + normalized * 36 - normal * 6, diff, rotation, this));
+    getPlayScene()->ProjectileGroup->AddNewObject(new LaserBullet(Position + normalized * 36 + normal * 6, diff, rotation, this));
     AudioHelper::PlayAudio("laser.wav");
 }

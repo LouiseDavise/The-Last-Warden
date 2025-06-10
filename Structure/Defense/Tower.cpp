@@ -10,7 +10,7 @@
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Turret.hpp"
+#include "Tower.hpp"
 
 PlayScene *Turret::getPlayScene()
 {
@@ -83,7 +83,7 @@ void Turret::Update(float deltaTime)
         {
             // shoot.
             reload = coolDown;
-            CreateBullet();
+            CreateProjectile();
         }
     }
 }

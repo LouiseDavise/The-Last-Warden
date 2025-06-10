@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(2025_I2P2_TowerDefense)
+project(The_Last_Warden)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -12,7 +12,7 @@ file(COPY Resource/images DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY Resource DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY allegro_monolith-5.2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(2025_I2P2_TowerDefense
+add_executable(The_Last_Warden
     Player/Player.cpp 
     Player/Player.hpp 
     Player/Caveman.cpp 
@@ -23,12 +23,12 @@ add_executable(2025_I2P2_TowerDefense
     Weapon/SpearWeapon.cpp 
     Weapon/SpearWeapon.hpp
 
-    Bullet/Bullet.cpp
-    Bullet/Bullet.hpp
-    Bullet/FireBullet.cpp
-    Bullet/FireBullet.hpp
-    Bullet/LaserBullet.cpp
-    Bullet/LaserBullet.hpp
+    Projectile/Projectile.cpp
+    Projectile/Projectile.hpp
+    Projectile/FireBullet.cpp
+    Projectile/FireBullet.hpp
+    Projectile/LaserBullet.cpp
+    Projectile/LaserBullet.hpp
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp
@@ -87,8 +87,8 @@ add_executable(2025_I2P2_TowerDefense
     Structure/Defense/LaserTurret.hpp
     Structure/Defense/MachineGunTurret.cpp
     Structure/Defense/MachineGunTurret.hpp
-    Structure/Defense/Turret.cpp
-    Structure/Defense/Turret.hpp
+    Structure/Defense/Tower.cpp
+    Structure/Defense/Tower.hpp
     Structure/StructureButton.cpp
     Structure/StructureButton.hpp
     Structure/Shovel.cpp
@@ -114,16 +114,16 @@ add_executable(2025_I2P2_TowerDefense
 )
 
 IF (WIN32)
-    target_include_directories(2025_I2P2_TowerDefense PUBLIC C:/Application/C++/Allegro/allegro/include)
-    target_link_directories(2025_I2P2_TowerDefense PUBLIC C:/Application/C++/Allegro/allegro/lib)
-    target_compile_options(2025_I2P2_TowerDefense PUBLIC ${ALLEGRO5_CFLAGS_OTHER})
-    target_link_libraries(2025_I2P2_TowerDefense liballegro_monolith)
+    target_include_directories(The_Last_Warden PUBLIC C:/Application/C++/Allegro/allegro/include)
+    target_link_directories(The_Last_Warden PUBLIC C:/Application/C++/Allegro/allegro/lib)
+    target_compile_options(The_Last_Warden PUBLIC ${ALLEGRO5_CFLAGS_OTHER})
+    target_link_libraries(The_Last_Warden liballegro_monolith)
 ELSE()
     find_package(PkgConfig)
     pkg_check_modules(ALLEGRO5 REQUIRED allegro-5 allegro_main-5 allegro_font-5 allegro_dialog-5 allegro_primitives-5 allegro_image-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5)
-    target_include_directories(2025_I2P2_TowerDefense PUBLIC lib)
-    target_include_directories(2025_I2P2_TowerDefense PUBLIC ${ALLEGRO5_INCLUDE_DIRS})
-    target_compile_options(2025_I2P2_TowerDefense PUBLIC ${ALLEGRO5_CFLAGS_OTHER})
-    target_link_libraries(2025_I2P2_TowerDefense ${ALLEGRO5_LIBRARIES})
-    target_link_directories(2025_I2P2_TowerDefense PUBLIC ${ALLEGRO5_LIBRARY_DIRS})
+    target_include_directories(The_Last_Warden PUBLIC lib)
+    target_include_directories(The_Last_Warden PUBLIC ${ALLEGRO5_INCLUDE_DIRS})
+    target_compile_options(The_Last_Warden PUBLIC ${ALLEGRO5_CFLAGS_OTHER})
+    target_link_libraries(The_Last_Warden ${ALLEGRO5_LIBRARIES})
+    target_link_directories(The_Last_Warden PUBLIC ${ALLEGRO5_LIBRARY_DIRS})
 ENDIF()

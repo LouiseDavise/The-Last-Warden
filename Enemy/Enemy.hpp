@@ -7,7 +7,7 @@
 #include "Engine/Point.hpp"
 #include "Engine/Sprite.hpp"
 
-class Bullet;
+class Projectile;
 class PlayScene;
 class Turret;
 
@@ -23,7 +23,7 @@ protected:
 
 public:
     std::list<Turret *> lockedTurrets;
-    std::list<Bullet *> lockedBullets;
+    std::list<Projectile *> lockedProjectiles;
     Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money);
     virtual void Hit(float damage);
     void UpdatePath(const std::vector<std::vector<int>> &mapDistance);

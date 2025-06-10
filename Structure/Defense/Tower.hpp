@@ -19,7 +19,7 @@ protected:
     std::list<Turret *>::iterator lockedTurretIterator;
     PlayScene *getPlayScene();
     // Reference: Design Patterns - Factory Method.
-    virtual void CreateBullet() = 0;
+    virtual void CreateProjectile() = 0;
 
 public:
     bool Enabled = true;

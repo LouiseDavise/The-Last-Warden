@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "Bullet/Bullet.hpp"
+#include "Projectile/Projectile.hpp"
 #include "Enemy.hpp"
 #include "Engine/AudioHelper.hpp"
 #include "Engine/GameEngine.hpp"
@@ -13,7 +13,7 @@
 #include "Engine/IScene.hpp"
 #include "Engine/LOG.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Structure/Defense/Turret.hpp"
+#include "Structure/Defense/Tower.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
@@ -33,7 +33,7 @@ void Enemy::Hit(float damage)
     {
         for (auto &it : lockedTurrets)
             it->Target = nullptr;
-        for (auto &it : lockedBullets)
+        for (auto &it : lockedProjectiles)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
         getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
