@@ -9,6 +9,7 @@
 #include "Player/Player.hpp"
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
+#include "Player/SupportPlayer.hpp"
 
 struct EnemyWave
 {
@@ -124,5 +125,9 @@ public:
     void SetMapFile(const std::string &filename);
     std::string waveFile = "Resource/single_wave.txt";
     void SetWaveFile(const std::string &filename);
+
+    bool isTwoPlayer = false;
+    void SetTwoPlayerMode(bool twoP);
+    SupportPlayer* supportPlayer = nullptr;
 };
 #endif // PLAYSCENE_HPP

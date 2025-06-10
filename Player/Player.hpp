@@ -38,8 +38,7 @@ protected:
     bool keyW{}, keyA{}, keyS{}, keyD{};
     bool faceRight = true;
     bool movingFlag = false;
-
-private:
+    
     float  hp;
     float  moveSpeed;
     float  radius;
