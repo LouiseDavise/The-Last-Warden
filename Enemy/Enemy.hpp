@@ -28,7 +28,7 @@ public:
     virtual void Hit(float damage);
     void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
     void Update(float deltaTime) override;
-    void Draw() const override;
+    virtual void Draw() const override;
     virtual bool IsTargetable() const { return true; }
 
     float GetRadius() const { return CollisionRadius; }

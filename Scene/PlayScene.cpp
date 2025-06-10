@@ -34,6 +34,8 @@
 #include "UI/Animation/ExplosionEffect.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Enemy/SlimeEnemy.hpp"
+#include "Enemy/GreenSlime.hpp"
+#include "Enemy/ToxicSlime.hpp"
 
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = {
@@ -228,25 +230,8 @@ void PlayScene::Draw() const
     al_identity_transform(&transform);
     al_use_transform(&transform);
     UIGroup->Draw();
-
-    if (DebugMode)
-    {
-        // Draw reverse BFS distance on all reachable blocks.
-        for (int i = 0; i < MapHeight; i++)
-        {
-            for (int j = 0; j < MapWidth; j++)
-            {
-                if (mapDistance[i][j] != -1)
-                {
-                    // Not elegant nor efficient, but it's quite enough for debugging.
-                    Engine::Label label(std::to_string(mapDistance[i][j]), "pirulen.ttf", 32, (j + 0.5) * BlockSize, (i + 0.5) * BlockSize);
-                    label.Anchor = Engine::Point(0.5, 0.5);
-                    label.Draw();
-                }
-            }
-        }
-    }
 }
+
 void PlayScene::OnMouseDown(int button, int mx, int my)
 {
     Player *player = GetPlayer();
@@ -368,10 +353,14 @@ void PlayScene::OnKeyDown(int keyCode)
     IScene::OnKeyDown(keyCode);
     player->OnKeyDown(keyCode);
 
-    keyStrokes.push_back(keyCode);
-    if (keyStrokes.size() > CheatCode.size())
-        keyStrokes.pop_front();
-
+    if(keyCode == ALLEGRO_KEY_TAB){
+        DebugMode = !DebugMode;
+    }
+    else{
+        keyStrokes.push_back(keyCode);
+        if (keyStrokes.size() > CheatCode.size())
+            keyStrokes.pop_front();
+    }
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
     else if (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsShovel())
@@ -901,7 +890,7 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
             if (mapState[gy][gx] != TILE_DIRT)
                 continue;
 
-            SlimeEnemy *slime = new SlimeEnemy(spawnX, spawnY);
+            GreenSlime *slime = new GreenSlime(spawnX, spawnY);
             if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
             {
                 slime->UpdatePath(mapDistance);

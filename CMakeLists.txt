@@ -34,6 +34,8 @@ add_executable(The_Last_Warden
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp
+    Enemy/GreenSlime.cpp 
+    Enemy/GreenSlime.hpp
     Enemy/SlimeEnemy.cpp
     Enemy/SlimeEnemy.hpp
 
