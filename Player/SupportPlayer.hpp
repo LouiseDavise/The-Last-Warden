@@ -12,7 +12,13 @@ public:
     void OnKeyUp(int keyCode);
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> idleFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> walkFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> attackFrames;
+    bool isAttacking = false;
+    float attackTimer = 0;
+    const float attackDuration = 0.4f;
+    float GetRadius() const;
 
 private:
     bool keyUp = false, keyDown = false, keyLeft = false, keyRight = false;
+    int damage;
 };

@@ -1,22 +1,25 @@
 #include "SupportPlayer.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Weapon/SpearWeapon.hpp"
+#include "Enemy/Enemy.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Resources.hpp"
+#include "Engine/Point.hpp"
+#include "Engine/Collider.hpp"
 
 using Res = Engine::Resources;
 
 SupportPlayer::SupportPlayer(float x, float y)
-    : Player(x, y, 100.0f, 190.0f, "Characters/Support/image1x1.png", "image", 10, 10.0f)
+    : Player(x, y, 100.0f, 190.0f, "Characters/Support/image1x1.png", "image", 10, 10.0f), damage(1)
 {
-    // Load idle frames (1-4)
     for (int i = 1; i <= 4; ++i)
         idleFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
 
-    // Load walking frames (5-10)
     for (int i = 5; i <= 10; ++i)
         walkFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
 
+    for (int i = 11; i <= 16; ++i)
+        attackFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
     currentBitmap = idleFrames[0];
 }
 
@@ -62,14 +65,47 @@ void SupportPlayer::Update(float dt)
         }
     }
 
+    // Collision
+    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (scene)
+    {
+        for (auto *obj : scene->EnemyGroup->GetObjects())
+        {
+            Enemy *enemy = dynamic_cast<Enemy *>(obj);
+            if (enemy)
+            {
+                if (Engine::Collider::IsCircleOverlap(Position, GetRadius(), enemy->Position, enemy->GetRadius()))
+                {
+                    enemy->Hit(damage);
+                    isAttacking = true;
+                    attackTimer = attackDuration;
+                    break;
+                }
+            }
+        }
+    }
+
     // Animation update
     animTimer += dt;
-    const auto &activeFrames = movingFlag ? walkFrames : idleFrames;
+
+    const auto &activeFrames =
+        isAttacking ? attackFrames : (movingFlag ? walkFrames : idleFrames);
+
     if (animTimer >= animInterval && !activeFrames.empty())
     {
         animTimer = 0;
         currentFrame = (currentFrame + 1) % activeFrames.size();
         currentBitmap = activeFrames[currentFrame];
+    }
+
+    if (isAttacking)
+    {
+        attackTimer -= dt;
+        if (attackTimer <= 0)
+        {
+            isAttacking = false;
+            currentFrame = 0;
+        }
     }
 
     Sprite::Update(dt);
@@ -103,4 +139,9 @@ void SupportPlayer::OnKeyUp(int k)
         keyLeft = false;
     if (k == ALLEGRO_KEY_RIGHT)
         keyRight = false;
+}
+
+float SupportPlayer::GetRadius() const
+{
+    return 32.0f;
 }
