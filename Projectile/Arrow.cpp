@@ -5,15 +5,15 @@
 #include "Enemy/Enemy.hpp"
 #include "Engine/Group.hpp"
 #include "Engine/Point.hpp"
-#include "FireBullet.hpp"
+#include "Arrow.hpp"
 #include "Scene/PlayScene.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 
 class Tower;
 
-FireBullet::FireBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent) : Projectile("Projectiles/bullet-1.png", 250, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+Arrow::Arrow(Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent) : Projectile("Projectiles/Arrow.png", 250, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
 }
-void FireBullet::OnExplode(Enemy *enemy) {
+void Arrow::OnExplode(Enemy *enemy) {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(2, 5);

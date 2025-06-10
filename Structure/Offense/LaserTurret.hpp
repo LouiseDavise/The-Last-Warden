@@ -2,7 +2,7 @@
 #define LASERTURRET_HPP
 #include "Tower.hpp"
 
-class LaserTurret : public Turret {
+class LaserTurret : public Tower {
 public:
     static const int Price;
     LaserTurret(float x, float y);

@@ -12,15 +12,15 @@
 #include "Scene/PlayScene.hpp"
 #include "Tower.hpp"
 
-PlayScene *Turret::getPlayScene()
+PlayScene *Tower::getPlayScene()
 {
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
-Turret::Turret(std::string imgBase, std::string imgTurret, float x, float y, float radius, int price, float coolDown) : Sprite(imgTurret, x, y), price(price), coolDown(coolDown), imgBase(imgBase, x, y)
+Tower::Tower(std::string imgBase, std::string imgTower, float x, float y, float radius, int price, float coolDown) : Sprite(imgTower, x, y), price(price), coolDown(coolDown), imgBase(imgBase, x, y)
 {
     CollisionRadius = radius;
 }
-void Turret::Update(float deltaTime)
+void Tower::Update(float deltaTime)
 {
     Sprite::Update(deltaTime);
     PlayScene *scene = getPlayScene();
@@ -33,9 +33,9 @@ void Turret::Update(float deltaTime)
         Engine::Point diff = Target->Position - Position;
         if (diff.Magnitude() > CollisionRadius || !Target->IsTargetable())
         {
-            Target->lockedTurrets.erase(lockedTurretIterator);
+            Target->lockedTowers.erase(lockedTowerIterator);
             Target = nullptr;
-            lockedTurretIterator = std::list<Turret *>::iterator();
+            lockedTowerIterator = std::list<Tower *>::iterator();
         }
     }
     if (!Target)
@@ -52,8 +52,8 @@ void Turret::Update(float deltaTime)
             if (diff.Magnitude() <= CollisionRadius)
             {
                 Target = dynamic_cast<Enemy *>(it);
-                Target->lockedTurrets.push_back(this);
-                lockedTurretIterator = std::prev(Target->lockedTurrets.end());
+                Target->lockedTowers.push_back(this);
+                lockedTowerIterator = std::prev(Target->lockedTowers.end());
                 break;
             }
         }
@@ -87,7 +87,7 @@ void Turret::Update(float deltaTime)
         }
     }
 }
-void Turret::Draw() const
+void Tower::Draw() const
 {
     if (Preview)
     {
@@ -101,4 +101,4 @@ void Turret::Draw() const
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
     }
 }
-int Turret::GetPrice() const{return price;}
+int Tower::GetPrice() const{return price;}

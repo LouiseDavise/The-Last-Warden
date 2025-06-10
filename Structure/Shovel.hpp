@@ -1,8 +1,8 @@
 #ifndef SHOVEL_HPP
 #define SHOVEL_HPP
-#include "Defense/Tower.hpp"
+#include "Offense/Tower.hpp"
 
-class Shovel : public Turret {
+class Shovel : public Tower {
 public:
     static const int Price;
     Shovel(float x, float y);

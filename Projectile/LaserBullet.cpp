@@ -9,9 +9,9 @@
 #include "Scene/PlayScene.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 
-class Turret;
+class Tower;
 
-LaserBullet::LaserBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Turret *parent) : Projectile("Projectiles/bullet-2.png", 500, 2, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+LaserBullet::LaserBullet(Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent) : Projectile("Projectiles/bullet-2.png", 500, 2, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
 }
 void LaserBullet::OnExplode(Enemy *enemy) {
     std::random_device dev;

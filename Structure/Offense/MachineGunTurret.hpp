@@ -2,7 +2,7 @@
 #define MACHINEGUNTURRET_HPP
 #include "Tower.hpp"
 
-class MachineGunTurret : public Turret {
+class MachineGunTurret : public Tower {
 public:
     static const int Price;
     MachineGunTurret(float x, float y);

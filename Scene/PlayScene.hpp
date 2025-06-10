@@ -18,7 +18,7 @@ struct EnemyWave
     bool spawned = false;
 };
 
-class Turret;
+class Tower;
 namespace Engine
 {
     class Group;
@@ -40,7 +40,7 @@ private:
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
-    Turret *highlightedTurret = nullptr;
+    Tower *highlightedTower = nullptr;
 
 protected:
     int money;
@@ -73,7 +73,7 @@ public:
     Engine::Label *UILives;
     Engine::Image *TargetTile;
     Engine::Image *StructurePanel;
-    Turret *preview;
+    Tower *preview;
 
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
@@ -107,7 +107,7 @@ public:
     void UIBtnClicked(int id);
 
     bool CheckSpaceValid(int x, int y);
-    Turret *GetTurretAt(int gx, int gy);
+    Tower *GetTowerAt(int gx, int gy);
     Engine::Point camera;
 
     // Enemy

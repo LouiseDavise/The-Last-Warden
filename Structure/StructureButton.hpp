@@ -14,8 +14,8 @@ protected:
 public:
     int money;
     Engine::Sprite Base;
-    Engine::Sprite Turret;
-    StructureButton(std::string img, std::string imgIn, Engine::Sprite Base, Engine::Sprite Turret, float x, float y, int money);
+    Engine::Sprite Tower;
+    StructureButton(std::string img, std::string imgIn, Engine::Sprite Base, Engine::Sprite Tower, float x, float y, int money);
     void Update(float deltaTime) override;
     void Draw() const override;
 };

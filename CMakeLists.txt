@@ -29,6 +29,8 @@ add_executable(The_Last_Warden
     Projectile/FireBullet.hpp
     Projectile/LaserBullet.cpp
     Projectile/LaserBullet.hpp
+    Projectile/Arrow.cpp 
+    Projectile/Arrow.hpp 
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp
@@ -83,12 +85,14 @@ add_executable(The_Last_Warden
     Scene/WelcomeScene.cpp
     Scene/WelcomeScene.hpp
 
-    Structure/Defense/LaserTurret.cpp
-    Structure/Defense/LaserTurret.hpp
-    Structure/Defense/MachineGunTurret.cpp
-    Structure/Defense/MachineGunTurret.hpp
-    Structure/Defense/Tower.cpp
-    Structure/Defense/Tower.hpp
+    Structure/Offense/Tower.cpp
+    Structure/Offense/Tower.hpp
+    Structure/Offense/BowTower.cpp 
+    Structure/Offense/BowTower.hpp 
+    Structure/Offense/LaserTurret.cpp
+    Structure/Offense/LaserTurret.hpp
+    Structure/Offense/MachineGunTurret.cpp
+    Structure/Offense/MachineGunTurret.hpp
     Structure/StructureButton.cpp
     Structure/StructureButton.hpp
     Structure/Shovel.cpp

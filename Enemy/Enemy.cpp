@@ -13,7 +13,7 @@
 #include "Engine/IScene.hpp"
 #include "Engine/LOG.hpp"
 #include "Scene/PlayScene.hpp"
-#include "Structure/Defense/Tower.hpp"
+#include "Structure/Offense/Tower.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
@@ -31,7 +31,7 @@ void Enemy::Hit(float damage)
     hp -= damage;
     if (hp <= 0)
     {
-        for (auto &it : lockedTurrets)
+        for (auto &it : lockedTowers)
             it->Target = nullptr;
         for (auto &it : lockedProjectiles)
             it->Target = nullptr;

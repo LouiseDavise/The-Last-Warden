@@ -6,7 +6,7 @@
 
 class Enemy;
 class PlayScene;
-class Turret;
+class Tower;
 namespace Engine {
     struct Point;
 }   // namespace Engine
@@ -15,13 +15,13 @@ class Projectile : public Engine::Sprite {
 protected:
     float speed;
     float damage;
-    Turret *parent;
+    Tower *parent;
     PlayScene *getPlayScene();
     virtual void OnExplode(Enemy *enemy);
 
 public:
     Enemy *Target = nullptr;
-    explicit Projectile(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Turret *parent);
+    explicit Projectile(std::string img, float speed, float damage, Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent);
     void Update(float deltaTime) override;
 };
 #endif   // Projectile_HPP

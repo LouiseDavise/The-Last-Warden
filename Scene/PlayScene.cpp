@@ -22,8 +22,9 @@
 #include "Engine/Resources.hpp"
 #include "Engine/Collider.hpp"
 #include "PlayScene.hpp"
-#include "Structure/Defense/LaserTurret.hpp"
-#include "Structure/Defense/MachineGunTurret.hpp"
+#include "Structure/Offense/BowTower.hpp"
+#include "Structure/Offense/LaserTurret.hpp"
+#include "Structure/Offense/MachineGunTurret.hpp"
 #include "Structure/StructureButton.hpp"
 #include "Structure/Shovel.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
@@ -269,14 +270,14 @@ void PlayScene::OnMouseMove(int mx, int my)
     {
         preview->Position = Engine::Point{(float)mx, (float)my};
 
-        Turret *tgt = GetTurretAt(x, y);
-        if (tgt != highlightedTurret)
+        Tower *tgt = GetTowerAt(x, y);
+        if (tgt != highlightedTower)
         {
-            if (highlightedTurret)
-                highlightedTurret->Tint = al_map_rgba(255, 255, 255, 255);
+            if (highlightedTower)
+                highlightedTower->Tint = al_map_rgba(255, 255, 255, 255);
             if (tgt)
                 tgt->Tint = al_map_rgba(255, 60, 60, 255); // bright red
-            highlightedTurret = tgt;
+            highlightedTower = tgt;
         }
         TargetTile->Visible = (tgt != nullptr);
         if (tgt)
@@ -305,7 +306,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
     {
         if (button & 1)
         {
-            Turret *t = GetTurretAt(gx, gy);
+            Tower *t = GetTowerAt(gx, gy);
             if (t)
             {
                 TowerGroup->RemoveObject(t->GetObjectIterator());
@@ -313,10 +314,10 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 mapState[gy][gx] = TILE_FLOOR;
             }
         }
-        if (highlightedTurret)
+        if (highlightedTower)
         {
-            highlightedTurret->Tint = al_map_rgba(255, 255, 255, 255);
-            highlightedTurret = nullptr;
+            highlightedTower->Tint = al_map_rgba(255, 255, 255, 255);
+            highlightedTower = nullptr;
         }
         return;
     }
@@ -901,8 +902,10 @@ void PlayScene::ConstructUI()
         const char *sprite;
     };
     std::vector<BtnInfo> btns = {
-        {w / 2 - 332 + 6, h - 82, MachineGunTurret::Price, 1, "Structures/turret-1.png"},
-        {w / 2 - 332 + 6 + 74, h - 82, LaserTurret::Price, 2, "Structures/turret-2.png"}};
+        {w / 2 - 332 + 6 + 74*0, h - 82, BowTower::Price, 1, "Structures/BowTower.png"},
+        {w / 2 - 332 + 6 + 74*1, h - 82, MachineGunTurret::Price, 2, "Structures/turret-1.png"},
+        {w / 2 - 332 + 6 + 74*2, h - 82, LaserTurret::Price, 3, "Structures/turret-2.png"}
+    };
 
     for (auto &b : btns)
     {
@@ -934,10 +937,14 @@ void PlayScene::UIBtnClicked(int id)
         preview = new Shovel(0, 0);
         break;
     case 1:
+        if (money >= BowTower::Price)
+            preview = new BowTower(0, 0);
+        break;
+    case 2:
         if (money >= MachineGunTurret::Price)
             preview = new MachineGunTurret(0, 0);
         break;
-    case 2:
+    case 3:
         if (money >= LaserTurret::Price)
             preview = new LaserTurret(0, 0);
         break;
@@ -967,11 +974,11 @@ bool PlayScene::CheckSpaceValid(int x, int y)
     return true;
 }
 
-Turret *PlayScene::GetTurretAt(int gx, int gy)
+Tower *PlayScene::GetTowerAt(int gx, int gy)
 {
     for (auto *obj : TowerGroup->GetObjects())
     {
-        auto *t = dynamic_cast<Turret *>(obj);
+        auto *t = dynamic_cast<Tower *>(obj);
         if (!t)
             continue;
         int tx = int(t->Position.x) / BlockSize;

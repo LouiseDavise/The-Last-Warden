@@ -10,7 +10,7 @@
 #include "Scene/PlayScene.hpp"
 
 const int LaserTurret::Price = 300;
-LaserTurret::LaserTurret(float x, float y) : Turret("Structures/tower-base.png", "Structures/turret-2.png", x, y, 300, Price, 0.5) {
+LaserTurret::LaserTurret(float x, float y) : Tower("Structures/tower-base.png", "Structures/turret-2.png", x, y, 300, Price, 0.5) {
     // Move center downward, since we the turret head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }

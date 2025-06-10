@@ -9,7 +9,7 @@
 
 class Projectile;
 class PlayScene;
-class Turret;
+class Tower;
 
 class Enemy : public Engine::Sprite
 {
@@ -22,7 +22,7 @@ protected:
     PlayScene *getPlayScene();
 
 public:
-    std::list<Turret *> lockedTurrets;
+    std::list<Tower *> lockedTowers;
     std::list<Projectile *> lockedProjectiles;
     Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money);
     virtual void Hit(float damage);
