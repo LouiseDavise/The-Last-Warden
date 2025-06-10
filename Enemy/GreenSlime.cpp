@@ -135,7 +135,6 @@ void GreenSlime::Update(float deltaTime)
     if (!moved)
         Velocity = Engine::Point(0, 0);
 
-    Enemy::Update(deltaTime);
     if (Velocity.x != 0) {
         faceRight = Velocity.x > 0;
     }
@@ -151,8 +150,6 @@ void GreenSlime::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
         return;
     if (mapDistance[gy][gx] == -1)
         return;
-
-    Enemy::UpdatePath(mapDistance); // Only call if valid
 }
 
 void GreenSlime::Draw() const {
