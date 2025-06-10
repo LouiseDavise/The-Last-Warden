@@ -35,6 +35,7 @@
 #include "Enemy/Enemy.hpp"
 #include "Enemy/GreenSlime.hpp"
 #include "Enemy/ToxicSlime.hpp"
+#include "Player/SupportPlayer.hpp"
 
 bool PlayScene::DebugMode = false;
 const std::vector<Engine::Point> PlayScene::directions = {
@@ -103,6 +104,12 @@ void PlayScene::Initialize()
 
     Player *player = new Caveman(centerX, centerY);
     PlayerGroup->AddNewObject(player);
+
+    if (isTwoPlayer)
+    {
+        supportPlayer = new SupportPlayer(centerX + 64, centerY);
+        PlayerGroup->AddNewObject(supportPlayer);
+    }
 
     // Calculate distances from player
     // Use BFS to fill mapDistance (already in your code, assumed)
@@ -350,12 +357,23 @@ void PlayScene::OnKeyDown(int keyCode)
 {
     Player *player = GetPlayer();
     IScene::OnKeyDown(keyCode);
-    player->OnKeyDown(keyCode);
+    for (auto *obj : PlayerGroup->GetObjects())
+    {
+        if (Player *p = dynamic_cast<Player *>(obj))
+        {
+            p->OnKeyDown(keyCode);
+        }
+    }
 
-    if(keyCode == ALLEGRO_KEY_TAB){
+    if (supportPlayer)
+        supportPlayer->OnKeyDown(keyCode);
+
+    if (keyCode == ALLEGRO_KEY_TAB)
+    {
         DebugMode = !DebugMode;
     }
-    else{
+    else
+    {
         keyStrokes.push_back(keyCode);
         if (keyStrokes.size() > CheatCode.size())
             keyStrokes.pop_front();
@@ -379,8 +397,15 @@ void PlayScene::OnKeyDown(int keyCode)
 
 void PlayScene::OnKeyUp(int keyCode)
 {
-    Player *player = GetPlayer();
-    player->OnKeyUp(keyCode);
+    for (auto *obj : PlayerGroup->GetObjects())
+    {
+        if (Player *p = dynamic_cast<Player *>(obj))
+        {
+            p->OnKeyUp(keyCode);
+        }
+    }
+    if (supportPlayer)
+        supportPlayer->OnKeyUp(keyCode);
 }
 
 int PlayScene::GetMoney() const { return money; }
@@ -398,6 +423,11 @@ void PlayScene::SetMapFile(const std::string &filename)
 void PlayScene::SetWaveFile(const std::string &filename)
 {
     waveFile = filename;
+}
+
+void PlayScene::SetTwoPlayerMode(bool twoP)
+{
+    isTwoPlayer = twoP;
 }
 
 void PlayScene::ReadMap()
