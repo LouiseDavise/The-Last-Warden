@@ -13,6 +13,8 @@ Caveman::Caveman(float x, float y)
     spear = new SpearWeapon(PositionWeapon(), this);
     if (auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene()))
         scene->WeaponGroup->AddNewObject(spear); // WeaponGroup takes ownership
+
+    CollisionRadius = 32;
 }
 
 void Caveman::Update(float dt)

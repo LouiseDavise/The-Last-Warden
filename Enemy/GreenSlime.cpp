@@ -6,7 +6,7 @@
 #include <cmath>
 
 GreenSlime::GreenSlime(float x, float y)
-    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 40, 40, 70, 1, 1)
+    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 70, 1, 1)
 {
     Size.x = 128;
     Size.y = 64;
@@ -22,6 +22,19 @@ GreenSlime::GreenSlime(float x, float y)
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
+    for (int i = 1; i <= 6; ++i)
+    {
+        std::string path = "Enemies/GreenSlime/Attack/image" + std::to_string(i) + "x1.png";
+        attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+    for (int i = 1; i <= 5; ++i)
+    {
+        std::string path = "Enemies/GreenSlime/Hurt/image" + std::to_string(i) + "x1.png";
+        hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+
     // Initial image
     bmp = runFrames[0];
     Velocity = Engine::Point(0, 0);
@@ -30,5 +43,9 @@ GreenSlime::GreenSlime(float x, float y)
     runInterval = 0.12f;
     deathTimer = 0;
     deathInterval = 0.12f;
+    attackTimer = 0;
+    attackInterval = 0.07f;
+    hurtTimer = 0;
+    hurtInterval = 0.12f;
     currentFrame = 0;
 }

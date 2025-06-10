@@ -12,6 +12,7 @@
 #include "Engine/Group.hpp"
 #include "Engine/IScene.hpp"
 #include "Engine/LOG.hpp"
+#include "Engine/Collider.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Structure/Offense/Tower.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
@@ -28,6 +29,7 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
 
 void Enemy::Hit(float damage)
 {
+    Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
     hp -= damage;
     if (hp <= 0 && state != State::Dying)
     {
@@ -42,13 +44,26 @@ void Enemy::Hit(float damage)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
         AudioHelper::PlayAudio("explosion.wav");
+    }else {
+        state = State::Hurt;
+        currentFrame = 0;
+        hurtTimer = 0;
     }
 }
 
 
 void Enemy::Update(float deltaTime)
 {   
-    if (state == State::Dying) {
+    if(state == State::Run){
+        runTimer += deltaTime;
+        if (runTimer >= runInterval)
+        {
+            runTimer = 0;
+            currentFrame = (currentFrame + 1) % runFrames.size();
+            bmp = runFrames[currentFrame];
+        }
+    }
+    else if (state == State::Dying) {
         deathTimer += deltaTime;
         if (deathTimer >= deathInterval && deathFrames.size() > 0) {
             deathTimer = 0;
@@ -61,29 +76,62 @@ void Enemy::Update(float deltaTime)
         bmp = deathFrames[currentFrame];  // Set death frame
         return;
     }
-
-    runTimer += deltaTime;
-    if (runTimer >= runInterval)
-    {
-        runTimer = 0;
-        currentFrame = (currentFrame + 1) % runFrames.size();
-        bmp = runFrames[currentFrame];
+    else if(state == State::Attacking){
+        attackTimer += deltaTime;
+        if (attackTimer >= attackInterval && attackFrames.size() > 0) {
+            attackTimer = 0;
+            currentFrame++;
+            if (currentFrame >= attackFrames.size()) {
+                auto *scene = getPlayScene();
+                auto* player = scene->GetPlayer();
+                if (player && !Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)){
+                    state = State::Run;
+                    currentFrame = 0;
+                    return;
+                }else{
+                    currentFrame = 0;
+                }
+            }
+        }
+        bmp = attackFrames[currentFrame];
+        return;
+    }
+    else if (state == State::Hurt) {
+        hurtTimer += deltaTime;
+        if (hurtTimer >= hurtInterval)
+        {
+            hurtTimer = 0;
+            currentFrame++;
+            if(currentFrame >= hurtFrames.size()){
+                state = State::Run;
+                currentFrame = 0;
+                return;
+            }
+        }
+        bmp = hurtFrames[currentFrame];
+        return;
     }
 
     auto *scene = getPlayScene();
-    if (!scene || !scene->GetPlayer())
-        return;
+    auto* player = scene->GetPlayer();
+    Engine::Point playerPos = player->Position;
 
-    Engine::Point playerPos = scene->GetPlayer()->Position;
-    float distToPlayer = (playerPos - Position).Magnitude();
-
-    if (distToPlayer <= PlayScene::BlockSize * 1.2f || scene->validLine(Position, playerPos))
-    {
+    if (player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)) {
+        if (state != State::Attacking) {
+            state = State::Attacking;
+            currentFrame = 0;
+            attackTimer = 0;
+            Velocity = Engine::Point(0, 0); // Stop movement
+        }
+    }
+    else if(scene->validLine(Position, playerPos)){
+        state = State::Run;
         Engine::Point dir = (playerPos - Position).Normalize();
         Velocity = dir * speed;
     }
     else
     {
+        state = State::Run;
         int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
         int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
 
@@ -194,6 +242,8 @@ void Enemy::Draw() const {
     switch(state){
         case State::Run : frame = runFrames[currentFrame].get(); break;
         case State::Dying : frame = deathFrames[currentFrame].get(); break;
+        case State::Attacking: frame = attackFrames[currentFrame].get(); break;
+        case State::Hurt: frame = hurtFrames[currentFrame].get(); break;
     }
     float cx = Anchor.x * al_get_bitmap_width(frame);
     float cy = Anchor.y * al_get_bitmap_height(frame);

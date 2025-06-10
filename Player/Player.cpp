@@ -175,6 +175,10 @@ void Player::Draw() const
         scaleX * (Size.x / w),
         Size.y / h,
         Rotation, 0);
+
+    if (PlayScene::DebugMode) {
+        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(255, 0, 0), 2);
+    }
 }
 
 void Player::OnKeyDown(int k)

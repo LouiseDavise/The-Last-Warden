@@ -13,7 +13,9 @@ class Tower;
 
 enum class State {
     Run,
-    Dying
+    Dying,
+    Attacking,
+    Hurt
 };
 
 class Enemy : public Engine::Sprite
@@ -28,10 +30,16 @@ protected:
 
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> attackFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> hurtFrames;
     float runTimer;
     float runInterval;
     float deathTimer;
     float deathInterval;
+    float attackTimer;
+    float attackInterval;
+    float hurtTimer;
+    float hurtInterval;
     int currentFrame;
     bool faceRight;
 

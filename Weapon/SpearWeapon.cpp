@@ -12,7 +12,7 @@ static constexpr float PI = 3.1415926f;
 
 // weap_path, dmg, speed, startPos, owner
 SpearWeapon::SpearWeapon(const Point& startPos, Player* owner)
-    : Weapon("Weapons/Spear.png", 40.f, 750.f, startPos, owner)
+    : Weapon("Weapons/Spear.png", 30, 750.f, startPos, owner)
 {
     CollisionRadius = 0;
     Anchor          = Point(0.5f, 0.5f);
