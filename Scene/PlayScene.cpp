@@ -70,11 +70,11 @@ void PlayScene::Initialize()
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
     AddNewObject(DebugIndicatorGroup = new Group("DebugGroup"));
+    AddNewObject(ProjectileGroup = new Group("ProjectileGroup"));
     AddNewObject(TowerGroup = new Group("TowerGroup"));
     AddNewObject(EnemyGroup = new Group("EnemyGroup"));
     AddNewObject(PlayerGroup = new Group("PlayerGroup"));
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
-    AddNewObject(ProjectileGroup = new Group("ProjectileGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
 
