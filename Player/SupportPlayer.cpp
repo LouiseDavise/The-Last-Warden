@@ -57,7 +57,14 @@ void SupportPlayer::Update(float dt)
             float nextY = Position.y + v.y;
             int gx = static_cast<int>(nextX) / PlayScene::BlockSize;
             int gy = static_cast<int>(nextY) / PlayScene::BlockSize;
-            if (scene->IsWalkable(gx, gy))
+            const float camX = scene->camera.x;
+            const float camY = scene->camera.y;
+            const float camW = Engine::GameEngine::GetInstance().GetScreenSize().x;
+            const float camH = Engine::GameEngine::GetInstance().GetScreenSize().y;
+
+            if (scene->IsWalkable(gx, gy) &&
+                nextX >= camX && nextX <= camX + camW &&
+                nextY >= camY && nextY <= camY + camH)
             {
                 Position.x = nextX;
                 Position.y = nextY;
@@ -127,6 +134,17 @@ void SupportPlayer::OnKeyDown(int k)
         keyLeft = true;
     if (k == ALLEGRO_KEY_RIGHT)
         keyRight = true;
+    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (k == ALLEGRO_KEY_P && scene)
+    {
+        for (auto *obj : scene->PlayerGroup->GetObjects())
+        {
+            if (SupportPlayer *sp = dynamic_cast<SupportPlayer *>(obj))
+            {
+                sp->TeleportToPlayer();
+            }
+        }
+    }
 }
 
 void SupportPlayer::OnKeyUp(int k)
@@ -144,4 +162,23 @@ void SupportPlayer::OnKeyUp(int k)
 float SupportPlayer::GetRadius() const
 {
     return 32.0f;
+}
+
+void SupportPlayer::TeleportToPlayer()
+{
+    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (!scene)
+        return;
+
+    for (auto *obj : scene->PlayerGroup->GetObjects())
+    {
+        Player *mainPlayer = dynamic_cast<Player *>(obj);
+        if (mainPlayer && mainPlayer != this)
+        {
+            // Offset to prevent overlap
+            Position.x = mainPlayer->Position.x + 20;
+            Position.y = mainPlayer->Position.y;
+            return;
+        }
+    }
 }

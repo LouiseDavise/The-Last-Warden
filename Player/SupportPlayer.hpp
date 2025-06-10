@@ -17,6 +17,7 @@ public:
     float attackTimer = 0;
     const float attackDuration = 0.4f;
     float GetRadius() const;
+    void TeleportToPlayer();
 
 private:
     bool keyUp = false, keyDown = false, keyLeft = false, keyRight = false;
