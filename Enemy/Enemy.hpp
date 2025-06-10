@@ -26,6 +26,13 @@ protected:
     int money;
     State state;
 
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;
+    float animationTimer;
+    float animationInterval;
+    int currentFrame;
+    bool faceRight;
+
     PlayScene *getPlayScene();
 
 public:
@@ -34,8 +41,8 @@ public:
 
     Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money);
 
-    void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
-    void Update(float deltaTime) override;
+    virtual void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
+    virtual void Update(float deltaTime) override;
     virtual void Hit(float damage);
     virtual void Draw() const override;
     virtual bool IsTargetable() const { return true; }
