@@ -6,19 +6,19 @@
 #include <cmath>
 
 GreenSlime::GreenSlime(float x, float y)
-    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 48, 40, 50, 1, 1),
-      animationTimer(0), animationInterval(0.1f), currentFrame(0)
+    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 48, 40, 70, 1, 1),
+      animationTimer(0), animationInterval(0.12f), currentFrame(0)
 {
     Size.x = 128;
     Size.y = 64;
     for (int i = 1; i <= 8; ++i)
     {
         std::string path = "Enemies/GreenSlime/Run/image" + std::to_string(i) + "x1.png";
-        animationFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+        runFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
     // Initial image
-    bmp = animationFrames[0];
+    bmp = runFrames[0];
     Velocity = Engine::Point(0, 0);
     faceRight = false;
 }
@@ -29,8 +29,8 @@ void GreenSlime::Update(float deltaTime)
     if (animationTimer >= animationInterval)
     {
         animationTimer = 0;
-        currentFrame = (currentFrame + 1) % animationFrames.size();
-        bmp = animationFrames[currentFrame];
+        currentFrame = (currentFrame + 1) % runFrames.size();
+        bmp = runFrames[currentFrame];
     }
 
     auto *scene = getPlayScene();
@@ -156,7 +156,7 @@ void GreenSlime::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
 }
 
 void GreenSlime::Draw() const {
-    ALLEGRO_BITMAP* frame = animationFrames[currentFrame].get();
+    ALLEGRO_BITMAP* frame = runFrames[currentFrame].get();
     float cx = Anchor.x * al_get_bitmap_width(frame);
     float cy = Anchor.y * al_get_bitmap_height(frame);
     float scaleX = Size.x / al_get_bitmap_width(frame);

@@ -10,7 +10,7 @@
 class GreenSlime : public Enemy
 {
 protected:
-    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> animationFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
     float animationTimer;
     float animationInterval;
     int currentFrame;

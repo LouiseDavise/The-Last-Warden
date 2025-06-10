@@ -33,7 +33,6 @@
 #include "player_data.h"
 #include "UI/Animation/ExplosionEffect.hpp"
 #include "Enemy/Enemy.hpp"
-#include "Enemy/SlimeEnemy.hpp"
 #include "Enemy/GreenSlime.hpp"
 #include "Enemy/ToxicSlime.hpp"
 
@@ -859,7 +858,7 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     float delay, count;
     while (fin >> type >> delay >> count)
     {
-        enemyWaves.push_back({type, delay, count, false});
+        enemyWaves.push_back({type, delay, count, false});  
     }
 }
 
