@@ -108,7 +108,7 @@ void PlayScene::Initialize()
     UpdateBFSFromPlayer(); // <- You might already have this.
     // Then:
     GenerateFlowField();
-    LoadEnemyWaves("Resource/single_wave.txt");
+    LoadEnemyWaves(waveFile);
 
     int w = al_get_display_width(al_get_current_display());
     int h = al_get_display_height(al_get_current_display());
@@ -405,6 +405,11 @@ void PlayScene::EarnMoney(int money)
 void PlayScene::SetMapFile(const std::string &filename)
 {
     mapFile = filename;
+}
+
+void PlayScene::SetWaveFile(const std::string &filename)
+{
+    waveFile = filename;
 }
 
 void PlayScene::ReadMap()

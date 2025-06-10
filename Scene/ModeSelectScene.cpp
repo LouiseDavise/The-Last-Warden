@@ -41,16 +41,19 @@ void ModeSelectScene::Initialize()
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
 }
+
 void ModeSelectScene::Terminate()
 {
     AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
+
 void ModeSelectScene::BackOnClick(int stage)
 {
     Engine::GameEngine::GetInstance().ChangeScene("start");
 }
+
 void ModeSelectScene::PlayOnClick(int stage)
 {
     auto &engine = Engine::GameEngine::GetInstance();
@@ -60,10 +63,12 @@ void ModeSelectScene::PlayOnClick(int stage)
         if (stage == 1)
         {
             scene->SetMapFile("Resource/map1.txt");
+            scene->SetWaveFile("Resource/single_wave.txt");
         }
         else if (stage == 2)
         {
             scene->SetMapFile("Resource/map2.txt");
+            scene->SetWaveFile("Resource/duo_wave.txt");
         }
     }
     engine.ChangeScene("play");

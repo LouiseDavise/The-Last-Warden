@@ -122,5 +122,7 @@ public:
     bool validLine(Engine::Point from, Engine::Point to);
     std::string mapFile = "Resource/map1.txt";
     void SetMapFile(const std::string &filename);
+    std::string waveFile = "Resource/single_wave.txt";
+    void SetWaveFile(const std::string &filename);
 };
 #endif // PLAYSCENE_HPP
