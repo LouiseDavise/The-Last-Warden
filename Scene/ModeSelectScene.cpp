@@ -21,14 +21,14 @@ void ModeSelectScene::Initialize()
     int halfH = h / 2;
     Engine::ImageButton *btn;
 
-    btn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH / 2 - 50, 400, 100);
+    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 - 50, 480, 115);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 1));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("1-PLAYER", "pirulen.ttf", 48, halfW, halfH / 2, 0, 0, 0, 255, 0.5, 0.5));
-    btn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH / 2 + 100, 400, 100);
+    AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 10, 28, 15, 0, 255, 0.5, 0.5));
+    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 + 100, 480, 115);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 2));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("2-PLAYER", "pirulen.ttf", 48, halfW, halfH / 2 + 150, 0, 0, 0, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 160, 28, 15, 0, 255, 0.5, 0.5));
 
     // Not safe if release resource while playing, however we only free while change scene, so it's fine.
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
@@ -36,10 +36,10 @@ void ModeSelectScene::Initialize()
     // Not safe if release resource while playing, however we only free while change scene, so it's fine.
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
 
-    btn = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, halfH / 2 + 350, 400, 100);
+    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 + 350, 480, 115);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::BackOnClick, this, 2));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("Back", "pirulen.ttf", 48, halfW, halfH / 2 + 400, 0, 0, 0, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 410, 28, 15, 0, 255, 0.5, 0.5));
 }
 
 void ModeSelectScene::Terminate()
