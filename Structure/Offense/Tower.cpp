@@ -16,10 +16,12 @@ PlayScene *Tower::getPlayScene()
 {
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
-Tower::Tower(std::string imgBase, std::string imgTower, float x, float y, float radius, int price, float coolDown) : Sprite(imgTower, x, y), price(price), coolDown(coolDown), imgBase(imgBase, x, y)
-{
+
+Tower::Tower(std::string imgBase, std::string imgTower, float x, float y, float radius, int price, float coolDown)
+    : Structure(imgTower, x, y, price), imgBase(imgBase, x, y), coolDown(coolDown) {
     CollisionRadius = radius;
 }
+
 void Tower::Update(float deltaTime)
 {
     Sprite::Update(deltaTime);
@@ -96,4 +98,3 @@ void Tower::Draw() const
     imgBase.Draw();
     Sprite::Draw();
 }
-int Tower::GetPrice() const{return price;}

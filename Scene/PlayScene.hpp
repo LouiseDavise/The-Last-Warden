@@ -19,7 +19,9 @@ struct EnemyWave
     bool spawned = false;
 };
 
+class Structure;
 class Tower;
+class Wall;
 namespace Engine
 {
     class Group;
@@ -75,7 +77,7 @@ public:
     Engine::Label *UITimerLabel;
     Engine::Image *TargetTile;
     Engine::Image *StructurePanel;
-    Tower *preview;
+    Structure *preview;
 
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;

@@ -89,6 +89,10 @@ add_executable(The_Last_Warden
     Scene/WelcomeScene.cpp
     Scene/WelcomeScene.hpp
 
+    Structure/Structure.cpp 
+    Structure/Structure.hpp
+    Structure/StructureButton.cpp
+    Structure/StructureButton.hpp
     Structure/Offense/Tower.cpp
     Structure/Offense/Tower.hpp
     Structure/Offense/BowTower.cpp 
@@ -97,8 +101,10 @@ add_executable(The_Last_Warden
     Structure/Offense/LaserTurret.hpp
     Structure/Offense/MachineGunTurret.cpp
     Structure/Offense/MachineGunTurret.hpp
-    Structure/StructureButton.cpp
-    Structure/StructureButton.hpp
+    Structure/Defense/Wall.cpp 
+    Structure/Defense/Wall.hpp 
+    Structure/Defense/BasicWall.cpp 
+    Structure/Defense/BasicWall.hpp 
     Structure/Shovel.cpp
     Structure/Shovel.hpp
 
