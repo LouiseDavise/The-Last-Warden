@@ -30,6 +30,6 @@ int main(int argc, char **argv)
 	game.AddNewScene("new-player-scene", new NewPlayerScene());
 	game.AddNewScene("old-player-scene", new OldPlayerScene());
 
-	game.Start("mode-select", 60, 1920, 1280);
+	game.Start("auth-scene", 60, 1920, 1280);
 	return 0;
 }

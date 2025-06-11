@@ -2,6 +2,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <iostream>
 
 #include "Engine/AudioHelper.hpp"
 #include "Engine/GameEngine.hpp"
@@ -12,34 +13,66 @@
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
 #include "UI/Component/Slider.hpp"
+#include "player_data.h"
 
 void ModeSelectScene::Initialize()
 {
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
-    int halfH = h / 2;
-    Engine::ImageButton *btn;
 
-    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 - 50, 480, 115);
+    AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
+
+    // Layout parameters
+    const int buttonWidth = 480;
+    const int buttonHeight = 115;
+    const int spacing = 35;
+    const int titleHeight = 100;
+
+    const int totalHeight =
+        titleHeight + spacing +
+        buttonHeight + spacing +
+        buttonHeight;
+
+    int startY = (h - totalHeight - 200) / 2;
+
+    // User Info
+    std::string profileImagePath;
+    if (std::string(heroType) == "MAGE")
+        profileImagePath = "Characters/mage-profile.png";
+    else if (std::string(heroType) == "ARCHER")
+        profileImagePath = "Characters/archer-profile.png";
+
+    AddNewObject(new Engine::Image("UI/avatar.png", 0, 0, 120, 120));
+
+    Engine::Image *profileImage = new Engine::Image(profileImagePath, 35, 30, 55, 55);
+    AddNewObject(profileImage);
+
+    // std::string playerInfo = std::string("Player: ") + nameInput;
+    AddNewObject(new Engine::Label(nameInput, "pirulen.ttf", 27, 115, 30, 255, 255, 255, 255, 0.0, 0.0));
+
+    std::string uidInfo = std::string("UID: ") + player_uid;
+    AddNewObject(new Engine::Label(uidInfo, "pirulen.ttf", 16, 115, 60, 200, 200, 200, 255, 0.0, 0.0));
+
+    // Title
+    AddNewObject(new Engine::Label("SELECT MODE", "RealwoodRegular.otf", 72, halfW, startY + titleHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
+    startY += titleHeight + spacing;
+
+    // 1-PLAYER Button
+    auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 1));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 10, 28, 15, 0, 255, 0.5, 0.5));
-    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 + 100, 480, 115);
+    AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
+    startY += buttonHeight + spacing;
+
+    // 2-PLAYER Button
+    btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 2));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 160, 28, 15, 0, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
 
-    // Not safe if release resource while playing, however we only free while change scene, so it's fine.
+    // BGM
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
-
-    // Not safe if release resource while playing, however we only free while change scene, so it's fine.
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
-
-    btn = new Engine::ImageButton("UI/basic-button.png", "UI/basic-button-hover.png", halfW - 240, halfH / 2 + 350, 480, 115);
-    btn->SetOnClickCallback(std::bind(&ModeSelectScene::BackOnClick, this, 2));
-    AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 410, 28, 15, 0, 255, 0.5, 0.5));
 }
 
 void ModeSelectScene::Terminate()
@@ -47,11 +80,6 @@ void ModeSelectScene::Terminate()
     AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
-}
-
-void ModeSelectScene::BackOnClick(int stage)
-{
-    Engine::GameEngine::GetInstance().ChangeScene("start");
 }
 
 void ModeSelectScene::PlayOnClick(int stage)
