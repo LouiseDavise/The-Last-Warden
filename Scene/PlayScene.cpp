@@ -246,6 +246,29 @@ void PlayScene::Draw() const
 
     al_identity_transform(&transform);
     al_use_transform(&transform);
+
+    Player *player = GetPlayer();
+    if (player)
+    {
+        float hpRatio = player->GetHP() / 100.0f;
+        float barWidth = 200;
+        float barHeight = 20;
+        float barX = 95;
+        float barY = 35;
+
+        al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(60, 60, 60));
+
+        ALLEGRO_COLOR hpColor = al_map_rgb(255 * (1 - hpRatio), 255 * hpRatio, 0);
+        al_draw_filled_rectangle(barX, barY, barX + barWidth * hpRatio, barY + barHeight, hpColor);
+
+        al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(28, 15, 0), 1);
+    }
+
+    // Profile Border
+    // float centerX = 20 + 32;
+    // float centerY = 20 + 32;
+    // float radius = 32;
+    // al_draw_circle(centerX, centerY, radius + 1.5f, al_map_rgb(255, 255, 255), 5.0f);
     UIGroup->Draw();
 }
 
@@ -977,6 +1000,9 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 
 void PlayScene::ConstructUI()
 {
+    playerProfileImage = new Engine::Image("Characters/mage-profile.png", 20, 20, 64, 64);
+    UIGroup->AddNewObject(playerProfileImage);
+
     int screenW = al_get_display_width(al_get_current_display());
 
     pauseButton = new Engine::Image("UI/pause-button.png", screenW - 80, 20, 60, 60);

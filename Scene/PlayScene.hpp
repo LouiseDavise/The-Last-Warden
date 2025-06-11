@@ -133,5 +133,6 @@ public:
     Engine::Image *pauseButton = nullptr;
     Engine::Image *playButton = nullptr;
     bool paused = false;
+    Engine::Image *playerProfileImage = nullptr;
 };
 #endif // PLAYSCENE_HPP

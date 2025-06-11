@@ -11,7 +11,7 @@ using Res = Engine::Resources;
 
 Player::Player(float x, float y, float hp, float moveSpeed, const std::string &firstFramePath, const std::string &namePrefix, int frames, float animFPS)
     : Sprite(firstFramePath, x, y),
-      hp(hp), moveSpeed(moveSpeed)
+      hp(hp), maxHP(hp), moveSpeed(moveSpeed)
 {
     Anchor = Point(0.5f, 0.5f);
     animInterval = 1.0f / animFPS;
