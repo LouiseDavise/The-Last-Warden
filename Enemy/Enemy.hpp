@@ -24,6 +24,7 @@ protected:
     std::vector<Engine::Point> path;
     float speed;
     float hp;
+    float MAXhp;
     float damage;
     int money;
     State state;
@@ -49,15 +50,16 @@ public:
     std::list<Tower *> lockedTowers;
     std::list<Projectile *> lockedProjectiles;
 
-    Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money);
+    Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, int money);
 
     virtual void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
     virtual void Update(float deltaTime) override;
     virtual void Hit(float damage);
     virtual void Draw() const override;
-    virtual bool IsTargetable() const { return true; }
 
     float GetRadius() const { return CollisionRadius; }
     float GetDamage() const { return damage; }
+    float GetHP() const { return hp; }
+    State GetState() const {return state;}
 };
 #endif // ENEMY_HPP

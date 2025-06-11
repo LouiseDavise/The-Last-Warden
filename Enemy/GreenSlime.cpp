@@ -6,7 +6,7 @@
 #include <cmath>
 
 GreenSlime::GreenSlime(float x, float y)
-    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 70, 1, 1)
+    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 70, 70, 1, 1)
 {
     Size.x = 128;
     Size.y = 64;
@@ -46,6 +46,6 @@ GreenSlime::GreenSlime(float x, float y)
     attackTimer = 0;
     attackInterval = 0.07f;
     hurtTimer = 0;
-    hurtInterval = 0.12f;
+    hurtInterval = 0.07f;
     currentFrame = 0;
 }

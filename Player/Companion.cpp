@@ -25,7 +25,7 @@ Companion::Companion(float x, float y)
 
 void Companion::Update(float dt)
 {
-    if (IsDead())
+    if (hp <= 0)
         return;
 
     // Movement

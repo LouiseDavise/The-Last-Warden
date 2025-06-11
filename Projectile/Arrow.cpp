@@ -11,7 +11,7 @@
 
 class Tower;
 
-Arrow::Arrow(Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent) : Projectile("Projectiles/Arrow.png", 700, 1, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
+Arrow::Arrow(Engine::Point position, Engine::Point forwardDirection, float rotation, Tower *parent) : Projectile("Projectiles/Arrow.png", 700, 10, position, forwardDirection, rotation - ALLEGRO_PI / 2, parent) {
 }
 void Arrow::OnExplode(Enemy *enemy) {
     std::random_device dev;

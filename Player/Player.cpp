@@ -34,7 +34,7 @@ void Player::LoadAnimation(const std::string &prefix, int frames)
 
 void Player::Update(float dt)
 {
-    if (IsDead())
+    if (hp <= 0)
         return;
     UpdateMovement(dt);
     UpdateAnimation(dt);
@@ -50,7 +50,7 @@ void Player::Update(float dt)
 
 void Player::UpdateMovement(float dt)
 {
-    if (IsDead())
+    if (hp <= 0)
         return;
 
     if (knockbackTime > 0)

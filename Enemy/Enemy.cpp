@@ -22,21 +22,31 @@ PlayScene *Enemy::getPlayScene(){
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
 
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float damage, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), damage(damage), money(money)
+Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), MAXhp(MAXhp), damage(damage), money(money)
 {
     CollisionRadius = radius;
 }
 
 void Enemy::Hit(float damage)
 {
+    if(state == State::Dying) return;
     Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
+    if(state != State::Hurt){
+        auto *scene = getPlayScene();
+        auto* player = scene->GetPlayer();
+        state = State::Hurt;
+        Engine::Point dir = (player->Position - Position).Normalize();
+        Velocity = dir * speed * 0.5f;
+    }
     hp -= damage;
-    if (hp <= 0 && state != State::Dying)
+    if (hp <= 0)
     {
         state = State::Dying;
         currentFrame = 0;
         runTimer = 0;
         deathTimer = 0;
+        attackTimer = 0;
+        hurtTimer = 0;
         Velocity = Engine::Point(0, 0);  // Stop movement
         for (auto &it : lockedTowers)
             it->Target = nullptr;
@@ -50,7 +60,6 @@ void Enemy::Hit(float damage)
         hurtTimer = 0;
     }
 }
-
 
 void Enemy::Update(float deltaTime)
 {   
@@ -70,6 +79,7 @@ void Enemy::Update(float deltaTime)
             currentFrame++;
             if (currentFrame >= deathFrames.size()) {
                 getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+                currentFrame = 0;
                 return;
             }
         }
@@ -252,6 +262,28 @@ void Enemy::Draw() const {
     int flags = faceRight ? ALLEGRO_FLIP_HORIZONTAL : 0;
 
     al_draw_tinted_scaled_rotated_bitmap(frame, Tint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
+
+    if (hp > 0) {
+        const float barW   = 40;      // width  of the bar (pixels)
+        const float barH   =  6;      // height of the bar
+        const float yOff   = CollisionRadius + 12;      // 12 px above sprite
+        const float left   = Position.x - barW / 2;
+        const float right  = Position.x + barW / 2;
+        const float top    = Position.y - yOff;
+        const float fillW  = barW * (hp / MAXhp);
+
+        // background (dark grey)
+        al_draw_filled_rectangle(left, top, right, top + barH,
+                                 al_map_rgb(40, 40, 40));
+        // foreground (green → red as HP drops)
+        float ratio = hp / MAXhp;
+        ALLEGRO_COLOR col = al_map_rgb(255 * (1 - ratio), 255 * ratio, 0);
+        al_draw_filled_rectangle(left, top, left + fillW, top + barH, col);
+
+        // thin white border
+        al_draw_rectangle(left, top, right, top + barH,
+                          al_map_rgb(255,255,255), 1);
+    }
     if (PlayScene::DebugMode) {
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(255, 0, 0), 2);
     }

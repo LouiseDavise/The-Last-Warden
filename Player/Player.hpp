@@ -23,7 +23,6 @@ public:
     virtual void OnMouseDown(int button, int mx, int my);
 
     bool  FacingRight() const { return faceRight; }
-    bool  IsDead() const {return hp <= 0.0f;}
     virtual Engine::Point PositionWeapon() const {return Position;}
 
     float  GetHP()    const { return hp; }

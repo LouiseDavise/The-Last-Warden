@@ -31,7 +31,7 @@ void Tower::Update(float deltaTime)
     if (Target)
     {
         Engine::Point diff = Target->Position - Position;
-        if (diff.Magnitude() > CollisionRadius || !Target->IsTargetable())
+        if (diff.Magnitude() > CollisionRadius)
         {
             Target->lockedTowers.erase(lockedTowerIterator);
             Target = nullptr;
@@ -46,7 +46,7 @@ void Tower::Update(float deltaTime)
         for (auto &it : scene->EnemyGroup->GetObjects())
         {
             Enemy *enemy = dynamic_cast<Enemy *>(it);
-            if (!enemy || !enemy->IsTargetable())
+            if (!enemy || enemy->GetState() == State::Dying)
                 continue;
             Engine::Point diff = it->Position - Position;
             if (diff.Magnitude() <= CollisionRadius)
@@ -95,10 +95,5 @@ void Tower::Draw() const
     }
     imgBase.Draw();
     Sprite::Draw();
-    if (PlayScene::DebugMode)
-    {
-        // Draw target radius.
-        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(0, 0, 255), 2);
-    }
 }
 int Tower::GetPrice() const{return price;}

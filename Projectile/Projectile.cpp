@@ -7,6 +7,7 @@
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
 #include "Engine/Sprite.hpp"
+#include "Engine/LOG.hpp"
 #include "Scene/PlayScene.hpp"
 
 PlayScene *Projectile::getPlayScene() {
@@ -28,7 +29,7 @@ void Projectile::Update(float deltaTime) {
     // However simply loop through all enemies is enough for this program.
     for (auto &it : scene->EnemyGroup->GetObjects()) {
         Enemy *enemy = dynamic_cast<Enemy *>(it);
-        if (!enemy->Visible)
+        if (!enemy->Visible || !enemy || enemy->GetState() == State::Dying)
             continue;
         if (Engine::Collider::IsCircleOverlap(Position, CollisionRadius, enemy->Position, enemy->CollisionRadius)) {
             OnExplode(enemy);

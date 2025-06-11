@@ -180,21 +180,19 @@ void PlayScene::Update(float deltaTime)
             Enemy *enemy = dynamic_cast<Enemy *>(obj);
             if (!enemy)
                 continue;
-
             if (!Engine::Collider::IsCircleOverlap(player->Position, player->GetRadius(), enemy->Position, enemy->GetRadius()))
                 continue;
 
-            if (player->GetHP() > 0)
+            if (player->GetHP() > 0 && enemy->GetHP() > 0)
                 player->TakeDamage(enemy->GetDamage(), enemy->Position);
         }
         IScene::Update(deltaTime);
         ticks += deltaTime;
-        if (player && player->IsDead())
+        if (player && player->GetHP() <= 0)
         {
             Engine::GameEngine::GetInstance().ChangeScene("lose-scene");
             return; // stop further updates this frame
         }
-        // Enemy Collision
     }
 
     if (preview)
@@ -894,39 +892,40 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
 
 void PlayScene::SpawnEnemy(const EnemyWave &wave)
 {
-    if (wave.type == 0)
+    Player *player = GetPlayer();
+    Engine::Point playerPos = player->Position;
+
+    static std::default_random_engine rng((std::random_device())());
+    std::uniform_real_distribution<float> angleDist(0, 2 * 3.1415926f);
+    float radius = 500.0f;
+
+    for (int i = 0; i < wave.count; ++i)
     {
-        Player *player = GetPlayer();
-        Engine::Point playerPos = player->Position;
+        float angle = angleDist(rng);
+        float spawnX = playerPos.x + std::cos(angle) * radius;
+        float spawnY = playerPos.y + std::sin(angle) * radius;
 
-        static std::default_random_engine rng((std::random_device())());
-        std::uniform_real_distribution<float> angleDist(0, 2 * 3.1415926f);
-        float radius = 500.0f;
+        // Convert to grid coordinates
+        int gx = static_cast<int>(spawnX) / BlockSize;
+        int gy = static_cast<int>(spawnY) / BlockSize;
 
-        for (int i = 0; i < wave.count; ++i)
-        {
-            float angle = angleDist(rng);
-            float spawnX = playerPos.x + std::cos(angle) * radius;
-            float spawnY = playerPos.y + std::sin(angle) * radius;
+        // Check if inside map and valid tile
+        if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
+            continue;
+        if (mapState[gy][gx] != TILE_DIRT)
+            continue;
 
-            // Convert to grid coordinates
-            int gx = static_cast<int>(spawnX) / BlockSize;
-            int gy = static_cast<int>(spawnY) / BlockSize;
-
-            // Check if inside map and valid tile
-            if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
-                continue;
-            if (mapState[gy][gx] != TILE_DIRT)
-                continue;
-
-            GreenSlime *slime = new GreenSlime(spawnX, spawnY);
-            if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
-            {
-                slime->UpdatePath(mapDistance);
-            }
-
-            EnemyGroup->AddNewObject(slime);
+        Enemy* toSpawn;
+        switch(wave.type){
+            case 0 : toSpawn = new GreenSlime(spawnX, spawnY); break;
+            case 1 : toSpawn = new ToxicSlime(spawnX, spawnY); break;
         }
+        if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
+        {
+            toSpawn->UpdatePath(mapDistance);
+        }
+
+        EnemyGroup->AddNewObject(toSpawn);
     }
 }
 
