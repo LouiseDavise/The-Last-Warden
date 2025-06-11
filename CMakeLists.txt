@@ -86,8 +86,6 @@ add_executable(The_Last_Warden
     Scene/NewPlayerScene.hpp
     Scene/OldPlayerScene.cpp
     Scene/OldPlayerScene.hpp
-    Scene/WelcomeScene.cpp
-    Scene/WelcomeScene.hpp
 
     Structure/Structure.cpp 
     Structure/Structure.hpp
