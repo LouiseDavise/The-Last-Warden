@@ -18,7 +18,7 @@ public:
     Player(float x, float y, float hp, float moveSpeed,
            const std::string &firstFramePath, const std::string &namePrefix, int frames, float animFPS);
 
-    void TakeDamage(float dmg, const Engine::Point &from);
+    void Hit(float dmg, const Engine::Point &from);
     void OnKeyDown(int keyCode);
     void OnKeyUp(int keyCode);
 

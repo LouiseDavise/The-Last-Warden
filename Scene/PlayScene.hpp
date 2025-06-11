@@ -66,6 +66,7 @@ public:
     Group *DebugIndicatorGroup;
     Group *ProjectileGroup;
     Group *TowerGroup;
+    Group *WallGroup;
     Group *EnemyGroup;
     Group *PlayerGroup;
     Group *EffectGroup;

@@ -13,7 +13,6 @@
 #include "Scene/AuthScene.hpp"
 #include "Scene/NewPlayerScene.hpp"
 #include "Scene/OldPlayerScene.hpp"
-#include "Scene/WelcomeScene.hpp"
 
 int main(int argc, char **argv)
 {
@@ -30,7 +29,6 @@ int main(int argc, char **argv)
 	game.AddNewScene("auth-scene", new AuthScene());
 	game.AddNewScene("new-player-scene", new NewPlayerScene());
 	game.AddNewScene("old-player-scene", new OldPlayerScene());
-	game.AddNewScene("welcome-scene", new WelcomeScene());
 
 	game.Start("mode-select", 60, 1920, 1280);
 	return 0;

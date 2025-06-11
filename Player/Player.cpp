@@ -204,7 +204,7 @@ void Player::OnKeyUp(int k)
         keyD = false;
 }
 
-void Player::TakeDamage(float dmg, const Engine::Point &from)
+void Player::Hit(float dmg, const Engine::Point &from)
 {
     hp -= dmg;
     if (hp < 0)

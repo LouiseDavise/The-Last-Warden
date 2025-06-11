@@ -17,7 +17,6 @@ protected:
     Sprite imgBase;
     std::list<Tower *>::iterator lockedTowerIterator;
     PlayScene *getPlayScene();
-    // Reference: Design Patterns - Factory Method.
     virtual void CreateProjectile() = 0;
 
 public:

@@ -5,7 +5,7 @@
 
 class Wall : public Structure {
 public:
-    Wall(std::string img, float x, float y, float hp);
+    Wall(std::string img, float x, float y, float hp, float radius);
     float hp, MAXhp;
     void Hit(float damage);
     void Update(float deltaTime) override;

@@ -73,12 +73,13 @@ void PlayScene::Initialize()
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
     AddNewObject(DebugIndicatorGroup = new Group("DebugGroup"));
     AddNewObject(ProjectileGroup = new Group("ProjectileGroup"));
-    AddNewObject(TowerGroup = new Group("TowerGroup"));
     AddNewObject(EnemyGroup = new Group("EnemyGroup"));
     AddNewObject(PlayerGroup = new Group("PlayerGroup"));
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
+    AddNewObject(TowerGroup = new Group("TowerGroup"));
+    AddNewObject(WallGroup = new Group("WallGroup"));
 
     std::ifstream fin("Resource/map1.txt");
     if (!fin.is_open())
@@ -180,17 +181,6 @@ void PlayScene::Update(float deltaTime)
 
     for (int i = 0; i < SpeedMult; i++)
     {
-        for (auto *obj : EnemyGroup->GetObjects())
-        {
-            Enemy *enemy = dynamic_cast<Enemy *>(obj);
-            if (!enemy)
-                continue;
-            if (!Engine::Collider::IsCircleOverlap(player->Position, player->GetRadius(), enemy->Position, enemy->GetRadius()))
-                continue;
-
-            if (player->GetHP() > 0 && enemy->GetHP() > 0)
-                player->TakeDamage(enemy->GetDamage(), enemy->Position);
-        }
         IScene::Update(deltaTime);
         ticks += deltaTime;
         if (player && player->GetHP() <= 0)

@@ -126,13 +126,15 @@ void Enemy::Update(float deltaTime)
     auto* player = scene->GetPlayer();
     Engine::Point playerPos = player->Position;
 
-    if (player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)) {
+    if (player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)
+        && player->GetHP() > 0 && hp > 0) {
         if (state != State::Attacking) {
             state = State::Attacking;
             currentFrame = 0;
             attackTimer = 0;
             Velocity = Engine::Point(0, 0); // Stop movement
         }
+        player->Hit(GetDamage(), Position);
     }
     else if(scene->validLine(Position, playerPos)){
         state = State::Run;
