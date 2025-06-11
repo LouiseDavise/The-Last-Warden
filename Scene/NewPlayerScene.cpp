@@ -19,6 +19,7 @@
 bool onEnterNameScene;
 char nameInput[17] = "PLAYER";
 int nameInputLen = 6;
+char heroType[10] = "";
 char player_uid[20];
 
 unsigned long hash(const char *str)
@@ -37,7 +38,7 @@ void generate_player_uid(const char *player_name, char *uid_buffer)
     snprintf(uid_buffer, 20, "%lu", hashed_value);
 }
 
-void save_player_uid_and_name(const std::string &uid, const std::string &player_name)
+void save_player_uid_and_name(const std::string &uid, const std::string &player_name, const std::string &hero_type)
 {
     std::filesystem::create_directories("Data");
 
@@ -46,13 +47,13 @@ void save_player_uid_and_name(const std::string &uid, const std::string &player_
 
     if (file.is_open())
     {
-        file << uid << "," << player_name << "\n";
+        file << uid << "," << player_name << "," << hero_type << "\n";
         file.close();
-        std::cout << "Player UID and name appended to player_uid.txt\n";
+        std::cout << "Player UID, name, and hero type appended to player_uid.txt\n";
     }
     else
     {
-        std::cout << "Failed to append Player UID and name to file.\n";
+        std::cout << "Failed to write to file.\n";
     }
 }
 
@@ -96,7 +97,7 @@ void NewPlayerScene::OnNextClick(int)
     if (nameInputLen >= 3)
     {
         generate_player_uid(nameInput, player_uid);
-        save_player_uid_and_name(player_uid, nameInput);
+        save_player_uid_and_name(player_uid, nameInput, "MAGE");
         onEnterNameScene = false;
         Engine::GameEngine::GetInstance().ChangeScene("start");
     }

@@ -101,7 +101,7 @@ void OldPlayerScene::OnKeyUp(int keyCode)
     }
 }
 
-bool OldPlayerScene::ValidateUID(const std::string &uid, std::string &outName)
+bool OldPlayerScene::ValidateUID(const std::string &uid, std::string &outName, std::string &outHero)
 {
     std::ifstream file("Data/player_uid.txt");
     if (!file)
@@ -111,12 +111,13 @@ bool OldPlayerScene::ValidateUID(const std::string &uid, std::string &outName)
     while (std::getline(file, line))
     {
         std::istringstream ss(line);
-        std::string file_uid, file_name;
-        if (std::getline(ss, file_uid, ',') && std::getline(ss, file_name))
+        std::string file_uid, file_name, file_hero;
+        if (std::getline(ss, file_uid, ',') && std::getline(ss, file_name, ',') && std::getline(ss, file_hero))
         {
             if (file_uid == uid)
             {
                 outName = file_name;
+                outHero = file_hero;
                 return true;
             }
         }
@@ -130,11 +131,13 @@ void OldPlayerScene::OnSubmitClick(int)
         return;
 
     std::string loadedName;
-    if (ValidateUID(uidInput, loadedName))
+    std::string loadedHero;
+    if (ValidateUID(uidInput, loadedName, loadedHero))
     {
         strcpy_s(player_uid, sizeof(player_uid), uidInput.c_str());
         strcpy_s(nameInput, sizeof(nameInput), loadedName.c_str());
-        Engine::GameEngine::GetInstance().ChangeScene("welcome-scene");
+        strcpy_s(heroType, sizeof(heroType), loadedHero.c_str());
+        Engine::GameEngine::GetInstance().ChangeScene("mode-select");
     }
     else
     {

@@ -23,7 +23,7 @@ public:
     void OnSubmitClick(int stage);
     void OnBackClick(int stage);
 
-    static bool ValidateUID(const std::string& uid, std::string& outName);
+    static bool ValidateUID(const std::string& uid, std::string& outName, std::string& outHero);
 };
 
 #endif // OLDPLAYER_SCENE_HPP
