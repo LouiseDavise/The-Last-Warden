@@ -14,6 +14,7 @@
 #include "Engine/LOG.hpp"
 #include "Engine/Collider.hpp"
 #include "Scene/PlayScene.hpp"
+#include "Structure/Structure.hpp"
 #include "Structure/Offense/Tower.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
@@ -124,10 +125,20 @@ void Enemy::Update(float deltaTime)
 
     auto *scene = getPlayScene();
     auto* player = scene->GetPlayer();
-    Engine::Point playerPos = player->Position;
 
-    if (player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)
-        && player->GetHP() > 0 && hp > 0) {
+    bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)
+                     && player->GetHP() > 0 && hp > 0;
+
+    Structure* collidedStructure = nullptr;
+    for (auto* obj : getPlayScene()->StructureGroup->GetObjects()) {
+        Structure* structure = dynamic_cast<Structure*>(obj);
+        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius)) {
+            collidedStructure = structure;
+            break;
+        }
+    }
+
+    if (playerCollide) {
         if (state != State::Attacking) {
             state = State::Attacking;
             currentFrame = 0;
@@ -136,9 +147,18 @@ void Enemy::Update(float deltaTime)
         }
         player->Hit(GetDamage(), Position);
     }
-    else if(scene->validLine(Position, playerPos)){
+    else if(collidedStructure){
+        if (state != State::Attacking) {
+            state = State::Attacking;
+            currentFrame = 0;
+            attackTimer = 0;
+            Velocity = Engine::Point(0, 0); // Stop movement
+        }
+        collidedStructure->Hit(GetDamage());
+    }
+    else if(scene->validLine(Position, player->Position)){
         state = State::Run;
-        Engine::Point dir = (playerPos - Position).Normalize();
+        Engine::Point dir = (player->Position - Position).Normalize();
         Velocity = dir * speed;
     }
     else

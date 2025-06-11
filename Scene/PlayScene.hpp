@@ -36,14 +36,14 @@ class PlayScene final : public Engine::IScene
 private:
     enum TileType
     {
-        TILE_DIRT,
-        TILE_FLOOR,
+        TILE_WALKABLE,
+        TILE_BRIDGE,
         TILE_OCCUPIED,
-        TILE_WALL
+        TILE_OBSTRUCTION
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
-    Tower *highlightedTower = nullptr;
+    Structure *highlightedStructure = nullptr;
 
 protected:
     int money;
@@ -65,8 +65,7 @@ public:
     Group *GroundEffectGroup;
     Group *DebugIndicatorGroup;
     Group *ProjectileGroup;
-    Group *OffenseGroup;
-    Group *DefenseGroup;
+    Group *StructureGroup;
     Group *EnemyGroup;
     Group *PlayerGroup;
     Group *EffectGroup;
@@ -104,6 +103,7 @@ public:
             return nullptr;
         return dynamic_cast<Player *>(PlayerGroup->GetObjects().back());
     }
+    TileType getTileType(int value) {return static_cast<TileType>(value);}
 
     void EarnMoney(int money);
     void ReadMap();
@@ -112,7 +112,7 @@ public:
     void UIBtnClicked(int id);
 
     bool CheckSpaceValid(int x, int y);
-    Tower *GetTowerAt(int gx, int gy);
+    Structure *GetStructureAt(int gx, int gy);
     Engine::Point camera;
 
     // Enemy

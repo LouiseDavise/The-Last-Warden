@@ -23,8 +23,7 @@
 #include "Engine/Collider.hpp"
 #include "PlayScene.hpp"
 #include "Structure/Offense/BowTower.hpp"
-#include "Structure/Offense/LaserTurret.hpp"
-#include "Structure/Offense/MachineGunTurret.hpp"
+#include "Structure/Defense/BasicWall.hpp"
 #include "Structure/StructureButton.hpp"
 #include "Structure/Shovel.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
@@ -74,12 +73,11 @@ void PlayScene::Initialize()
     AddNewObject(DebugIndicatorGroup = new Group("DebugGroup"));
     AddNewObject(ProjectileGroup = new Group("ProjectileGroup"));
     AddNewObject(EnemyGroup = new Group("EnemyGroup"));
+    AddNewObject(StructureGroup = new Group("StructureGroup"));
     AddNewObject(PlayerGroup = new Group("PlayerGroup"));
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
-    AddNewObject(OffenseGroup = new Group("OffenseGroup"));
-    AddNewObject(DefenseGroup = new Group("DefenseGroup"));
 
     std::ifstream fin("Resource/map1.txt");
     if (!fin.is_open())
@@ -227,12 +225,12 @@ void PlayScene::Draw() const
     al_use_transform(&transform);
     TileMapGroup->Draw();
     GroundEffectGroup->Draw();
+    StructureGroup->Draw();
     EnemyGroup->Draw();
     PlayerGroup->Draw();
     WeaponGroup->Draw();
     ProjectileGroup->Draw();
     EffectGroup->Draw();
-    OffenseGroup->Draw();
 
     al_identity_transform(&transform);
     al_use_transform(&transform);
@@ -313,14 +311,14 @@ void PlayScene::OnMouseMove(int mx, int my)
     {
         preview->Position = Engine::Point{(float)mx, (float)my};
 
-        Tower *tgt = GetTowerAt(x, y);
-        if (tgt != highlightedTower)
+        Structure *tgt = GetStructureAt(x, y);
+        if (tgt != highlightedStructure)
         {
-            if (highlightedTower)
-                highlightedTower->Tint = al_map_rgba(255, 255, 255, 255);
+            if (highlightedStructure)
+                highlightedStructure->Tint = al_map_rgba(255, 255, 255, 255);
             if (tgt)
                 tgt->Tint = al_map_rgba(255, 60, 60, 255); // bright red
-            highlightedTower = tgt;
+            highlightedStructure = tgt;
         }
         TargetTile->Visible = (tgt != nullptr);
         if (tgt)
@@ -349,18 +347,18 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
     {
         if (button & 1)
         {
-            Tower *t = GetTowerAt(gx, gy);
-            if (t)
+            Structure *s = GetStructureAt(gx, gy);
+            if (s)
             {
-                OffenseGroup->RemoveObject(t->GetObjectIterator());
+                StructureGroup->RemoveObject(s->GetObjectIterator());
                 AudioHelper::PlaySample("shovel.mp3");
-                mapState[gy][gx] = TILE_FLOOR;
+                mapState[gy][gx] = TILE_BRIDGE;
             }
         }
-        if (highlightedTower)
+        if (highlightedStructure)
         {
-            highlightedTower->Tint = al_map_rgba(255, 255, 255, 255);
-            highlightedTower = nullptr;
+            highlightedStructure->Tint = al_map_rgba(255, 255, 255, 255);
+            highlightedStructure = nullptr;
         }
         return;
     }
@@ -394,7 +392,8 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             preview->Enabled = true;
             preview->Preview = false;
             preview->Tint = al_map_rgba(255, 255, 255, 255);
-            OffenseGroup->AddNewObject(preview);
+            preview->occupyX = x; preview->occupyY = y;
+            StructureGroup->AddNewObject(preview);
             // To keep responding when paused.
             preview->Update(0);
             // Remove Preview.
@@ -549,12 +548,12 @@ void PlayScene::ReadMap()
             switch (tileChar)
             {
             case '0':
-                mapState[i][j] = TILE_DIRT;
+                mapState[i][j] = TILE_WALKABLE;
                 break;
 
                 // case '1':
                 // {
-                //     mapState[i][j] = TILE_DIRT;
+                //     mapState[i][j] = TILE_WALKABLE;
                 //     int treeIdx = treeDist(rng);
                 //     std::string treePath = "Tileset/tree/image1x" + std::to_string(treeIdx) + ".png";
                 //     TileMapGroup->AddNewObject(new Engine::Image(treePath, j * BlockSize, i * BlockSize, BlockSize, BlockSize));
@@ -563,7 +562,7 @@ void PlayScene::ReadMap()
 
             case '1':
             {
-                mapState[i][j] = TILE_WALL;
+                mapState[i][j] = TILE_OBSTRUCTION;
 
                 auto isRiverLike = [&](int nx, int ny)
                 {
@@ -636,7 +635,7 @@ void PlayScene::ReadMap()
 
             case '2':
             {
-                mapState[i][j] = TILE_WALL;
+                mapState[i][j] = TILE_OBSTRUCTION;
 
                 auto isSameWall = [&](int cx, int cy, int nx, int ny)
                 {
@@ -679,7 +678,7 @@ void PlayScene::ReadMap()
 
             case '3':
             {
-                mapState[i][j] = TILE_WALL;
+                mapState[i][j] = TILE_OBSTRUCTION;
 
                 auto isRiverLike = [&](int nx, int ny)
                 {
@@ -742,7 +741,7 @@ void PlayScene::ReadMap()
             }
             case '4':
             {
-                mapState[i][j] = TILE_FLOOR;
+                mapState[i][j] = TILE_BRIDGE;
 
                 auto isRiverLike = [&](int nx, int ny)
                 {
@@ -771,7 +770,7 @@ void PlayScene::ReadMap()
             }
 
             default:
-                mapState[i][j] = TILE_DIRT;
+                mapState[i][j] = TILE_WALKABLE;
                 break;
             }
             if (tileChar == '0' && prob(rng) < treeChance)
@@ -909,7 +908,7 @@ void PlayScene::UpdateBFSFromPlayer()
 
 bool PlayScene::IsWalkable(int x, int y)
 {
-    return mapState[y][x] != TILE_WALL;
+    return mapState[y][x] != TILE_OBSTRUCTION;
 }
 
 void PlayScene::ReadEnemyWave()
@@ -966,7 +965,7 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
         // Check if inside map and valid tile
         if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
             continue;
-        if (mapState[gy][gx] != TILE_DIRT)
+        if (mapState[gy][gx] != TILE_WALKABLE)
             continue;
 
         Enemy *toSpawn;
@@ -1014,8 +1013,8 @@ void PlayScene::ConstructUI()
     };
     std::vector<BtnInfo> btns = {
         {w / 2 - 332 + 6 + 74 * 0, h - 82, BowTower::Price, 1, "Structures/BowTower.png"},
-        {w / 2 - 332 + 6 + 74 * 1, h - 82, MachineGunTurret::Price, 2, "Structures/turret-1.png"},
-        {w / 2 - 332 + 6 + 74 * 2, h - 82, LaserTurret::Price, 3, "Structures/turret-2.png"}};
+        {w / 2 - 332 + 6 + 74 * 1, h - 82, BasicWall::Price, 2, "Structures/BasicWall.png"}
+    };
 
     for (auto &b : btns)
     {
@@ -1051,12 +1050,8 @@ void PlayScene::UIBtnClicked(int id)
             preview = new BowTower(0, 0);
         break;
     case 2:
-        if (money >= MachineGunTurret::Price)
-            preview = new MachineGunTurret(0, 0);
-        break;
-    case 3:
-        if (money >= LaserTurret::Price)
-            preview = new LaserTurret(0, 0);
+        if (money >= BasicWall::Price)
+            preview = new BasicWall(0, 0);
         break;
     }
     if (!preview)
@@ -1074,27 +1069,27 @@ bool PlayScene::CheckSpaceValid(int x, int y)
     if (x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
         return false;
 
-    if (mapState[y][x] == TILE_OCCUPIED || mapState[y][x] == TILE_WALL)
+    if (mapState[y][x] == TILE_OCCUPIED || mapState[y][x] == TILE_OBSTRUCTION)
         return false;
 
-    // Only allow placement on TILE_DIRT or TILE_FLOOR
-    if (mapState[y][x] != TILE_DIRT && mapState[y][x] != TILE_FLOOR)
+    // Only allow placement on TILE_WALKABLE or TILE_BRIDGE
+    if (mapState[y][x] != TILE_WALKABLE && mapState[y][x] != TILE_BRIDGE)
         return false;
 
     return true;
 }
 
-Tower *PlayScene::GetTowerAt(int gx, int gy)
+Structure *PlayScene::GetStructureAt(int gx, int gy)
 {
-    for (auto *obj : OffenseGroup->GetObjects())
+    for (auto *obj : StructureGroup->GetObjects())
     {
-        auto *t = dynamic_cast<Tower *>(obj);
-        if (!t)
+        auto *s = dynamic_cast<Tower *>(obj);
+        if (!s)
             continue;
-        int tx = int(t->Position.x) / BlockSize;
-        int ty = int(t->Position.y) / BlockSize;
-        if (tx == gx && ty == gy)
-            return t;
+        int sx = int(s->Position.x) / BlockSize;
+        int sy = int(s->Position.y) / BlockSize;
+        if (sx == gx && sy == gy)
+            return s;
     }
     return nullptr;
 }

@@ -9,9 +9,8 @@ class Wall : public Structure {
 protected:
     PlayScene *getPlayScene();
 public:
-    Wall(std::string img, float x, float y, float hp, float radius);
-    float hp, MAXhp;
-    void Hit(float damage);
+    Wall(std::string img, float x, float y, int price, float hp, float MAXhp, float radius);
+    void Hit(float damage) override;
     void Update(float deltaTime) override;
     void Draw() const override;
 };

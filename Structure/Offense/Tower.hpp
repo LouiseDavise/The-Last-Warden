@@ -12,6 +12,7 @@ class PlayScene;
 class Tower : public Structure {
 protected:
     float coolDown;
+    float range;
     float reload = 0;
     float rotateRadian = 2 * ALLEGRO_PI;
     Sprite imgBase;
@@ -21,7 +22,8 @@ protected:
 
 public:
     Enemy *Target = nullptr;
-    Tower(std::string imgBase, std::string imgTower, float x, float y, float radius, int price, float coolDown);
+    Tower(std::string imgBase, std::string imgTower, float x, float y, int price, float hp, float MAXhp, float radius, float coolDown, float range);
+    void Hit(float damage) override;
     void Update(float deltaTime) override;
     void Draw() const override;
 };

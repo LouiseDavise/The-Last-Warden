@@ -4,30 +4,29 @@
 #include "Scene/PlayScene.hpp"
 #include "Engine/GameEngine.hpp"
 
-Wall::Wall(std::string img, float x, float y, float hp, float radius)
-    : Structure(img, x, y), hp(hp), MAXhp(hp) {
-    CollisionRadius = radius;
+Wall::Wall(std::string img, float x, float y, int price, float hp, float MAXhp, float radius)
+    : Structure(img, x, y, price, hp, MAXhp, radius) {
+    type = StructureType::Defense;
+}
+
+PlayScene* Wall::getPlayScene() {
+    return dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
 
 void Wall::Hit(float damage) {
     hp -= damage;
     if (hp <= 0) {
-        // Remove this wall from the scene
-        getPlayScene()->DefenseGroup->RemoveObject(objectIterator);
+        getPlayScene()->mapState[occupyY][occupyX] = getPlayScene()->getTileType(0);
+        getPlayScene()->StructureGroup->RemoveObject(objectIterator);
     }
 }
 
 void Wall::Update(float deltaTime) {
     Sprite::Update(deltaTime);
-    // You may add blinking / damage effect / animation here in the future
-    if (hp <= 0) {
-        getPlayScene()->DefenseGroup->RemoveObject(objectIterator);
-    }
 }
 
 void Wall::Draw() const {
     Sprite::Draw();
-
     if (hp > 0) {
         const float barW = 40;
         const float barH = 6;
@@ -37,13 +36,15 @@ void Wall::Draw() const {
         const float top = Position.y - yOff;
         const float fillW = barW * (hp / MAXhp);
 
-        // Background
         al_draw_filled_rectangle(left, top, right, top + barH, al_map_rgb(40, 40, 40));
-        // Health fill (green→red)
+
         float ratio = hp / MAXhp;
-        ALLEGRO_COLOR color = al_map_rgb(255 * (1 - ratio), 255 * ratio, 0);
+        ALLEGRO_COLOR color = al_map_rgb(100 + 50 * (1 - ratio), 150 + 50 * (1 - ratio), 255);  // Blue tone
         al_draw_filled_rectangle(left, top, left + fillW, top + barH, color);
-        // White border
+
         al_draw_rectangle(left, top, right, top + barH, al_map_rgb(255, 255, 255), 1);
+    }
+    if (PlayScene::DebugMode) {
+        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(50, 50, 255), 2);
     }
 }

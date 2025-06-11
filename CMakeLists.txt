@@ -27,10 +27,6 @@ add_executable(The_Last_Warden
 
     Projectile/Projectile.cpp
     Projectile/Projectile.hpp
-    Projectile/FireBullet.cpp
-    Projectile/FireBullet.hpp
-    Projectile/LaserBullet.cpp
-    Projectile/LaserBullet.hpp
     Projectile/Arrow.cpp 
     Projectile/Arrow.hpp 
 
@@ -95,10 +91,6 @@ add_executable(The_Last_Warden
     Structure/Offense/Tower.hpp
     Structure/Offense/BowTower.cpp 
     Structure/Offense/BowTower.hpp 
-    Structure/Offense/LaserTurret.cpp
-    Structure/Offense/LaserTurret.hpp
-    Structure/Offense/MachineGunTurret.cpp
-    Structure/Offense/MachineGunTurret.hpp
     Structure/Defense/Wall.cpp 
     Structure/Defense/Wall.hpp 
     Structure/Defense/BasicWall.cpp 
