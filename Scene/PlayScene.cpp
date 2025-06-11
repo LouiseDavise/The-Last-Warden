@@ -133,6 +133,9 @@ void PlayScene::Initialize()
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
     // UIGroup->AddNewObject(lifeTextLabel);
     ConstructUI();
+    UITimerLabel = new Engine::Label("00:00:00", "pirulen.ttf", 30, al_get_display_width(al_get_current_display()) / 2, 20, 255, 255, 255, 255, 0.5f, 0.0f);
+    UIGroup->AddNewObject(UITimerLabel);
+
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
     // Start BGM.
@@ -214,6 +217,14 @@ void PlayScene::Update(float deltaTime)
     float mapHeightPx = (MapHeight + 3) * BlockSize;
     camera.x = std::max(0.0f, std::min(camera.x, std::max(0.0f, mapWidthPx - screenSize.x)));
     camera.y = std::max(0.0f, std::min(camera.y, std::max(0.0f, mapHeightPx - screenSize.y)));
+
+    int totalSeconds = static_cast<int>(matchTime);
+    int hours = totalSeconds / 3600;
+    int minutes = (totalSeconds % 3600) / 60;
+    int seconds = totalSeconds % 60;
+    char buffer[16];
+    std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, seconds);
+    UITimerLabel->Text = buffer;
 }
 
 void PlayScene::Draw() const
@@ -886,7 +897,7 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     float delay, count;
     while (fin >> type >> delay >> count)
     {
-        enemyWaves.push_back({type, delay, count, false});  
+        enemyWaves.push_back({type, delay, count, false});
     }
 }
 

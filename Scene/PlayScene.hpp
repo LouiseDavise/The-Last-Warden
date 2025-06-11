@@ -72,6 +72,7 @@ public:
 
     Engine::Label *UIMoney;
     Engine::Label *UILives;
+    Engine::Label *UITimerLabel;
     Engine::Image *TargetTile;
     Engine::Image *StructurePanel;
     Tower *preview;
@@ -128,6 +129,6 @@ public:
 
     bool isTwoPlayer = false;
     void SetTwoPlayerMode(bool twoP);
-    Companion* companion = nullptr;
+    Companion *companion = nullptr;
 };
 #endif // PLAYSCENE_HPP
