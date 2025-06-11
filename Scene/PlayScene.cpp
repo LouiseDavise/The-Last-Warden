@@ -152,6 +152,8 @@ void PlayScene::Terminate()
 
 void PlayScene::Update(float deltaTime)
 {
+    if (paused)
+        return;
     Player *player = GetPlayer();
     if (player)
     {
@@ -249,6 +251,34 @@ void PlayScene::Draw() const
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
 {
+    if ((button & 1))
+    {
+        Engine::Point mouse(mx + camera.x, my + camera.y);
+
+        if (pauseButton->Visible &&
+            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 50 &&
+            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 50)
+        {
+            paused = true;
+            pauseButton->Visible = false;
+            playButton->Visible = true;
+            return;
+        }
+
+        if (playButton->Visible &&
+            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 50 &&
+            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 50)
+        {
+            paused = false;
+            playButton->Visible = false;
+            pauseButton->Visible = true;
+            return;
+        }
+
+        if (paused)
+            return; // Don't allow game actions while paused
+    }
+
     Player *player = GetPlayer();
     if ((button & 1) && !TargetTile->Visible && preview)
     {
@@ -926,10 +956,15 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
         if (mapState[gy][gx] != TILE_DIRT)
             continue;
 
-        Enemy* toSpawn;
-        switch(wave.type){
-            case 0 : toSpawn = new GreenSlime(spawnX, spawnY); break;
-            case 1 : toSpawn = new ToxicSlime(spawnX, spawnY); break;
+        Enemy *toSpawn;
+        switch (wave.type)
+        {
+        case 0:
+            toSpawn = new GreenSlime(spawnX, spawnY);
+            break;
+        case 1:
+            toSpawn = new ToxicSlime(spawnX, spawnY);
+            break;
         }
         if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
         {
@@ -942,6 +977,16 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 
 void PlayScene::ConstructUI()
 {
+    int screenW = al_get_display_width(al_get_current_display());
+
+    pauseButton = new Engine::Image("UI/pause-button.png", screenW - 80, 20, 60, 60);
+    playButton = new Engine::Image("UI/play-button.png", screenW - 80, 20, 60, 60);
+    playButton->Visible = false;
+
+    pauseButton->Visible = true;
+    UIGroup->AddNewObject(pauseButton);
+    UIGroup->AddNewObject(playButton);
+
     int w = al_get_display_width(al_get_current_display());
     int h = al_get_display_height(al_get_current_display());
     struct BtnInfo

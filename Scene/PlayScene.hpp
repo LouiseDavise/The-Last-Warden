@@ -130,5 +130,8 @@ public:
     bool isTwoPlayer = false;
     void SetTwoPlayerMode(bool twoP);
     Companion *companion = nullptr;
+    Engine::Image *pauseButton = nullptr;
+    Engine::Image *playButton = nullptr;
+    bool paused = false;
 };
 #endif // PLAYSCENE_HPP
