@@ -65,8 +65,8 @@ public:
     Group *GroundEffectGroup;
     Group *DebugIndicatorGroup;
     Group *ProjectileGroup;
-    Group *TowerGroup;
-    Group *WallGroup;
+    Group *OffenseGroup;
+    Group *DefenseGroup;
     Group *EnemyGroup;
     Group *PlayerGroup;
     Group *EffectGroup;

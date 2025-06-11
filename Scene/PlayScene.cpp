@@ -78,8 +78,8 @@ void PlayScene::Initialize()
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
-    AddNewObject(TowerGroup = new Group("TowerGroup"));
-    AddNewObject(WallGroup = new Group("WallGroup"));
+    AddNewObject(OffenseGroup = new Group("OffenseGroup"));
+    AddNewObject(DefenseGroup = new Group("DefenseGroup"));
 
     std::ifstream fin("Resource/map1.txt");
     if (!fin.is_open())
@@ -232,7 +232,7 @@ void PlayScene::Draw() const
     WeaponGroup->Draw();
     ProjectileGroup->Draw();
     EffectGroup->Draw();
-    TowerGroup->Draw();
+    OffenseGroup->Draw();
 
     al_identity_transform(&transform);
     al_use_transform(&transform);
@@ -352,7 +352,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             Tower *t = GetTowerAt(gx, gy);
             if (t)
             {
-                TowerGroup->RemoveObject(t->GetObjectIterator());
+                OffenseGroup->RemoveObject(t->GetObjectIterator());
                 AudioHelper::PlaySample("shovel.mp3");
                 mapState[gy][gx] = TILE_FLOOR;
             }
@@ -394,7 +394,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             preview->Enabled = true;
             preview->Preview = false;
             preview->Tint = al_map_rgba(255, 255, 255, 255);
-            TowerGroup->AddNewObject(preview);
+            OffenseGroup->AddNewObject(preview);
             // To keep responding when paused.
             preview->Update(0);
             // Remove Preview.
@@ -1086,7 +1086,7 @@ bool PlayScene::CheckSpaceValid(int x, int y)
 
 Tower *PlayScene::GetTowerAt(int gx, int gy)
 {
-    for (auto *obj : TowerGroup->GetObjects())
+    for (auto *obj : OffenseGroup->GetObjects())
     {
         auto *t = dynamic_cast<Tower *>(obj);
         if (!t)
