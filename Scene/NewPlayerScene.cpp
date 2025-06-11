@@ -39,9 +39,9 @@ void generate_player_uid(const char *player_name, char *uid_buffer)
 
 void save_player_uid_and_name(const std::string &uid, const std::string &player_name)
 {
-    std::filesystem::create_directories("Data"); 
+    std::filesystem::create_directories("Data");
 
-    std::ofstream file("Data/player_uid.txt", std::ios::app); 
+    std::ofstream file("Data/player_uid.txt", std::ios::app);
     std::cout << "Writing to: " << std::filesystem::absolute("Data/player_uid.txt") << std::endl;
 
     if (file.is_open())
@@ -62,24 +62,26 @@ void NewPlayerScene::Initialize()
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
 
+    AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
+
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
     onEnterNameScene = true;
 
     // Title
-    AddNewObject(new Engine::Label("Enter Your Name", "pirulen.ttf", 48, halfW, h / 6, 240, 240, 240, 255, 0.5, 0.5));
-    AddNewObject(new Engine::Label("This will be displayed in the game.", "pirulen.ttf", 24, halfW, h / 6 + 60, 180, 180, 180, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("ENTER YOUR NAME", "RealwoodRegular.otf", 80, halfW, 280, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("This will be displayed in the game.", "pirulen.ttf", 24, halfW, h / 6 + 150, 180, 180, 180, 255, 0.5, 0.5));
 
     // NEXT Button
-    auto *btnNext = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 520, 400, 100);
+    auto *btnNext = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 630, 480, 115);
     btnNext->SetOnClickCallback(std::bind(&NewPlayerScene::OnNextClick, this, 0));
     AddNewControlObject(btnNext);
-    AddNewObject(new Engine::Label("NEXT", "pirulen.ttf", 36, halfW, 570, 66, 76, 110, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("NEXT", "RealwoodRegular.otf", 56, halfW, 640 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 
     // BACK Button
-    auto *btnBack = new Engine::ImageButton("Tileset/dirt.png", "Tileset/floor.png", halfW - 200, 650, 400, 100);
+    auto *btnBack = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 770, 480, 115);
     btnBack->SetOnClickCallback(std::bind(&NewPlayerScene::OnBackClick, this, 0));
     AddNewControlObject(btnBack);
-    AddNewObject(new Engine::Label("BACK", "pirulen.ttf", 36, halfW, 700, 66, 76, 110, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, 780 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 }
 
 void NewPlayerScene::Terminate()
@@ -120,6 +122,10 @@ void NewPlayerScene::OnKeyDown(int keyCode)
         nameInput[nameInputLen++] = 'A' + (keyCode - ALLEGRO_KEY_A);
         nameInput[nameInputLen] = '\0';
     }
+    else if (keyCode == ALLEGRO_KEY_ENTER)
+    {
+        OnNextClick(0);
+    }
 }
 
 void NewPlayerScene::Draw() const
@@ -130,17 +136,18 @@ void NewPlayerScene::Draw() const
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
 
-    float input_x = halfW - 300;
-    float input_y = 360 - 50;
-    float input_w = halfW - 190;
+    float input_w = 600;
     float input_h = 90;
+    float input_x = halfW - input_w / 2;
+    float input_y = 450;
 
+    // Draw input box
     al_draw_filled_rounded_rectangle(input_x, input_y, input_x + input_w, input_y + input_h, 10, 10, al_map_rgb(240, 240, 240));
     al_draw_rounded_rectangle(input_x, input_y, input_x + input_w, input_y + input_h, 10, 10, al_map_rgb(50, 50, 50), 3);
 
     auto font = Engine::Resources::GetInstance().GetFont("pirulen.ttf", 28).get();
     if (font)
     {
-        al_draw_text(font, al_map_rgb(30, 30, 30), halfW, input_y + 25, ALLEGRO_ALIGN_CENTER, nameInput);
+        al_draw_text(font, al_map_rgb(30, 30, 30), halfW, input_y + input_h / 2 - 14, ALLEGRO_ALIGN_CENTER, nameInput);
     }
 }
