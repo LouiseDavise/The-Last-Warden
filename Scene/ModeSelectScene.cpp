@@ -62,6 +62,8 @@ void ModeSelectScene::Initialize()
         profileImagePath = "Characters/mage-profile.png";
     else if (std::string(heroType) == "ARCHER")
         profileImagePath = "Characters/archer-profile.png";
+    else if (std::string(heroType) == "SPEARMAN")
+        profileImagePath = "Characters/Spearman/spearman-profile.png";
 
     AddNewObject(new Engine::Image("UI/avatar.png", 0, 0, 120, 120));
 

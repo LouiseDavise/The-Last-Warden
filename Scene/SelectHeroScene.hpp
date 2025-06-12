@@ -25,7 +25,7 @@ public:
     explicit SelectHeroScene() = default;
     void Initialize() override;
     void Terminate() override;
-    void OnSelectClick(int heroId); // 0 = Caveman, 1 = Archer, 2 = Mage
+    void OnSelectClick(int heroId); // 0 = Spearman, 1 = Archer, 2 = Mage
 };
 
 #endif // SELECT_HERO_SCENE_HPP

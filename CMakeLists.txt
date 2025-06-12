@@ -15,8 +15,8 @@ file(COPY allegro_monolith-5.2.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 add_executable(The_Last_Warden
     Player/Player.cpp 
     Player/Player.hpp 
-    Player/Caveman.cpp 
-    Player/Caveman.hpp 
+    Player/Spearman.cpp 
+    Player/Spearman.hpp 
     Player/Companion.cpp
     Player/Companion.hpp
 

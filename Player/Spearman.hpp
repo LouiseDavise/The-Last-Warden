@@ -5,10 +5,10 @@
 
 class SpearWeapon;
 
-class Caveman : public Player
+class Spearman : public Player
 {
 public:
-    Caveman(float x, float y);
+    Spearman(float x, float y);
 
     void Update(float dt) override;
     void Draw() const override;
