@@ -997,8 +997,8 @@ void PlayScene::ConstructUI()
 
     int screenW = al_get_display_width(al_get_current_display());
 
-    pauseButton = new Engine::ImageButton("UI/pause-button-transparant.png", screenW - 80, 20, 55, 55);
-    playButton = new Engine::ImageButton("UI/play-button-transparant.png", screenW - 80, 20, 55, 55);
+    pauseButton = new Engine::Image("UI/pause-button-transparant.png", screenW - 80, 20, 55, 55);
+    playButton = new Engine::Image("UI/play-button-transparant.png", screenW - 80, 20, 55, 55);
     playButton->Visible = false;
 
     pauseButton->Visible = true;

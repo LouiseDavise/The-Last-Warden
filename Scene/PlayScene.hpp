@@ -133,8 +133,8 @@ public:
     bool isTwoPlayer = false;
     void SetTwoPlayerMode(bool twoP);
     Companion *companion = nullptr;
-    Engine::ImageButton *pauseButton = nullptr;
-    Engine::ImageButton *playButton = nullptr;
+    Engine::Image *pauseButton = nullptr;
+    Engine::Image *playButton = nullptr;
     bool paused = false;
     Engine::Image *playerProfileImage = nullptr;
 };
