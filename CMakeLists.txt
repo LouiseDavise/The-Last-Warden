@@ -19,16 +19,22 @@ add_executable(The_Last_Warden
     Player/Spearman.hpp 
     Player/Companion.cpp
     Player/Companion.hpp
+    Player/Mage.cpp
+    Player/Mage.hpp
 
     Weapon/Weapon.cpp 
     Weapon/Weapon.hpp 
     Weapon/SpearWeapon.cpp 
     Weapon/SpearWeapon.hpp
+    Weapon/WandWeapon.cpp
+    Weapon/WandWeapon.hpp
 
     Projectile/Projectile.cpp
     Projectile/Projectile.hpp
     Projectile/Arrow.cpp 
     Projectile/Arrow.hpp 
+    Projectile/MagicBullet.cpp 
+    Projectile/MagicBullet.hpp 
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp

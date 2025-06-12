@@ -14,6 +14,7 @@
 
 #include "Player/Player.hpp"
 #include "Player/Spearman.hpp"
+#include "Player/Mage.hpp"
 #include "Weapon/Weapon.hpp"
 #include "Weapon/SpearWeapon.hpp"
 #include "Engine/AudioHelper.hpp"
@@ -110,7 +111,24 @@ void PlayScene::Initialize()
         PlayerGroup->AddNewObject(companion);
     }
 
-    Player *player = new Spearman(centerX, centerY);
+    Player *player = nullptr;
+    if (std::string(heroType) == "SPEARMAN")
+    {
+        player = new Spearman(centerX, centerY);
+    }
+    else if (std::string(heroType) == "MAGE")
+    {
+        player = new Mage(centerX, centerY);
+    }
+    // else if (std::string(heroType) == "ARCHER")
+    // {
+    //     player = new Archer(centerX, centerY);
+    // }
+    else
+    {
+        player = new Spearman(centerX, centerY);
+    }
+
     PlayerGroup->AddNewObject(player);
 
     // Calculate distances from player
