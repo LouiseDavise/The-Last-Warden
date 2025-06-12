@@ -23,7 +23,7 @@ PlayScene *Enemy::getPlayScene(){
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
 
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), MAXhp(MAXhp), damage(damage), money(money)
+Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, float atkcd, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), MAXhp(MAXhp), damage(damage), atkcd(atkcd), money(money)
 {
     CollisionRadius = radius;
 }

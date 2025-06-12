@@ -26,6 +26,7 @@ protected:
     float hp;
     float MAXhp;
     float damage;
+    float atkcd;
     int money;
     State state;
 
@@ -50,7 +51,7 @@ public:
     std::list<Tower *> lockedTowers;
     std::list<Projectile *> lockedProjectiles;
 
-    Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, int money);
+    Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, float atkcd, int money);
 
     virtual void UpdatePath(const std::vector<std::vector<int>> &mapDistance);
     virtual void Update(float deltaTime) override;

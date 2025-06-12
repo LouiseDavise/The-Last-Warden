@@ -37,6 +37,9 @@
 #include "Enemy/Enemy.hpp"
 #include "Enemy/GreenSlime.hpp"
 #include "Enemy/ToxicSlime.hpp"
+#include "Enemy/LavaSlime.hpp"
+#include "Enemy/Orc.hpp"
+#include "Enemy/HighOrc.hpp"
 #include "Player/Companion.hpp"
 
 bool PlayScene::DebugMode = false;
@@ -1031,11 +1034,20 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
         Enemy *toSpawn;
         switch (wave.type)
         {
-        case 0:
+        case 1:
             toSpawn = new GreenSlime(spawnX, spawnY);
             break;
-        case 1:
+        case 2:
             toSpawn = new ToxicSlime(spawnX, spawnY);
+            break;
+        case 3:
+            toSpawn = new LavaSlime(spawnX, spawnY);
+            break;
+        case 4:
+            toSpawn = new Orc(spawnX, spawnY);
+            break;
+        case 5:
+            toSpawn = new HighOrc(spawnX, spawnY);
             break;
         }
         if (!mapDistance.empty() && mapDistance[gy][gx] != -1)

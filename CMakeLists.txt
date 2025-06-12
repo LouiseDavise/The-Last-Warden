@@ -36,6 +36,12 @@ add_executable(The_Last_Warden
     Enemy/GreenSlime.hpp
     Enemy/ToxicSlime.cpp 
     Enemy/ToxicSlime.hpp
+    Enemy/LavaSlime.cpp 
+    Enemy/LavaSlime.hpp
+    Enemy/Orc.cpp 
+    Enemy/Orc.hpp
+    Enemy/HighOrc.cpp 
+    Enemy/HighOrc.hpp
 
     Engine/Allegro5Exception.cpp
     Engine/Allegro5Exception.hpp
