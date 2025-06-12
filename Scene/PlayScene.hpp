@@ -45,6 +45,10 @@ private:
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
     Structure *highlightedStructure = nullptr;
+    ALLEGRO_BITMAP* darknessOverlay = nullptr;
+    void DrawNightTime() const;
+    bool isNight = false;
+    float nightCycleTimer = 0.0f;
 
 protected:
     int money;

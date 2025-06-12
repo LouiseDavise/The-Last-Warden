@@ -159,6 +159,9 @@ void PlayScene::Initialize()
     UITimerLabel = new Engine::Label("00:00:00", "pirulen.ttf", 30, al_get_display_width(al_get_current_display()) / 2, 20, 255, 255, 255, 255, 0.5f, 0.0f);
     UIGroup->AddNewObject(UITimerLabel);
 
+    int screenW = al_get_display_width(al_get_current_display());
+    int screenH = al_get_display_height(al_get_current_display());
+    darknessOverlay = al_create_bitmap(screenW, screenH);
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
     // Start BGM.
@@ -192,6 +195,12 @@ void PlayScene::Update(float deltaTime)
     }
 
     matchTime += deltaTime;
+    nightCycleTimer += deltaTime;
+    if (nightCycleTimer >= 10.0f) {
+        isNight = !isNight;
+        nightCycleTimer = 0.0f;
+    }
+
     while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp) {
         SpawnEnemy(enemyWaves.front());
         enemyWaves.pop();
@@ -265,6 +274,7 @@ void PlayScene::Draw() const
     al_identity_transform(&transform);
     al_use_transform(&transform);
 
+    DrawNightTime();
     Player *player = GetPlayer();
     if (player)
     {
@@ -331,9 +341,9 @@ void PlayScene::Draw() const
 
             ALLEGRO_COLOR barColor;
             if (wand->IsCoolingDown())
-                barColor = al_map_rgb(150, 100, 255); 
+                barColor = al_map_rgb(100, 200, 255); 
             else
-                barColor = al_map_rgb(100, 255, 255);
+                barColor = al_map_rgb(255, 255, 0);
 
             float fillRatio = wand->IsCoolingDown()
                                   ? cooldownRatio
@@ -1271,3 +1281,54 @@ Structure *PlayScene::GetStructureAt(int gx, int gy)
     }
     return nullptr;
 }
+
+void PlayScene::DrawNightTime() const {
+    if (!isNight || !darknessOverlay) return;
+
+    Player* player = GetPlayer();
+    if (!player) return;
+
+    Engine::Point screenCenter = player->Position - camera;
+    Engine::Point mousePos = Engine::GameEngine::GetInstance().GetMousePosition();
+
+    int screenW = al_get_display_width(al_get_current_display());
+    int screenH = al_get_display_height(al_get_current_display());
+
+    ALLEGRO_BITMAP* oldTarget = al_get_target_bitmap();
+    al_set_target_bitmap(darknessOverlay);
+
+    // Fill screen with almost-black (multiplicative blackout)
+    al_clear_to_color(al_map_rgb(2, 2, 8)); 
+    int layers = 4;
+    float baseRadius = 130.0f;
+    for (int i = 0; i < layers; ++i) {
+        float r = baseRadius - i * 10.0f;
+        int brightness = 50 + i * 40; 
+        brightness = std::min(brightness, 255);
+        al_draw_filled_circle(screenCenter.x, screenCenter.y, r, al_map_rgb(brightness * 0.425, brightness * 0.425, brightness));
+    }
+
+    float dx = mousePos.x - screenCenter.x;
+    float dy = mousePos.y - screenCenter.y;
+    float angle = std::atan2(dy, dx);
+    float coneLength = 500;
+    float coneAngle = ALLEGRO_PI / 15.0f;
+
+    float x1 = screenCenter.x + coneLength * std::cos(angle - coneAngle);
+    float y1 = screenCenter.y + coneLength * std::sin(angle - coneAngle);
+    float x2 = screenCenter.x + coneLength * std::cos(angle + coneAngle);
+    float y2 = screenCenter.y + coneLength * std::sin(angle + coneAngle);
+
+    al_draw_filled_triangle(screenCenter.x, screenCenter.y, x1, y1, x2, y2, al_map_rgb(170 * 0.425, 170 * 0.425, 170));
+
+    // Torch draft
+
+    // Blend onto screen using multiplicative light blending
+    al_set_target_bitmap(oldTarget);
+    int op, src, dst;
+    al_get_blender(&op, &src, &dst);
+    al_set_blender(ALLEGRO_ADD, ALLEGRO_ZERO, ALLEGRO_SRC_COLOR);
+    al_draw_bitmap(darknessOverlay, 0, 0, 0);
+    al_set_blender(op, src, dst);
+}
+
