@@ -73,12 +73,39 @@ void Companion::Update(float dt)
             const float camW = Engine::GameEngine::GetInstance().GetScreenSize().x;
             const float camH = Engine::GameEngine::GetInstance().GetScreenSize().y;
 
+            bool moved = false;
+
+            // Try full diagonal move
             if (scene->IsWalkable(gx, gy) &&
                 nextX >= camX && nextX <= camX + camW &&
                 nextY >= camY && nextY <= camY + camH)
             {
                 Position.x = nextX;
                 Position.y = nextY;
+                moved = true;
+            }
+
+            if (!moved)
+            {
+                // Try only X
+                float testX = Position.x + v.x;
+                int testGridX = static_cast<int>(testX / PlayScene::BlockSize);
+                if (scene->IsWalkable(testGridX, static_cast<int>(Position.y / PlayScene::BlockSize)) &&
+                    testX >= camX && testX <= camX + camW)
+                {
+                    Position.x = testX;
+                    moved = true;
+                }
+
+                // Try only Y
+                float testY = Position.y + v.y;
+                int testGridY = static_cast<int>(testY / PlayScene::BlockSize);
+                if (scene->IsWalkable(static_cast<int>(Position.x / PlayScene::BlockSize), testGridY) &&
+                    testY >= camY && testY <= camY + camH)
+                {
+                    Position.y = testY;
+                    moved = true;
+                }
             }
         }
     }
