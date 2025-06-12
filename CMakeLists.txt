@@ -68,8 +68,6 @@ add_executable(The_Last_Warden
     Scene/PlayScene.hpp
     Scene/ModeSelectScene.cpp
     Scene/ModeSelectScene.hpp
-    Scene/StartScene.cpp
-    Scene/StartScene.hpp
     Scene/WinScene.cpp
     Scene/WinScene.hpp
     Scene/SettingScene.cpp
@@ -82,6 +80,8 @@ add_executable(The_Last_Warden
     Scene/NewPlayerScene.hpp
     Scene/OldPlayerScene.cpp
     Scene/OldPlayerScene.hpp
+    Scene/SelectHeroScene.cpp
+    Scene/SelectHeroScene.hpp
 
     Structure/Structure.cpp 
     Structure/Structure.hpp

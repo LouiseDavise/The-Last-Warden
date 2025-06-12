@@ -3,6 +3,7 @@
 #include <ctime>
 #include <functional>
 #include <string>
+#include <filesystem>
 #include <cstdio>
 #include <cstring>
 #include <fstream>
@@ -12,7 +13,6 @@
 #include "Engine/GameEngine.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
-#include "StartScene.hpp"
 #include <filesystem>
 #include "player_data.h"
 
@@ -38,24 +38,6 @@ void generate_player_uid(const char *player_name, char *uid_buffer)
     snprintf(uid_buffer, 20, "%lu", hashed_value);
 }
 
-void save_player_uid_and_name(const std::string &uid, const std::string &player_name, const std::string &hero_type)
-{
-    std::filesystem::create_directories("Data");
-
-    std::ofstream file("Data/player_uid.txt", std::ios::app);
-    std::cout << "Writing to: " << std::filesystem::absolute("Data/player_uid.txt") << std::endl;
-
-    if (file.is_open())
-    {
-        file << uid << "," << player_name << "," << hero_type << "\n";
-        file.close();
-        std::cout << "Player UID, name, and hero type appended to player_uid.txt\n";
-    }
-    else
-    {
-        std::cout << "Failed to write to file.\n";
-    }
-}
 
 void NewPlayerScene::Initialize()
 {
@@ -97,9 +79,8 @@ void NewPlayerScene::OnNextClick(int)
     if (nameInputLen >= 3)
     {
         generate_player_uid(nameInput, player_uid);
-        save_player_uid_and_name(player_uid, nameInput, "MAGE");
         onEnterNameScene = false;
-        Engine::GameEngine::GetInstance().ChangeScene("start");
+        Engine::GameEngine::GetInstance().ChangeScene("select-hero");
     }
 }
 
