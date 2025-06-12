@@ -6,21 +6,31 @@
 #include "Engine/Resources.hpp"
 #include "Engine/Point.hpp"
 #include "Engine/Collider.hpp"
+#include "Scene/player_data.h"
 #include <allegro5/allegro_primitives.h>
 
 using Res = Engine::Resources;
 
 Companion::Companion(float x, float y)
-    : Player(x, y, 100.0f, 190.0f, "Characters/Support/image1x1.png", "image", 10, 10.0f), damage(1)
+    : Player(x, y, 100.0f, 190.0f, "Characters/Support-1/image1x1.png", "image", 10, 10.0f), damage(1)
 {
+    std::string folder;
+    if (std::string(companionType) == "COMP1")
+        folder = "Support-1";
+    else if (std::string(companionType) == "COMP2")
+        folder = "Support-2";
+    else
+        folder = "Support-3";
+
     for (int i = 1; i <= 4; ++i)
-        idleFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
+        idleFrames.push_back(Res::GetInstance().GetBitmap("Characters/" + folder + "/image" + std::to_string(i) + "x1.png"));
 
     for (int i = 5; i <= 10; ++i)
-        walkFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
+        walkFrames.push_back(Res::GetInstance().GetBitmap("Characters/" + folder + "/image" + std::to_string(i) + "x1.png"));
 
     for (int i = 11; i <= 16; ++i)
-        attackFrames.push_back(Res::GetInstance().GetBitmap("Characters/Support/image" + std::to_string(i) + "x1.png"));
+        attackFrames.push_back(Res::GetInstance().GetBitmap("Characters/" + folder + "/image" + std::to_string(i) + "x1.png"));
+
     currentBitmap = idleFrames[0];
 }
 

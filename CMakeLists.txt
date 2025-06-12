@@ -82,6 +82,8 @@ add_executable(The_Last_Warden
     Scene/OldPlayerScene.hpp
     Scene/SelectHeroScene.cpp
     Scene/SelectHeroScene.hpp
+    Scene/SelectCompanionScene.cpp
+    Scene/SelectCompanionScene.hpp
 
     Structure/Structure.cpp 
     Structure/Structure.hpp
