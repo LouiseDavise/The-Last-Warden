@@ -4,6 +4,7 @@
 #include "Scene/PlayScene.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Engine/Collider.hpp"
+#include "Engine/IObject.hpp"
 #include "Engine/LOG.hpp"
 #include "Projectile/MagicBullet.hpp"
 
@@ -41,8 +42,8 @@ void WandWeapon::Use(float tx, float ty)
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (scene)
     {
-        auto *bullet = new MagicBullet(Position.x, Position.y, damage, direction, rotation);
-        scene->ProjectileGroup->AddNewObject(bullet);
+        MagicBullet *bullet = new MagicBullet(Position.x, Position.y, damage, direction, rotation);
+        scene->ProjectileGroup->AddNewObject(static_cast<Engine::IObject *>(bullet));
     }
 }
 
