@@ -1054,58 +1054,66 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     }
 }
 
-void PlayScene::SpawnEnemy(const EnemyWave &wave)
-{
-    Player *player = GetPlayer();
-    Engine::Point playerPos = player->Position;
-
+void PlayScene::SpawnEnemy(const EnemyWave &wave) {
     static std::default_random_engine rng((std::random_device())());
-    std::uniform_real_distribution<float> angleDist(0, 2 * 3.1415926f);
-    float radius = 500.0f;
+    std::uniform_int_distribution<int> edgeDist(0, 3); // 0: top, 1: bottom, 2: left, 3: right
+    std::uniform_int_distribution<int> xDist(2, MapWidth - 3);
+    std::uniform_int_distribution<int> yDist(2  , MapHeight - 3);
 
-    for (int i = 0; i < wave.count; ++i)
-    {
-        float angle = angleDist(rng);
-        float spawnX = playerPos.x + std::cos(angle) * radius;
-        float spawnY = playerPos.y + std::sin(angle) * radius;
+    for (int i = 0; i < wave.count; ++i) {
+        int gx = 0, gy = 0;
+        bool valid = false;
 
-        // Convert to grid coordinates
-        int gx = static_cast<int>(spawnX) / BlockSize;
-        int gy = static_cast<int>(spawnY) / BlockSize;
-
-        // Check if inside map and valid tile
-        if (gx < 0 || gx >= MapWidth || gy < 0 || gy >= MapHeight)
-            continue;
-        if (mapState[gy][gx] != TILE_WALKABLE)
-            continue;
-
-        Enemy *toSpawn;
-        switch (wave.type)
-        {
-        case 1:
-            toSpawn = new GreenSlime(spawnX, spawnY);
-            break;
-        case 2:
-            toSpawn = new ToxicSlime(spawnX, spawnY);
-            break;
-        case 3:
-            toSpawn = new LavaSlime(spawnX, spawnY);
-            break;
-        case 4:
-            toSpawn = new Orc(spawnX, spawnY);
-            break;
-        case 5:
-            toSpawn = new HighOrc(spawnX, spawnY);
-            break;
+        // Try multiple times in case edge tile is not walkable
+        for (int attempt = 0; attempt < 5 && !valid; ++attempt) {
+            int edge = edgeDist(rng);
+            switch (edge) {
+                case 0: // Top edge
+                    gx = xDist(rng);
+                    gy = 2;
+                    break;
+                case 1: // Bottom edge
+                    gx = xDist(rng);
+                    gy = MapHeight - 3;
+                    break;
+                case 2: // Left edge
+                    gx = 2;
+                    gy = yDist(rng);
+                    break;
+                case 3: // Right edge
+                    gx = MapWidth - 3;
+                    gy = yDist(rng);
+                    break;
+            }
+            valid = (mapState[gy][gx] == TILE_WALKABLE);
+            if(valid) break;
         }
-        if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
-        {
+
+        if (!valid)
+            continue; // skip this spawn if no valid edge tile found
+
+        float spawnX = gx * BlockSize + BlockSize / 2;
+        float spawnY = gy * BlockSize + BlockSize / 2;
+
+        Enemy *toSpawn = nullptr;
+        switch (wave.type) {
+            case 1: toSpawn = new GreenSlime(spawnX, spawnY); break;
+            case 2: toSpawn = new ToxicSlime(spawnX, spawnY); break;
+            case 3: toSpawn = new LavaSlime(spawnX, spawnY); break;
+            case 4: toSpawn = new Orc(spawnX, spawnY); break;
+            case 5: toSpawn = new HighOrc(spawnX, spawnY); break;
+        }
+
+        if (!toSpawn) continue;
+
+        if (!mapDistance.empty() && mapDistance[gy][gx] != -1) {
             toSpawn->UpdatePath(mapDistance);
         }
 
         EnemyGroup->AddNewObject(toSpawn);
     }
 }
+
 
 void PlayScene::ConstructUI()
 {
