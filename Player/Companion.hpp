@@ -18,8 +18,16 @@ public:
     const float attackDuration = 0.4f;
     float GetRadius() const;
     void TeleportToPlayer();
+    float attackQuota = 100.0f;
+    float quotaDepleteRate = 50.0f;
+    float quotaRechargeTime = 2.0f;
+    float timeSinceLastAttack = 0.0f;
+    const float rechargeDelay = 4.0f;
+    bool isRecharging = false;
+    void Draw() const override;
 
 private:
-    bool keyUp = false, keyDown = false, keyLeft = false, keyRight = false;
-    int damage;
+    bool keyUp = false,
+         keyDown = false, keyLeft = false, keyRight = false;
+    int damage = 1;
 };
