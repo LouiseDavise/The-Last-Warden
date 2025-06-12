@@ -36,6 +36,26 @@ void ModeSelectScene::Initialize()
 
     int startY = (h - totalHeight - 200) / 2;
 
+    int buttonSize = 64;
+    int padding = 16;
+
+    // Leaderboard button
+    auto *leaderboardBtn = new Engine::ImageButton(
+        "UI/leaderboard-button.png", "UI/leaderboard-button-transparant.png",
+        w - 2 * (buttonSize + padding), padding,
+        buttonSize, buttonSize);
+    leaderboardBtn->SetOnClickCallback(std::bind(&ModeSelectScene::ScoreboardOnClick, this));
+    AddNewControlObject(leaderboardBtn);
+
+    // Settings button
+    auto *settingsBtn = new Engine::ImageButton(
+        "UI/setting-button.png", "UI/setting-button-transparant.png",
+        w - (buttonSize + padding), padding,
+        buttonSize, buttonSize);
+    settingsBtn->SetOnClickCallback(std::bind(&ModeSelectScene::SettingsOnClick, this));
+
+    AddNewControlObject(settingsBtn);
+
     // User Info
     std::string profileImagePath;
     if (std::string(heroType) == "MAGE")
@@ -62,14 +82,14 @@ void ModeSelectScene::Initialize()
     auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 1));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, 10 + startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
     startY += buttonHeight + spacing;
 
     // 2-PLAYER Button
     btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 2));
     AddNewControlObject(btn);
-    AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, 10 + startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
 
     // BGM
     bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
@@ -106,5 +126,10 @@ void ModeSelectScene::PlayOnClick(int stage)
 
 void ModeSelectScene::ScoreboardOnClick()
 {
-    Engine::GameEngine::GetInstance().ChangeScene("scoreboard-scene");
+    Engine::GameEngine::GetInstance().ChangeScene("leaderboard-scene");
+}
+
+void ModeSelectScene::SettingsOnClick()
+{
+    Engine::GameEngine::GetInstance().ChangeScene("setting-scene");
 }

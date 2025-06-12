@@ -15,6 +15,7 @@ public:
     void Terminate() override;
     void PlayOnClick(int stage);
     void ScoreboardOnClick();
+    void SettingsOnClick();
     void BackOnClick(int stage);
 
     void BGMSlideOnValueChanged(float value);
