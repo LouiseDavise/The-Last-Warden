@@ -5,6 +5,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <queue>
 
 #include "Player/Player.hpp"
 #include "Engine/IScene.hpp"
@@ -13,10 +14,9 @@
 
 struct EnemyWave
 {
+    float timestamp;
     int type;
-    float delay;
     float count;
-    bool spawned = false;
 };
 
 class Structure;
@@ -117,7 +117,7 @@ public:
     Engine::Point camera;
 
     // Enemy
-    std::vector<EnemyWave> enemyWaves;
+    std::queue<EnemyWave> enemyWaves;
     float totalTime;
     void LoadEnemyWaves(const std::string &filename);
     void SpawnEnemy(const EnemyWave &wave);

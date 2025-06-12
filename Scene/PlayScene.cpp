@@ -137,8 +137,7 @@ void PlayScene::Initialize()
 
     // Calculate distances from player
     // Use BFS to fill mapDistance (already in your code, assumed)
-    UpdateBFSFromPlayer(); // <- You might already have this.
-    // Then:
+    UpdateBFSFromPlayer();
     GenerateFlowField();
     LoadEnemyWaves(waveFile);
 
@@ -193,13 +192,9 @@ void PlayScene::Update(float deltaTime)
     }
 
     matchTime += deltaTime;
-    for (auto &wave : enemyWaves)
-    {
-        if (!wave.spawned && matchTime >= wave.delay)
-        {
-            SpawnEnemy(wave);
-            wave.spawned = true;
-        }
+    while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp) {
+        SpawnEnemy(enemyWaves.front());
+        enemyWaves.pop();
     }
 
     for (int i = 0; i < SpeedMult; i++)
@@ -1052,10 +1047,10 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     }
 
     int type;
-    float delay, count;
-    while (fin >> type >> delay >> count)
+    float timestamp, count;
+    while (fin >> timestamp >> type >> count)
     {
-        enemyWaves.push_back({type, delay, count, false});
+        enemyWaves.push(EnemyWave{timestamp, type, count});
     }
 }
 
