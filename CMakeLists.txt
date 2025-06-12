@@ -91,12 +91,14 @@ add_executable(The_Last_Warden
     Structure/Offense/Tower.hpp
     Structure/Offense/BowTower.cpp 
     Structure/Offense/BowTower.hpp 
+    Structure/Defense/SmashBone.cpp
+    Structure/Defense/SmashBone.hpp
+    Structure/Defense/Axe.cpp
+    Structure/Defense/Axe.hpp
     Structure/Defense/Wall.cpp 
     Structure/Defense/Wall.hpp 
     Structure/Defense/BasicWall.cpp 
     Structure/Defense/BasicWall.hpp 
-    Structure/Shovel.cpp
-    Structure/Shovel.hpp
 
     UI/Animation/DirtyEffect.cpp
     UI/Animation/DirtyEffect.hpp

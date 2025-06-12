@@ -46,6 +46,6 @@ GreenSlime::GreenSlime(float x, float y)
     attackTimer = 0;
     attackInterval = 0.07f;
     hurtTimer = 0;
-    hurtInterval = 0.07f;
+    hurtInterval = 0.05f;
     currentFrame = 0;
 }

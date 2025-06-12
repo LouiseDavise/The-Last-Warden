@@ -39,7 +39,8 @@ private:
         TILE_WALKABLE,
         TILE_BRIDGE,
         TILE_OCCUPIED,
-        TILE_OBSTRUCTION
+        TILE_OBSTRUCTION,
+        TILE_PROPERTY
     };
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;

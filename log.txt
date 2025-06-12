@@ -43,7 +43,7 @@
 [INFO] Loaded Resource<image>: Resource/images/play/turret-2.png
 [INFO] Loaded Resource<image>: Resource/images/play/benjamin.png
 [INFO] Loaded Resource<image>: Resource/images/play/landmine.png
-[INFO] Loaded Resource<image>: Resource/images/play/shovel.png
+[INFO] Loaded Resource<image>: Resource/images/play/SmashBone.png
 [INFO] Loaded Resource<image>: Resource/images/play/target.png
 [INFO] Loaded Resource<audio>: Resource/audios/astronomia.ogg
 [INFO] Created<sample_instance>: Resource/audios/astronomia.ogg

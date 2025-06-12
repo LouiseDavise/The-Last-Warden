@@ -21,7 +21,7 @@ In a hostile world overrun by enemies, you are the last surviving warden. Build 
 - **Turrets** that auto-attack within a radius
 - **Walls** with limited HP
 - **Mud leak** to slow enemies
-- **Shovel** to remove structures
+- **SmashBone** to remove structures
 
 ### 👾 Enemies
 - Spawn from map edges

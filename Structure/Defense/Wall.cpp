@@ -30,7 +30,7 @@ void Wall::Draw() const {
     if (hp > 0) {
         const float barW = 40;
         const float barH = 6;
-        const float yOff = CollisionRadius + 10;
+        const float yOff = CollisionRadius;
         const float left = Position.x - barW / 2;
         const float right = Position.x + barW / 2;
         const float top = Position.y - yOff;

@@ -33,11 +33,7 @@ void Enemy::Hit(float damage)
     if(state == State::Dying) return;
     Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
     if(state != State::Hurt){
-        auto *scene = getPlayScene();
-        auto* player = scene->GetPlayer();
         state = State::Hurt;
-        Engine::Point dir = (player->Position - Position).Normalize();
-        Velocity = dir * speed * 0.5f;
     }
     hp -= damage;
     if (hp <= 0)
@@ -120,6 +116,14 @@ void Enemy::Update(float deltaTime)
             }
         }
         bmp = hurtFrames[currentFrame];
+        auto *scene = getPlayScene();
+        auto* player = scene->GetPlayer();
+        if (player) {
+            Engine::Point dir = (player->Position - Position).Normalize();
+            Engine::Point slowVel = dir * speed * 0.675f;
+            Position.x += slowVel.x * deltaTime;
+            Position.y += slowVel.y * deltaTime;
+        }
         return;
     }
 

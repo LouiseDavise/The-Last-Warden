@@ -16,7 +16,8 @@ public:
     Structure(std::string img, float x, float y, int price, float hp, float MAXhp, float radius);
     virtual ~Structure() = default;
     virtual void Hit(float damage);
-    virtual bool IsShovel() const { return false; } // Optional, can override in derived classes
+    virtual bool IsSmashBone() const { return false; }
+    virtual bool IsAxe() const { return false; }
     int GetPrice() const {return price;}
     bool Preview = false;
     bool Enabled = true;
