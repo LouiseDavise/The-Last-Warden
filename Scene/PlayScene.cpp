@@ -218,6 +218,16 @@ void PlayScene::Update(float deltaTime)
     char buffer[16];
     std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, seconds);
     UITimerLabel->Text = buffer;
+
+    Caveman *caveman = dynamic_cast<Caveman *>(player);
+    if (caveman)
+    {
+        SpearWeapon *spear = caveman->GetSpear();
+        if (spear)
+        {
+            spear->Update(deltaTime);
+        }
+    }
 }
 
 void PlayScene::Draw() const
@@ -253,6 +263,37 @@ void PlayScene::Draw() const
         al_draw_filled_rectangle(barX, barY, barX + barWidth * hpRatio, barY + barHeight, hpColor);
 
         al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(28, 15, 0), 1);
+    }
+
+    Caveman *caveman = dynamic_cast<Caveman *>(player);
+    if (caveman)
+    {
+        SpearWeapon *spear = caveman->GetSpear();
+        if (spear)
+        {
+            float cooldownRatio = spear->GetCooldownPercent();
+            int usedQuota = spear->GetMaxQuota() - spear->GetQuota();
+
+            float barWidth = 200;
+            float barHeight = 16;
+            float barX = 95;
+            float barY = 60; // just under HP bar
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(40, 40, 40));
+
+            ALLEGRO_COLOR barColor;
+            if (spear->IsCoolingDown())
+                barColor = al_map_rgb(100, 200, 255); // cooling down
+            else
+                barColor = al_map_rgb(255, 255, 0); // quota mode
+
+            float fillRatio = spear->IsCoolingDown()
+                                  ? cooldownRatio
+                                  : (1 - usedQuota / (float)spear->GetMaxQuota());
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, barColor);
+            al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+        }
     }
 
     // Profile Border
