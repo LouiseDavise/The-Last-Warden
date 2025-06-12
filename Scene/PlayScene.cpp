@@ -29,6 +29,7 @@
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/Plane.hpp"
 #include "UI/Component/Label.hpp"
+#include "UI/Component/ImageButton.hpp"
 #include "player_data.h"
 #include "UI/Animation/ExplosionEffect.hpp"
 #include "Enemy/Enemy.hpp"
@@ -267,8 +268,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         Engine::Point mouse(mx + camera.x, my + camera.y);
 
         if (pauseButton->Visible &&
-            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 50 &&
-            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 50)
+            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 55 &&
+            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 55)
         {
             paused = true;
             pauseButton->Visible = false;
@@ -277,8 +278,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         }
 
         if (playButton->Visible &&
-            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 50 &&
-            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 50)
+            mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 55 &&
+            my >= pauseButton->Position.y && my <= pauseButton->Position.y + 55)
         {
             paused = false;
             playButton->Visible = false;
@@ -304,6 +305,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 void PlayScene::OnMouseMove(int mx, int my)
 {
     IScene::OnMouseMove(mx, my);
+    UIGroup->OnMouseMove(mx, my);
     int x = (mx + camera.x) / BlockSize;
     int y = (my + camera.y) / BlockSize;
 
@@ -392,7 +394,8 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             preview->Enabled = true;
             preview->Preview = false;
             preview->Tint = al_map_rgba(255, 255, 255, 255);
-            preview->occupyX = x; preview->occupyY = y;
+            preview->occupyX = x;
+            preview->occupyY = y;
             StructureGroup->AddNewObject(preview);
             // To keep responding when paused.
             preview->Update(0);
@@ -994,8 +997,8 @@ void PlayScene::ConstructUI()
 
     int screenW = al_get_display_width(al_get_current_display());
 
-    pauseButton = new Engine::Image("UI/pause-button.png", screenW - 80, 20, 60, 60);
-    playButton = new Engine::Image("UI/play-button.png", screenW - 80, 20, 60, 60);
+    pauseButton = new Engine::ImageButton("UI/pause-button-transparant.png", screenW - 80, 20, 55, 55);
+    playButton = new Engine::ImageButton("UI/play-button-transparant.png", screenW - 80, 20, 55, 55);
     playButton->Visible = false;
 
     pauseButton->Visible = true;
@@ -1013,8 +1016,7 @@ void PlayScene::ConstructUI()
     };
     std::vector<BtnInfo> btns = {
         {w / 2 - 332 + 6 + 74 * 0, h - 82, BowTower::Price, 1, "Structures/BowTower.png"},
-        {w / 2 - 332 + 6 + 74 * 1, h - 82, BasicWall::Price, 2, "Structures/BasicWall.png"}
-    };
+        {w / 2 - 332 + 6 + 74 * 1, h - 82, BasicWall::Price, 2, "Structures/BasicWall.png"}};
 
     for (auto &b : btns)
     {
