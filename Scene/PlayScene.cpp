@@ -17,6 +17,7 @@
 #include "Player/Mage.hpp"
 #include "Weapon/Weapon.hpp"
 #include "Weapon/SpearWeapon.hpp"
+#include "Weapon/WandWeapon.hpp"
 #include "Engine/AudioHelper.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Group.hpp"
@@ -298,19 +299,50 @@ void PlayScene::Draw() const
             float barWidth = 200;
             float barHeight = 16;
             float barX = 95;
-            float barY = 60; // just under HP bar
+            float barY = 60;
 
             al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(40, 40, 40));
 
             ALLEGRO_COLOR barColor;
             if (spear->IsCoolingDown())
-                barColor = al_map_rgb(100, 200, 255); // cooling down
+                barColor = al_map_rgb(100, 200, 255);
             else
-                barColor = al_map_rgb(255, 255, 0); // quota mode
+                barColor = al_map_rgb(255, 255, 0);
 
             float fillRatio = spear->IsCoolingDown()
                                   ? cooldownRatio
                                   : (1 - usedQuota / (float)spear->GetMaxQuota());
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, barColor);
+            al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+        }
+    }
+
+    Mage *mage = dynamic_cast<Mage *>(player);
+    if (mage)
+    {
+        WandWeapon *wand = mage->GetWand();
+        if (wand)
+        {
+            float cooldownRatio = wand->GetCooldownPercent();
+            int usedQuota = wand->GetMaxQuota() - wand->GetQuota();
+
+            float barWidth = 200;
+            float barHeight = 16;
+            float barX = 95;
+            float barY = 60;
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(30, 30, 60));
+
+            ALLEGRO_COLOR barColor;
+            if (wand->IsCoolingDown())
+                barColor = al_map_rgb(150, 100, 255); 
+            else
+                barColor = al_map_rgb(100, 255, 255);
+
+            float fillRatio = wand->IsCoolingDown()
+                                  ? cooldownRatio
+                                  : (1 - usedQuota / (float)wand->GetMaxQuota());
 
             al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, barColor);
             al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);

@@ -32,8 +32,8 @@ private:
                                 float halfLen, float halfWidth,
                                 float rotRad) const;
 
-    int maxQuota = 5;
-    int currentQuota = 5;
+    int maxQuota = 10;
+    int currentQuota = 10;
     float cooldownTime = 8.0f;
     float cooldownTimer = 0.0f;
     bool coolingDown = false;

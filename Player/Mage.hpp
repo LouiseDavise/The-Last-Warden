@@ -11,6 +11,7 @@ public:
     void Draw() const override;
     void OnMouseDown(int button, int mx, int my) override;
     Engine::Point PositionWeapon() const override;
+    WandWeapon* GetWand() const { return wand; }
 
 private:
     WandWeapon* wand;
