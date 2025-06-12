@@ -62,6 +62,8 @@ void ModeSelectScene::Initialize()
         profileImagePath = "Characters/mage-profile.png";
     else if (std::string(heroType) == "ARCHER")
         profileImagePath = "Characters/archer-profile.png";
+    else if (std::string(heroType) == "SPEARMAN")
+        profileImagePath = "Characters/Spearman/spearman-profile.png";
 
     AddNewObject(new Engine::Image("UI/avatar.png", 0, 0, 120, 120));
 
@@ -113,15 +115,16 @@ void ModeSelectScene::PlayOnClick(int stage)
             scene->SetMapFile("Resource/map1.txt");
             scene->SetWaveFile("Resource/single_wave.txt");
             scene->SetTwoPlayerMode(false);
+            engine.ChangeScene("play");
         }
         else if (stage == 2)
         {
             scene->SetMapFile("Resource/map2.txt");
             scene->SetWaveFile("Resource/duo_wave.txt");
             scene->SetTwoPlayerMode(true);
+            engine.ChangeScene("select-companion");
         }
     }
-    engine.ChangeScene("play");
 }
 
 void ModeSelectScene::ScoreboardOnClick()

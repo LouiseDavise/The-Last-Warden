@@ -17,10 +17,6 @@
 #include "player_data.h"
 
 bool onEnterNameScene;
-char nameInput[17] = "PLAYER";
-int nameInputLen = 6;
-char heroType[10] = "";
-char player_uid[20];
 
 unsigned long hash(const char *str)
 {

@@ -93,6 +93,7 @@
         "condition_variable": "cpp",
         "memory_resource": "cpp",
         "cinttypes": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "__config": "cpp"
     }
 }

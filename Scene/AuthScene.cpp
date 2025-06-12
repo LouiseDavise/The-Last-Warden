@@ -5,6 +5,13 @@
 #include "Engine/Point.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
+#include "player_data.h"
+
+char nameInput[17] = "PLAYER";
+int nameInputLen = 6;
+char heroType[10] = "";
+char player_uid[20] = "";
+char companionType[10] = "";
 
 void AuthScene::Initialize()
 {

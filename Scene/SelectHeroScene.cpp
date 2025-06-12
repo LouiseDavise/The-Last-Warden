@@ -56,7 +56,7 @@ void SelectHeroScene::Initialize()
     };
 
     HeroOption heroes[charCount] = {
-        {"Caveman", "A primitive but strong melee brawler.", "Characters/Mage1x1.png"},
+        {"Spearman", "A primitive but strong melee brawler.", "Characters/Spearman/image1x1.png"},
         {"Archer", "Quick ranged attacker with high DPS.", "Characters/Mage1x1.png"},
         {"Mage", "Master of elemental magic and AoE.", "Characters/Mage1x1.png"}};
 
@@ -105,7 +105,7 @@ void SelectHeroScene::Initialize()
     confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 160, 600, 140, 65);
     confirmBtn->SetOnClickCallback([this]()
                                    {
-    const char* types[] = {"CAVEMAN", "ARCHER", "MAGE"};
+    const char* types[] = {"SPEARMAN", "ARCHER", "MAGE"};
     strncpy(heroType, types[pendingHeroId], sizeof(heroType));
     heroType[sizeof(heroType) - 1] = '\0';
 
@@ -143,7 +143,7 @@ void SelectHeroScene::Initialize()
 void SelectHeroScene::OnSelectClick(int heroId)
 {
     pendingHeroId = heroId;
-    const char *heroNames[] = {"Caveman", "Archer", "Mage"};
+    const char *heroNames[] = {"Spearman", "Archer", "Mage"};
 
     std::string message = "Are you sure you want to pick the " + std::string(heroNames[heroId]) + " hero?";
     confirmText->Text = message;

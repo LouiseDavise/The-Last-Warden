@@ -13,7 +13,8 @@
 #include <limits>
 
 #include "Player/Player.hpp"
-#include "Player/Caveman.hpp"
+#include "Player/Spearman.hpp"
+#include "Player/Mage.hpp"
 #include "Weapon/Weapon.hpp"
 #include "Weapon/SpearWeapon.hpp"
 #include "Engine/AudioHelper.hpp"
@@ -113,7 +114,24 @@ void PlayScene::Initialize()
         PlayerGroup->AddNewObject(companion);
     }
 
-    Player *player = new Caveman(centerX, centerY);
+    Player *player = nullptr;
+    if (std::string(heroType) == "SPEARMAN")
+    {
+        player = new Spearman(centerX, centerY);
+    }
+    else if (std::string(heroType) == "MAGE")
+    {
+        player = new Mage(centerX, centerY);
+    }
+    // else if (std::string(heroType) == "ARCHER")
+    // {
+    //     player = new Archer(centerX, centerY);
+    // }
+    else
+    {
+        player = new Spearman(centerX, centerY);
+    }
+
     PlayerGroup->AddNewObject(player);
 
     // Calculate distances from player
@@ -222,10 +240,10 @@ void PlayScene::Update(float deltaTime)
     std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, seconds);
     UITimerLabel->Text = buffer;
 
-    Caveman *caveman = dynamic_cast<Caveman *>(player);
-    if (caveman)
+    Spearman *spearman = dynamic_cast<Spearman *>(player);
+    if (spearman)
     {
-        SpearWeapon *spear = caveman->GetSpear();
+        SpearWeapon *spear = spearman->GetSpear();
         if (spear)
         {
             spear->Update(deltaTime);
@@ -268,10 +286,10 @@ void PlayScene::Draw() const
         al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(28, 15, 0), 1);
     }
 
-    Caveman *caveman = dynamic_cast<Caveman *>(player);
-    if (caveman)
+    Spearman *spearman = dynamic_cast<Spearman *>(player);
+    if (spearman)
     {
-        SpearWeapon *spear = caveman->GetSpear();
+        SpearWeapon *spear = spearman->GetSpear();
         if (spear)
         {
             float cooldownRatio = spear->GetCooldownPercent();
@@ -408,9 +426,12 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
         return;
     }
 
-    if (preview && preview->IsAxe()) {
-        if (button & 1) {
-            if (mapState[gy][gx] == TILE_PROPERTY) {
+    if (preview && preview->IsAxe())
+    {
+        if (button & 1)
+        {
+            if (mapState[gy][gx] == TILE_PROPERTY)
+            {
                 // Chop tree: turn into TILE_WALKABLE and replace image
                 static std::default_random_engine rng((std::random_device())());
                 std::uniform_int_distribution<int> baseDist(1, 9);
@@ -1061,7 +1082,15 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 
 void PlayScene::ConstructUI()
 {
-    playerProfileImage = new Engine::Image("Characters/mage-profile.png", 20, 20, 64, 64);
+    std::string profileImagePath;
+    if (std::string(heroType) == "MAGE")
+        profileImagePath = "Characters/mage-profile.png";
+    else if (std::string(heroType) == "ARCHER")
+        profileImagePath = "Characters/archer-profile.png";
+    else if (std::string(heroType) == "SPEARMAN")
+        profileImagePath = "Characters/Spearman/spearman-profile.png";
+
+    playerProfileImage = new Engine::Image(profileImagePath, 20, 20, 64, 64);
     UIGroup->AddNewObject(playerProfileImage);
 
     int screenW = al_get_display_width(al_get_current_display());
@@ -1086,8 +1115,7 @@ void PlayScene::ConstructUI()
     };
     std::vector<BtnInfo> btns = {
         {w / 2 - 332 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png"},
-        {w / 2 - 332 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png"}
-    };
+        {w / 2 - 332 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png"}};
 
     for (auto &b : btns)
     {
@@ -1099,47 +1127,47 @@ void PlayScene::ConstructUI()
         UIGroup->AddNewControlObject(btn);
 
         float pricePanelCenter = b.x + 37;
-        ALLEGRO_FONT* font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
+        ALLEGRO_FONT *font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
         std::string priceStr = std::to_string(b.price);
         float textW = al_get_text_width(font, priceStr.c_str());
 
         auto *priceLbl = new Engine::Label(
-            priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20)/2, b.y + 73);
+            priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20) / 2, b.y + 73);
         priceLbl->Color = al_map_rgb(255, 255, 255);
 
         UIGroup->AddNewObject(priceLbl);
-        Engine::Image* coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20)/2 + textW, b.y + 71, 24, 24);
+        Engine::Image *coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20) / 2 + textW, b.y + 71, 24, 24);
         UIGroup->AddNewObject(coinImg);
     }
 
     // Axe UI
     StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-                                            Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
-                                            Engine::Sprite("Structures/Axe.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
-                                            w / 2 - 332 + 8 + 72 * 7, h - 94, Axe::Price);
+                                               Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
+                                               Engine::Sprite("Structures/Axe.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
+                                               w / 2 - 332 + 8 + 72 * 7, h - 94, Axe::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, -1));
     UIGroup->AddNewControlObject(btn);
     float pricePanelCenter = w / 2 - 332 + 8 + 72 * 7 + 37;
-    ALLEGRO_FONT* font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
+    ALLEGRO_FONT *font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
     std::string priceStr = std::to_string(Axe::Price);
     float textW = al_get_text_width(font, priceStr.c_str());
 
     auto *priceLbl = new Engine::Label(
-        priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20)/2, h - 94 + 73);
+        priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20) / 2, h - 94 + 73);
     priceLbl->Color = al_map_rgb(255, 255, 255);
     UIGroup->AddNewObject(priceLbl);
-    Engine::Image* coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20)/2 + textW, h - 94 + 71, 24, 24);
+    Engine::Image *coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20) / 2 + textW, h - 94 + 71, 24, 24);
     UIGroup->AddNewObject(coinImg);
 
     // SmashBone UI
     btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-                                            Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
-                                            Engine::Sprite("Structures/SmashBone.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
-                                            w / 2 - 332 + 8 + 72 * 8, h - 94, SmashBone::Price);
+                              Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
+                              Engine::Sprite("Structures/SmashBone.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
+                              w / 2 - 332 + 8 + 72 * 8, h - 94, SmashBone::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
     UIGroup->AddNewControlObject(btn);
     priceLbl = new Engine::Label(
-            "-", "pirulen.ttf", 16, w / 2 - 332 + 8 + 72 * 8 + 32, h - 90 + 71);
+        "-", "pirulen.ttf", 16, w / 2 - 332 + 8 + 72 * 8 + 32, h - 90 + 71);
     priceLbl->Color = al_map_rgb(255, 255, 255);
     UIGroup->AddNewObject(priceLbl);
 }

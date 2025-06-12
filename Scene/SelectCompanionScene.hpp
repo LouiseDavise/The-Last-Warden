@@ -1,5 +1,5 @@
-#ifndef SELECT_HERO_SCENE_HPP
-#define SELECT_HERO_SCENE_HPP
+#ifndef SELECT_COMPANION_SCENE_HPP
+#define SELECT_COMPANION_SCENE_HPP
 
 #include <allegro5/allegro_audio.h>
 #include <memory>
@@ -7,11 +7,10 @@
 #include "UI/Component/Label.hpp"
 #include "UI/Component/ImageButton.hpp"
 
-class SelectHeroScene final : public Engine::IScene
-{
+class SelectCompanionScene final : public Engine::IScene {
 private:
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
-    int pendingHeroId = -1;
+    int pendingCompanionId = -1;
     Engine::Image *confirmBox = nullptr;
     Engine::Label *confirmText = nullptr;
     Engine::Label *warningText1 = nullptr;
@@ -22,10 +21,10 @@ private:
     Engine::Label *cancelLabel = nullptr;
 
 public:
-    explicit SelectHeroScene() = default;
+    explicit SelectCompanionScene() = default;
     void Initialize() override;
     void Terminate() override;
-    void OnSelectClick(int heroId); // 0 = Spearman, 1 = Archer, 2 = Mage
+    void OnSelectClick(int compId);  // 0 = COMP1, 1 = COMP2, 2 = COMP3
 };
 
-#endif // SELECT_HERO_SCENE_HPP
+#endif
