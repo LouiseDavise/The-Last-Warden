@@ -620,6 +620,7 @@ void PlayScene::EarnMoney(int money)
 void PlayScene::SetMapFile(const std::string &filename)
 {
     mapFile = filename;
+    Engine::LOG(Engine::INFO) << "Set Map File to :  " << filename;
 }
 
 void PlayScene::SetWaveFile(const std::string &filename)

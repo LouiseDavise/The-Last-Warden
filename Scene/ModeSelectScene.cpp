@@ -104,20 +104,20 @@ void ModeSelectScene::Terminate()
     IScene::Terminate();
 }
 
-void ModeSelectScene::PlayOnClick(int stage)
+void ModeSelectScene::PlayOnClick(int mode)
 {
     auto &engine = Engine::GameEngine::GetInstance();
     PlayScene *scene = dynamic_cast<PlayScene *>(engine.GetScene("play"));
     if (scene)
     {
-        if (stage == 1)
+        if (mode == 1)
         {
             scene->SetMapFile("Resource/map1.txt");
             scene->SetWaveFile("Resource/single_wave.txt");
             scene->SetTwoPlayerMode(false);
             engine.ChangeScene("play");
         }
-        else if (stage == 2)
+        else if (mode == 2)
         {
             scene->SetMapFile("Resource/map2.txt");
             scene->SetWaveFile("Resource/duo_wave.txt");
