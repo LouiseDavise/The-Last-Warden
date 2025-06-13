@@ -13,6 +13,7 @@
 #include "Scene/SelectHeroScene.hpp"
 #include "Scene/SelectCompanionScene.hpp"
 #include "Scene/ScoreScene.hpp"
+#include "Scene/SplashScene.hpp"
 
 int main(int argc, char **argv)
 {
@@ -29,6 +30,7 @@ int main(int argc, char **argv)
 	game.AddNewScene("select-hero", new SelectHeroScene());
 	game.AddNewScene("select-companion", new SelectCompanionScene());
 	game.AddNewScene("score-scene", new ScoreScene());
-	game.Start("auth-scene", 60, 1920, 1280);
+	game.AddNewScene("splash-scene", new SplashScene());
+	game.Start("splash-scene", 60, 1920, 1280);
 	return 0;
 }
