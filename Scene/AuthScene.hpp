@@ -15,8 +15,8 @@ public:
     void Initialize() override;
     void Terminate() override;
 
-    void OnNewPlayerClick(int stage);
-    void OnOldPlayerClick(int stage);
+    void OnLoginClick();
+    void OnRegisterClick();
 };
 
 #endif // AUTHSCENE_HPP

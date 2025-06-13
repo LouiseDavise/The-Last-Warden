@@ -34,7 +34,7 @@ void LeaderBoardScene::Initialize()
     AddNewObject(new Engine::Label("Next", "RealwoodRegular.otf", 24, halfW + 300, halfH / 2 + 500, 255, 255, 255, 255, 0.5, 0.5));
 
     Engine::ImageButton *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 200, halfH / 2 + 450, 400, 100);
-    btn->SetOnClickCallback(std::bind(&LeaderBoardScene::BackOnClick, this, 2));
+    btn->SetOnClickCallback(std::bind(&LeaderBoardScene::BackOnClick, this));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 505, 255, 255, 255, 255, 0.5, 0.5));
 
@@ -53,7 +53,7 @@ void LeaderBoardScene::Terminate()
     IScene::Terminate();
 }
 
-void LeaderBoardScene::BackOnClick(int stage)
+void LeaderBoardScene::BackOnClick()
 {
     Engine::GameEngine::GetInstance().ChangeScene("mode-select");
 }

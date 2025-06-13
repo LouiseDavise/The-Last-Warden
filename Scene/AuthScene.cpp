@@ -35,10 +35,10 @@ void AuthScene::Initialize()
     int newBtnY = halfH - 80;
 
     auto *btnNew = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", newBtnX, newBtnY - 5, newBtnW, newBtnH);
-    btnNew->SetOnClickCallback(std::bind(&AuthScene::OnNewPlayerClick, this, 0));
+    btnNew->SetOnClickCallback(std::bind(&AuthScene::OnLoginClick, this));
     AddNewControlObject(btnNew);
 
-    AddNewObject(new Engine::Label("NEW PLAYER", "RealwoodRegular.otf", 56, halfW, newBtnY + newBtnH / 2, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("LOGIN", "RealwoodRegular.otf", 56, halfW, newBtnY + newBtnH / 2, 255, 255, 255, 255, 0.5, 0.5));
 
     int oldBtnW = 480;
     int oldBtnH = 115;
@@ -46,10 +46,10 @@ void AuthScene::Initialize()
     int oldBtnY = halfH + 70;
 
     auto *btnOld = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", oldBtnX, oldBtnY - 5, oldBtnW, oldBtnH);
-    btnOld->SetOnClickCallback(std::bind(&AuthScene::OnOldPlayerClick, this, 0));
+    btnOld->SetOnClickCallback(std::bind(&AuthScene::OnRegisterClick, this));
     AddNewControlObject(btnOld);
 
-    AddNewObject(new Engine::Label("OLD PLAYER", "RealwoodRegular.otf", 56, halfW, oldBtnY + oldBtnH / 2, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("REGISTER", "RealwoodRegular.otf", 56, halfW, oldBtnY + oldBtnH / 2, 255, 255, 255, 255, 0.5, 0.5));
 }
 
 void AuthScene::Terminate()
@@ -59,12 +59,12 @@ void AuthScene::Terminate()
     IScene::Terminate();
 }
 
-void AuthScene::OnNewPlayerClick(int)
+void AuthScene::OnRegisterClick()
 {
-    Engine::GameEngine::GetInstance().ChangeScene("new-player-scene");
+    Engine::GameEngine::GetInstance().ChangeScene("register-scene");
 }
 
-void AuthScene::OnOldPlayerClick(int)
+void AuthScene::OnLoginClick()
 {
-    Engine::GameEngine::GetInstance().ChangeScene("old-player-scene");
+    Engine::GameEngine::GetInstance().ChangeScene("login-scene");
 }

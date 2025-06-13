@@ -35,7 +35,7 @@ public:
     void Terminate() override;
     void Update(float deltaTime) override;
     void ScoreboardOnClick();
-    void BackOnClick(int stage);
+    void BackOnClick();
     void OnNextClick();
     void OnBackClick();
     void RenderPage();

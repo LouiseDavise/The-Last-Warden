@@ -90,10 +90,10 @@ add_executable(The_Last_Warden
     Scene/LeaderBoardScene.hpp
     Scene/AuthScene.cpp
     Scene/AuthScene.hpp
-    Scene/NewPlayerScene.cpp
-    Scene/NewPlayerScene.hpp
-    Scene/OldPlayerScene.cpp
-    Scene/OldPlayerScene.hpp
+    Scene/RegisterScene.cpp
+    Scene/RegisterScene.hpp
+    Scene/LoginScene.cpp
+    Scene/LoginScene.hpp
     Scene/SelectHeroScene.cpp
     Scene/SelectHeroScene.hpp
     Scene/SelectCompanionScene.cpp

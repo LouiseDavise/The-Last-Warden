@@ -32,7 +32,9 @@ void SelectCompanionScene::Initialize()
 
         AddNewObject(new Engine::Image("Characters/" + compFolders[i] + "/image1x1.png", x, compY, 150, 150));
         AddNewObject(new Engine::Label(compNames[i], "pirulen.ttf", 28, x + 75, compY + 160, 255, 255, 255, 255, 0.5, 0.0));
-        AddNewObject(new Engine::Label("Unique Style!", "pirulen.ttf", 12, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
+        if(i == 0)AddNewObject(new Engine::Label("Unique Soul", "pirulen.ttf", 18, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
+        if(i == 1)AddNewObject(new Engine::Label("Sharp Sidekick", "pirulen.ttf", 18, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
+        if(i == 2)AddNewObject(new Engine::Label("Bold Adventurer", "pirulen.ttf", 18, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
 
         auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", x + 10, compY + 250, 130, 60);
         btn->SetOnClickCallback(std::bind(&SelectCompanionScene::OnSelectClick, this, i));

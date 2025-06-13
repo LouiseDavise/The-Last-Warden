@@ -8,8 +8,8 @@
 #include "Scene/SettingScene.hpp"
 #include "Scene/LeaderBoardScene.hpp"
 #include "Scene/AuthScene.hpp"
-#include "Scene/NewPlayerScene.hpp"
-#include "Scene/OldPlayerScene.hpp"
+#include "Scene/RegisterScene.hpp"
+#include "Scene/LoginScene.hpp"
 #include "Scene/SelectHeroScene.hpp"
 #include "Scene/SelectCompanionScene.hpp"
 #include "Scene/ScoreScene.hpp"
@@ -25,8 +25,8 @@ int main(int argc, char **argv)
 	game.AddNewScene("setting-scene", new SettingScene());
 	game.AddNewScene("leaderboard-scene", new LeaderBoardScene());
 	game.AddNewScene("auth-scene", new AuthScene());
-	game.AddNewScene("new-player-scene", new NewPlayerScene());
-	game.AddNewScene("old-player-scene", new OldPlayerScene());
+	game.AddNewScene("register-scene", new RegisterScene());
+	game.AddNewScene("login-scene", new LoginScene());
 	game.AddNewScene("select-hero", new SelectHeroScene());
 	game.AddNewScene("select-companion", new SelectCompanionScene());
 	game.AddNewScene("score-scene", new ScoreScene());

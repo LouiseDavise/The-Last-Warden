@@ -8,7 +8,7 @@
 using Engine::Point;
 
 Mage::Mage(float x, float y)
-    : Player("Characters/Mage/Idle/image1x1.png", x, y, 1.0f, 100.0f, 190.0f) {
+    : Player("Characters/Mage/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f) {
     wand = new WandWeapon(PositionWeapon(), this);
     if (auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene()))
         scene->WeaponGroup->AddNewObject(wand);

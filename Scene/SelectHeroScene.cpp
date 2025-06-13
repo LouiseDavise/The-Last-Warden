@@ -143,7 +143,7 @@ void SelectHeroScene::Initialize()
 void SelectHeroScene::OnSelectClick(int heroId)
 {
     pendingHeroId = heroId;
-    const char *heroNames[] = {"Spearman", "Archer", "Mage"};
+    const char *heroNames[] = {"SPEARMAN", "ARCHER", "MAGE"};
 
     std::string message = "Are you sure you want to pick the " + std::string(heroNames[heroId]) + " hero?";
     confirmText->Text = message;
