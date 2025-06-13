@@ -88,6 +88,7 @@ public:
     Group *WeaponGroup;
     Group *UIGroup;
     Group *PanelGroup;
+    Group *IlluminatedGroup;
 
     Engine::Label *UIMoney;
     Engine::Label *UILives;
@@ -126,6 +127,12 @@ public:
         if (PlayerGroup->GetObjects().empty())
             return nullptr;
         return dynamic_cast<Player *>(PlayerGroup->GetObjects().back());
+    }
+    inline Player *GetCompanion() const
+    {
+        if (PlayerGroup->GetObjects().empty())
+            return nullptr;
+        return dynamic_cast<Player *>(PlayerGroup->GetObjects().front());
     }
     TileType getTileType(int value) { return static_cast<TileType>(value); }
 

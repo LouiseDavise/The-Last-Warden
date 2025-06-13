@@ -35,6 +35,7 @@ namespace Engine {
 
     public:
         // Determines whether this object should be drawn and updated.
+        bool isLightSource = false;
         bool Visible = true;
         // The object's position, center depends on Anchor.
         Point Position;

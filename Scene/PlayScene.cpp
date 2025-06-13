@@ -29,6 +29,7 @@
 #include "PlayScene.hpp"
 #include "Structure/Offense/BowTower.hpp"
 #include "Structure/Defense/BasicWall.hpp"
+#include "Structure/Defense/Bonfire.hpp"
 #include "Structure/StructureButton.hpp"
 #include "Structure/Defense/SmashBone.hpp"
 #include "Structure/Defense/Axe.hpp"
@@ -211,7 +212,7 @@ void PlayScene::Update(float deltaTime)
 
     matchTime += deltaTime;
     nightCycleTimer += deltaTime;
-    if (nightCycleTimer >= 100.0f)
+    if (nightCycleTimer >= 5.0f)
     {
         isNight = !isNight;
         nightCycleTimer = 0.0f;
@@ -536,7 +537,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
     if ((button & 1) && !TargetTile->Visible && preview)
         if ((button & 1) && !TargetTile->Visible && preview)
         {
-            // Cancel turret construct.
+            // Cancel construct.
             UIGroup->RemoveObject(preview->GetObjectIterator());
             preview = nullptr;
         }
@@ -1337,16 +1338,19 @@ void PlayScene::ConstructUI()
         int btnId;
         const char *sprite;
         const char *base;
+        float yOff;
     };
     std::vector<BtnInfo> btns = {
-        {w / 2 - 332 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png"},
-        {w / 2 - 332 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png"}};
+        {w / 2 - 332 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png", 0},
+        {w / 2 - 332 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png", 3},
+        {w / 2 - 332 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}
+    };
 
     for (auto &b : btns)
     {
         StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
                                                    Engine::Sprite(b.base, b.x + 36, b.y + 38, 0, 0, 0.5, 0.5),
-                                                   Engine::Sprite(b.sprite, b.x + 36, b.y + 30, 0, 0, 0.5, 0.5),
+                                                   Engine::Sprite(b.sprite, b.x + 36, b.y + 30 + b.yOff, 0, 0, 0.5, 0.5),
                                                    b.x, b.y, b.price);
         btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, b.btnId));
         PanelGroup->AddNewControlObject(btn);
@@ -1510,6 +1514,10 @@ void PlayScene::UIBtnClicked(int id)
             if (money >= BasicWall::Price)
                 preview = new BasicWall(0, 0);
             break;
+        case 3:
+            if (money >= Bonfire::Price)
+                preview = new Bonfire(0, 0);
+            break;
         }
     if (!preview)
         return;
@@ -1571,6 +1579,22 @@ void PlayScene::DrawNightTime() const
 
     // Fill screen with almost-black (multiplicative blackout)
     al_clear_to_color(al_map_rgb(2, 2, 8));
+
+    if(isTwoPlayer) {
+        Player* companion = GetCompanion();
+        if(!companion) return;
+        Engine::Point screenCenter = companion->Position - camera;
+        int layers = 4;
+        float baseRadius = 130.0f;
+        for (int i = 0; i < layers; ++i)
+        {
+            float r = baseRadius - i * 10.0f;
+            int brightness = 50 + i * 40;
+            brightness = std::min(brightness, 255);
+            al_draw_filled_circle(screenCenter.x, screenCenter.y, r, al_map_rgb(brightness * 0.425, brightness * 0.425, brightness));
+        }
+    }
+
     int layers = 4;
     float baseRadius = 130.0f;
     for (int i = 0; i < layers; ++i)
@@ -1594,7 +1618,21 @@ void PlayScene::DrawNightTime() const
 
     al_draw_filled_triangle(screenCenter.x, screenCenter.y, x1, y1, x2, y2, al_map_rgb(170 * 0.425, 170 * 0.425, 170));
 
-    // Torch draft
+    for (auto& obj : StructureGroup->GetObjects()) {
+        if (!obj || !obj->isLightSource) continue;
+        Engine::Point lightCenter = obj->Position - camera;
+        for (int i = 0; i < 2; ++i) {
+            float r = baseRadius - i * 10.0f;
+            int brightness =  160 + i * 40;
+            brightness = std::min(brightness, 255);
+            al_draw_filled_circle(
+                lightCenter.x, lightCenter.y,
+                r,
+                al_map_rgb(brightness, brightness * 0.8, brightness * 0.5)
+            );
+        }
+        
+    }
 
     // Blend onto screen using multiplicative light blending
     al_set_target_bitmap(oldTarget);

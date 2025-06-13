@@ -11,7 +11,7 @@
 
 const int BowTower::Price = 100;
 BowTower::BowTower(float x, float y) : Tower("Structures/tower-base.png", "Structures/BowTower.png", x, y, Price, 100, 100, 32, 0.45, 500) {
-    // Move center downward, since we the turret head is slightly biased upward.
+    // Move center downward, since head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }
 void BowTower::CreateProjectile() {

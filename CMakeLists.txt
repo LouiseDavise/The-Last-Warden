@@ -119,6 +119,8 @@ add_executable(The_Last_Warden
     Structure/Defense/Wall.hpp 
     Structure/Defense/BasicWall.cpp 
     Structure/Defense/BasicWall.hpp 
+    Structure/Defense/Bonfire.cpp 
+    Structure/Defense/Bonfire.hpp
 
     UI/Animation/DirtyEffect.cpp
     UI/Animation/DirtyEffect.hpp

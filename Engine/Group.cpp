@@ -114,6 +114,7 @@ namespace Engine {
         if (it->first) delete it->second;
         objects.erase(it);
     }
+
     void Group::RemoveControl(std::list<std::pair<bool, IControl *>>::iterator it) {
         if (it->first) delete it->second;
         controls.erase(it);
