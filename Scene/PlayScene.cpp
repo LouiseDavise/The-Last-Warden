@@ -91,7 +91,7 @@ void PlayScene::Initialize()
     AddNewControlObject(UIGroup = new Group("UIGroup"));
     AddNewControlObject(PanelGroup = new Group("PanelGroup"));
 
-    std::ifstream fin("Resource/map1.txt");
+    std::ifstream fin(mapFile);
     if (!fin.is_open())
     {
         std::cerr << "Failed to open map file\n";
@@ -217,9 +217,31 @@ void PlayScene::Update(float deltaTime)
         nightCycleTimer = 0.0f;
     }
 
+    if (enemyWaves.empty())
+    {
+        bool allEnemiesDead = true;
+        for (auto *obj : EnemyGroup->GetObjects())
+        {
+            Enemy *enemy = dynamic_cast<Enemy *>(obj);
+            if (enemy->GetHP() > 0)
+            {
+                allEnemiesDead = false;
+                break;
+            }
+        }
+        if (allEnemiesDead)
+        {
+            std::cout << "winnnnnnnnnnnnnnn" << std::endl;
+            Engine::GameEngine::GetInstance().ChangeScene("score-scene");
+            return;
+        }
+    }
+
     while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp)
     {
         SpawnEnemy(enemyWaves.front());
+        waveCount = (totalWaveSpawned / 10) + 1;
+        totalWaveSpawned++;
         enemyWaves.pop();
     }
 
@@ -229,7 +251,7 @@ void PlayScene::Update(float deltaTime)
         ticks += deltaTime;
         if (player && player->GetHP() <= 0)
         {
-            Engine::GameEngine::GetInstance().ChangeScene("lose-scene");
+            Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return; // stop further updates this frame
         }
     }
@@ -1111,21 +1133,6 @@ bool PlayScene::IsWalkable(int x, int y)
     return mapState[y][x] != TILE_OBSTRUCTION;
 }
 
-void PlayScene::ReadEnemyWave()
-{
-    std::string filename = std::string("Resource/enemy.txt");
-    // Read enemy file.
-    float type, wait, repeat;
-    enemyWaveData.clear();
-    std::ifstream fin(filename);
-    while (fin >> type && fin >> wait && fin >> repeat)
-    {
-        for (int i = 0; i < repeat; i++)
-            enemyWaveData.emplace_back(type, wait);
-    }
-    fin.close();
-}
-
 void PlayScene::LoadEnemyWaves(const std::string &filename)
 {
     std::ifstream fin(filename);
@@ -1156,7 +1163,7 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
         bool valid = false;
 
         // Try multiple times in case edge tile is not walkable
-        for (int attempt = 0; attempt < 5 && !valid; ++attempt)
+        for (int attempt = 0; attempt < 100 && !valid; ++attempt)
         {
             int edge = edgeDist(rng);
             switch (edge)
@@ -1179,10 +1186,10 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
                 break;
             }
             valid = (mapState[gy][gx] == TILE_WALKABLE);
+            Engine::LOG(Engine::INFO) << "ATTEMPT (" << gy << "),(" << gx << ") : result->" << valid;
             if (valid)
                 break;
         }
-
         if (!valid)
             continue; // skip this spawn if no valid edge tile found
 
@@ -1327,6 +1334,7 @@ void PlayScene::ConstructUI()
     homeWarning1->Visible = true;
     homeWarning2->Visible = true;
     homeConfirmBtn->Visible = true;
+    homeConfirmBtn->Enabled = true;
     homeCancelBtn->Visible = true;
     homeConfirmLabel->Visible = true;
     homeCancelLabel->Visible = true; });
@@ -1367,36 +1375,10 @@ void PlayScene::ConstructUI()
     // Confirm
     homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 - 160, 550, 140, 65);
     homeConfirmBtn->SetOnClickCallback([]()
-                                       {
-    PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
-    if (!play) return;
-
-    // Score Calculation
-    int score = play->GetMoney();
-    float time = play->matchTime;
-
-    // Save to file
-    std::filesystem::create_directories("Data");
-    std::ofstream file("Data/scoreboard.txt", std::ios::app);
-    std::cout << "Writing to: " << std::filesystem::absolute("Data/scoreboard.txt") << std::endl;
-
-    if (file.is_open()) {
-        std::time_t now = std::time(nullptr);
-        char dateStr[11];
-        std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now));
-
-        file << player_uid << "," << nameInput << "," << score << ","
-             << static_cast<int>(time) << "s" << "," << dateStr << "\n";
-        file.close();
-        std::cout << "Score saved to scoreboard.txt\n";
-    } else {
-        std::cout << "Failed to write score to file.\n";
-    }
-
-    // Switch scene
-    Engine::GameEngine::GetInstance().ChangeScene("leaderboard-scene"); });
+                                       { Engine::GameEngine::GetInstance().ChangeScene("score-scene"); });
 
     homeConfirmBtn->Visible = false;
+    homeConfirmBtn->Enabled = false;
     UIGroup->AddNewControlObject(homeConfirmBtn);
 
     homeConfirmLabel = new Engine::Label("Confirm", "pirulen.ttf", 17, screenWidth / 2 - 90, 580, 255, 255, 255, 255, 0.5, 0.5);
@@ -1414,6 +1396,7 @@ void PlayScene::ConstructUI()
     homeWarning1->Visible = false;
     homeWarning2->Visible = false;
     homeConfirmBtn->Visible = false;
+    homeConfirmBtn->Enabled = false;
     homeCancelBtn->Visible = false;
     homeConfirmLabel->Visible = false;
     homeCancelLabel->Visible = false; });

@@ -85,6 +85,12 @@ void SelectCompanionScene::Initialize()
     cancelLabel = new Engine::Label("Cancel", "pirulen.ttf", 17, halfW + 110, 630, 255, 255, 255, 255, 0.5, 0.5);
     cancelLabel->Visible = false;
     AddNewObject(cancelLabel);
+
+    auto backButton = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 240, 790, 480, 115);
+    backButton->SetOnClickCallback([]()
+                                   { Engine::GameEngine::GetInstance().ChangeScene("mode-select"); });
+    AddNewControlObject(backButton);
+    AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, 800 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 }
 
 void SelectCompanionScene::OnSelectClick(int compId)

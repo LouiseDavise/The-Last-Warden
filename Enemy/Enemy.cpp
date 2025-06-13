@@ -19,7 +19,8 @@
 #include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
-PlayScene *Enemy::getPlayScene(){
+PlayScene *Enemy::getPlayScene()
+{
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
 
@@ -30,9 +31,11 @@ Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float
 
 void Enemy::Hit(float damage)
 {
-    if(state == State::Dying) return;
+    if (state == State::Dying)
+        return;
     Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
-    if(state != State::Hurt){
+    if (state != State::Hurt)
+    {
         state = State::Hurt;
     }
     hp -= damage;
@@ -44,14 +47,17 @@ void Enemy::Hit(float damage)
         deathTimer = 0;
         attackTimer = 0;
         hurtTimer = 0;
-        Velocity = Engine::Point(0, 0);  // Stop movement
+        Velocity = Engine::Point(0, 0); // Stop movement
         for (auto &it : lockedTowers)
             it->Target = nullptr;
         for (auto &it : lockedProjectiles)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
+        getPlayScene()->IncreaseKillCount();
         AudioHelper::PlayAudio("explosion.wav");
-    }else {
+    }
+    else
+    {
         state = State::Hurt;
         currentFrame = 0;
         hurtTimer = 0;
@@ -59,8 +65,9 @@ void Enemy::Hit(float damage)
 }
 
 void Enemy::Update(float deltaTime)
-{   
-    if(state == State::Run){
+{
+    if (state == State::Run)
+    {
         runTimer += deltaTime;
         if (runTimer >= runInterval)
         {
@@ -69,33 +76,47 @@ void Enemy::Update(float deltaTime)
             bmp = runFrames[currentFrame];
         }
     }
-    else if (state == State::Dying) {
+    else if (state == State::Dying)
+    {
+        if (deathFrames.empty())
+        {
+            getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
+            return;
+        }
         deathTimer += deltaTime;
-        if (deathTimer >= deathInterval && deathFrames.size() > 0) {
+        if (deathTimer >= deathInterval && deathFrames.size() > 0)
+        {
             deathTimer = 0;
             currentFrame++;
-            if (currentFrame >= deathFrames.size()) {
+            if (currentFrame >= deathFrames.size())
+            {
                 getPlayScene()->EnemyGroup->RemoveObject(objectIterator);
                 currentFrame = 0;
                 return;
             }
         }
-        bmp = deathFrames[currentFrame];  // Set death frame
+        bmp = deathFrames[currentFrame]; // Set death frame
         return;
     }
-    else if(state == State::Attacking){
+    else if (state == State::Attacking)
+    {
         attackTimer += deltaTime;
-        if (attackTimer >= attackInterval && attackFrames.size() > 0) {
+        if (attackTimer >= attackInterval && attackFrames.size() > 0)
+        {
             attackTimer = 0;
             currentFrame++;
-            if (currentFrame >= attackFrames.size()) {
+            if (currentFrame >= attackFrames.size())
+            {
                 auto *scene = getPlayScene();
-                auto* player = scene->GetPlayer();
-                if (player && !Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)){
+                auto *player = scene->GetPlayer();
+                if (player && !Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius))
+                {
                     state = State::Run;
                     currentFrame = 0;
                     return;
-                }else{
+                }
+                else
+                {
                     currentFrame = 0;
                 }
             }
@@ -103,13 +124,15 @@ void Enemy::Update(float deltaTime)
         bmp = attackFrames[currentFrame];
         return;
     }
-    else if (state == State::Hurt) {
+    else if (state == State::Hurt)
+    {
         hurtTimer += deltaTime;
         if (hurtTimer >= hurtInterval)
         {
             hurtTimer = 0;
             currentFrame++;
-            if(currentFrame >= hurtFrames.size()){
+            if (currentFrame >= hurtFrames.size())
+            {
                 state = State::Run;
                 currentFrame = 0;
                 return;
@@ -117,8 +140,9 @@ void Enemy::Update(float deltaTime)
         }
         bmp = hurtFrames[currentFrame];
         auto *scene = getPlayScene();
-        auto* player = scene->GetPlayer();
-        if (player) {
+        auto *player = scene->GetPlayer();
+        if (player)
+        {
             Engine::Point dir = (player->Position - Position).Normalize();
             Engine::Point slowVel = dir * speed * 0.675f;
             Position.x += slowVel.x * deltaTime;
@@ -128,22 +152,25 @@ void Enemy::Update(float deltaTime)
     }
 
     auto *scene = getPlayScene();
-    auto* player = scene->GetPlayer();
+    auto *player = scene->GetPlayer();
 
-    bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)
-                     && player->GetHP() > 0 && hp > 0;
+    bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius) && player->GetHP() > 0 && hp > 0;
 
-    Structure* collidedStructure = nullptr;
-    for (auto* obj : getPlayScene()->StructureGroup->GetObjects()) {
-        Structure* structure = dynamic_cast<Structure*>(obj);
-        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius)) {
+    Structure *collidedStructure = nullptr;
+    for (auto *obj : getPlayScene()->StructureGroup->GetObjects())
+    {
+        Structure *structure = dynamic_cast<Structure *>(obj);
+        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius))
+        {
             collidedStructure = structure;
             break;
         }
     }
 
-    if (playerCollide) {
-        if (state != State::Attacking) {
+    if (playerCollide)
+    {
+        if (state != State::Attacking)
+        {
             state = State::Attacking;
             currentFrame = 0;
             attackTimer = 0;
@@ -151,8 +178,10 @@ void Enemy::Update(float deltaTime)
         }
         player->Hit(GetDamage(), Position);
     }
-    else if(collidedStructure){
-        if (state != State::Attacking) {
+    else if (collidedStructure)
+    {
+        if (state != State::Attacking)
+        {
             state = State::Attacking;
             currentFrame = 0;
             attackTimer = 0;
@@ -160,7 +189,8 @@ void Enemy::Update(float deltaTime)
         }
         collidedStructure->Hit(GetDamage());
     }
-    else if(scene->validLine(Position, player->Position)){
+    else if (scene->validLine(Position, player->Position))
+    {
         state = State::Run;
         Engine::Point dir = (player->Position - Position).Normalize();
         Velocity = dir * speed;
@@ -256,11 +286,11 @@ void Enemy::Update(float deltaTime)
     if (!moved)
         Velocity = Engine::Point(0, 0);
 
-    if (Velocity.x != 0) {
+    if (Velocity.x != 0)
+    {
         faceRight = Velocity.x > 0;
     }
 }
-
 
 void Enemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
 {
@@ -273,13 +303,23 @@ void Enemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
         return;
 }
 
-void Enemy::Draw() const {
-    ALLEGRO_BITMAP* frame;
-    switch(state){
-        case State::Run : frame = runFrames[currentFrame].get(); break;
-        case State::Dying : frame = deathFrames[currentFrame].get(); break;
-        case State::Attacking: frame = attackFrames[currentFrame].get(); break;
-        case State::Hurt: frame = hurtFrames[currentFrame].get(); break;
+void Enemy::Draw() const
+{
+    ALLEGRO_BITMAP *frame;
+    switch (state)
+    {
+    case State::Run:
+        frame = runFrames[currentFrame].get();
+        break;
+    case State::Dying:
+        frame = deathFrames[currentFrame].get();
+        break;
+    case State::Attacking:
+        frame = attackFrames[currentFrame].get();
+        break;
+    case State::Hurt:
+        frame = hurtFrames[currentFrame].get();
+        break;
     }
     float cx = Anchor.x * al_get_bitmap_width(frame);
     float cy = Anchor.y * al_get_bitmap_height(frame);
@@ -289,14 +329,15 @@ void Enemy::Draw() const {
 
     al_draw_tinted_scaled_rotated_bitmap(frame, Tint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
 
-    if (hp > 0) {
-        const float barW   = 40;      // width  of the bar (pixels)
-        const float barH   =  6;      // height of the bar
-        const float yOff   = CollisionRadius + 12;      // 12 px above sprite
-        const float left   = Position.x - barW / 2;
-        const float right  = Position.x + barW / 2;
-        const float top    = Position.y - yOff;
-        const float fillW  = barW * (hp / MAXhp);
+    if (hp > 0)
+    {
+        const float barW = 40;                   // width  of the bar (pixels)
+        const float barH = 6;                    // height of the bar
+        const float yOff = CollisionRadius + 12; // 12 px above sprite
+        const float left = Position.x - barW / 2;
+        const float right = Position.x + barW / 2;
+        const float top = Position.y - yOff;
+        const float fillW = barW * (hp / MAXhp);
 
         // background (dark grey)
         al_draw_filled_rectangle(left, top, right, top + barH,
@@ -308,10 +349,10 @@ void Enemy::Draw() const {
 
         // thin white border
         al_draw_rectangle(left, top, right, top + barH,
-                          al_map_rgb(255,255,255), 1);
+                          al_map_rgb(255, 255, 255), 1);
     }
-    if (PlayScene::DebugMode) {
+    if (PlayScene::DebugMode)
+    {
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(255, 0, 0), 2);
     }
 }
-
