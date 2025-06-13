@@ -59,9 +59,9 @@ void ModeSelectScene::Initialize()
     // User Info
     std::string profileImagePath;
     if (std::string(heroType) == "MAGE")
-        profileImagePath = "Characters/mage-profile.png";
+        profileImagePath = "Characters/Mage/mage-profile.png";
     else if (std::string(heroType) == "ARCHER")
-        profileImagePath = "Characters/archer-profile.png";
+        profileImagePath = "Characters/Archer/archer-profile.png";
     else if (std::string(heroType) == "SPEARMAN")
         profileImagePath = "Characters/Spearman/spearman-profile.png";
 

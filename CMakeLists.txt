@@ -21,6 +21,8 @@ add_executable(The_Last_Warden
     Player/Companion.hpp
     Player/Mage.cpp
     Player/Mage.hpp
+    Player/Archer.cpp
+    Player/Archer.hpp
 
     Weapon/Weapon.cpp 
     Weapon/Weapon.hpp 
@@ -28,6 +30,8 @@ add_executable(The_Last_Warden
     Weapon/SpearWeapon.hpp
     Weapon/WandWeapon.cpp
     Weapon/WandWeapon.hpp
+    Weapon/BowWeapon.cpp
+    Weapon/BowWeapon.hpp
 
     Projectile/Projectile.cpp
     Projectile/Projectile.hpp
@@ -35,6 +39,8 @@ add_executable(The_Last_Warden
     Projectile/Arrow.hpp 
     Projectile/MagicBullet.cpp 
     Projectile/MagicBullet.hpp 
+    Projectile/ArrowBullet.cpp 
+    Projectile/ArrowBullet.hpp 
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp

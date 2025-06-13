@@ -15,9 +15,11 @@
 #include "Player/Player.hpp"
 #include "Player/Spearman.hpp"
 #include "Player/Mage.hpp"
+#include "Player/Archer.hpp"
 #include "Weapon/Weapon.hpp"
 #include "Weapon/SpearWeapon.hpp"
 #include "Weapon/WandWeapon.hpp"
+#include "Weapon/BowWeapon.hpp"
 #include "Engine/AudioHelper.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Group.hpp"
@@ -126,10 +128,10 @@ void PlayScene::Initialize()
     {
         player = new Mage(centerX, centerY);
     }
-    // else if (std::string(heroType) == "ARCHER")
-    // {
-    //     player = new Archer(centerX, centerY);
-    // }
+    else if (std::string(heroType) == "ARCHER")
+    {
+        player = new Archer(centerX, centerY);
+    }
     else
     {
         player = new Spearman(centerX, centerY);
@@ -157,9 +159,9 @@ void PlayScene::Initialize()
 
     std::string moneyStr = std::to_string(money);
     totalCoin = new Engine::Label(
-        moneyStr, "pirulen.ttf", 16, w / 2- 37, h - 119);
-            totalCoin->Color = al_map_rgb(255, 255, 255);
-    totalCoinIcon = new Engine::Image("UI/coin-icon.png", w/2 + 15, h - 120, 24, 24);
+        moneyStr, "pirulen.ttf", 16, w / 2 - 37, h - 119);
+    totalCoin->Color = al_map_rgb(255, 255, 255);
+    totalCoinIcon = new Engine::Image("UI/coin-icon.png", w / 2 + 15, h - 120, 24, 24);
     AddNewObject(totalCoinIcon);
     AddNewObject(totalCoin);
 
@@ -206,12 +208,14 @@ void PlayScene::Update(float deltaTime)
 
     matchTime += deltaTime;
     nightCycleTimer += deltaTime;
-    if (nightCycleTimer >= 10.0f) {
+    if (nightCycleTimer >= 100.0f)
+    {
         isNight = !isNight;
         nightCycleTimer = 0.0f;
     }
 
-    while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp) {
+    while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp)
+    {
         SpawnEnemy(enemyWaves.front());
         enemyWaves.pop();
     }
@@ -356,13 +360,44 @@ void PlayScene::Draw() const
 
             ALLEGRO_COLOR barColor;
             if (wand->IsCoolingDown())
-                barColor = al_map_rgb(100, 200, 255); 
+                barColor = al_map_rgb(100, 200, 255);
             else
                 barColor = al_map_rgb(255, 255, 0);
 
             float fillRatio = wand->IsCoolingDown()
                                   ? cooldownRatio
                                   : (1 - usedQuota / (float)wand->GetMaxQuota());
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, barColor);
+            al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+        }
+    }
+
+    Archer *archer = dynamic_cast<Archer *>(player);
+    if (archer)
+    {
+        BowWeapon *bow = archer->GetBow();
+        if (bow)
+        {
+            float cooldownRatio = bow->GetCooldownPercent();
+            int usedQuota = bow->GetMaxQuota() - bow->GetQuota();
+
+            float barWidth = 200;
+            float barHeight = 16;
+            float barX = 95;
+            float barY = 60;
+
+            al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(60, 30, 30));
+
+            ALLEGRO_COLOR barColor;
+            if (bow->IsCoolingDown())
+                barColor = al_map_rgb(255, 120, 120);
+            else
+                barColor = al_map_rgb(255, 255, 0);
+
+            float fillRatio = bow->IsCoolingDown()
+                                  ? cooldownRatio
+                                  : (1 - usedQuota / (float)bow->GetMaxQuota());
 
             al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, barColor);
             al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
@@ -418,7 +453,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         preview = nullptr;
     }
     IScene::OnMouseDown(button, mx, my);
-    if (!IsMouseOverUI(mx, my)) player->OnMouseDown(button, mx, my);
+    if (!IsMouseOverUI(mx, my))
+        player->OnMouseDown(button, mx, my);
 }
 
 void PlayScene::OnMouseMove(int mx, int my)
@@ -458,7 +494,8 @@ void PlayScene::OnMouseMove(int mx, int my)
 
 void PlayScene::OnMouseUp(int button, int mx, int my)
 {
-    if (IsMouseOverUI(mx, my)) return;
+    if (IsMouseOverUI(mx, my))
+        return;
     IScene::OnMouseUp(button, mx, my);
     int gx = (mx + camera.x) / BlockSize;
     int gy = (my + camera.y) / BlockSize;
@@ -472,7 +509,9 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 StructureGroup->RemoveObject(s->GetObjectIterator());
                 AudioHelper::PlaySample("win.wav");
                 mapState[gy][gx] = TILE_WALKABLE;
-            }else{
+            }
+            else
+            {
                 UIGroup->RemoveObject(preview->GetObjectIterator());
                 preview = nullptr;
             }
@@ -502,7 +541,9 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 // Add new base tile
                 TileMapGroup->AddNewObject(new Engine::Image(basePath, gx * BlockSize, gy * BlockSize, BlockSize, BlockSize));
                 AudioHelper::PlaySample("win.wav");
-            }else{
+            }
+            else
+            {
                 UIGroup->RemoveObject(preview->GetObjectIterator());
                 preview = nullptr;
             }
@@ -580,11 +621,13 @@ void PlayScene::OnKeyDown(int keyCode)
         preview = nullptr;
         return;
     }
-    else if (keyCode == ALLEGRO_KEY_H) {
+    else if (keyCode == ALLEGRO_KEY_H)
+    {
         PanelVisible = !PanelVisible;
         totalCoin->Visible = !totalCoin->Visible;
         totalCoinIcon->Visible = !totalCoinIcon->Visible;
-        for (auto* obj : PanelGroup->GetObjects()) {
+        for (auto *obj : PanelGroup->GetObjects())
+        {
             obj->Visible = !obj->Visible;
         }
     }
@@ -1096,39 +1139,44 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     }
 }
 
-void PlayScene::SpawnEnemy(const EnemyWave &wave) {
+void PlayScene::SpawnEnemy(const EnemyWave &wave)
+{
     static std::default_random_engine rng((std::random_device())());
     std::uniform_int_distribution<int> edgeDist(0, 3); // 0: top, 1: bottom, 2: left, 3: right
     std::uniform_int_distribution<int> xDist(2, MapWidth - 3);
-    std::uniform_int_distribution<int> yDist(2  , MapHeight - 3);
+    std::uniform_int_distribution<int> yDist(2, MapHeight - 3);
 
-    for (int i = 0; i < wave.count; ++i) {
+    for (int i = 0; i < wave.count; ++i)
+    {
         int gx = 0, gy = 0;
         bool valid = false;
 
         // Try multiple times in case edge tile is not walkable
-        for (int attempt = 0; attempt < 5 && !valid; ++attempt) {
+        for (int attempt = 0; attempt < 5 && !valid; ++attempt)
+        {
             int edge = edgeDist(rng);
-            switch (edge) {
-                case 0: // Top edge
-                    gx = xDist(rng);
-                    gy = 2;
-                    break;
-                case 1: // Bottom edge
-                    gx = xDist(rng);
-                    gy = MapHeight - 3;
-                    break;
-                case 2: // Left edge
-                    gx = 2;
-                    gy = yDist(rng);
-                    break;
-                case 3: // Right edge
-                    gx = MapWidth - 3;
-                    gy = yDist(rng);
-                    break;
+            switch (edge)
+            {
+            case 0: // Top edge
+                gx = xDist(rng);
+                gy = 2;
+                break;
+            case 1: // Bottom edge
+                gx = xDist(rng);
+                gy = MapHeight - 3;
+                break;
+            case 2: // Left edge
+                gx = 2;
+                gy = yDist(rng);
+                break;
+            case 3: // Right edge
+                gx = MapWidth - 3;
+                gy = yDist(rng);
+                break;
             }
             valid = (mapState[gy][gx] == TILE_WALKABLE);
-            if(valid) break;
+            if (valid)
+                break;
         }
 
         if (!valid)
@@ -1138,17 +1186,30 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave) {
         float spawnY = gy * BlockSize + BlockSize / 2;
 
         Enemy *toSpawn = nullptr;
-        switch (wave.type) {
-            case 1: toSpawn = new GreenSlime(spawnX, spawnY); break;
-            case 2: toSpawn = new ToxicSlime(spawnX, spawnY); break;
-            case 3: toSpawn = new LavaSlime(spawnX, spawnY); break;
-            case 4: toSpawn = new Orc(spawnX, spawnY); break;
-            case 5: toSpawn = new HighOrc(spawnX, spawnY); break;
+        switch (wave.type)
+        {
+        case 1:
+            toSpawn = new GreenSlime(spawnX, spawnY);
+            break;
+        case 2:
+            toSpawn = new ToxicSlime(spawnX, spawnY);
+            break;
+        case 3:
+            toSpawn = new LavaSlime(spawnX, spawnY);
+            break;
+        case 4:
+            toSpawn = new Orc(spawnX, spawnY);
+            break;
+        case 5:
+            toSpawn = new HighOrc(spawnX, spawnY);
+            break;
         }
 
-        if (!toSpawn) continue;
+        if (!toSpawn)
+            continue;
 
-        if (!mapDistance.empty() && mapDistance[gy][gx] != -1) {
+        if (!mapDistance.empty() && mapDistance[gy][gx] != -1)
+        {
             toSpawn->UpdatePath(mapDistance);
         }
 
@@ -1156,14 +1217,13 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave) {
     }
 }
 
-
 void PlayScene::ConstructUI()
 {
     std::string profileImagePath;
     if (std::string(heroType) == "MAGE")
-        profileImagePath = "Characters/mage-profile.png";
+        profileImagePath = "Characters/Mage/mage-profile.png";
     else if (std::string(heroType) == "ARCHER")
-        profileImagePath = "Characters/archer-profile.png";
+        profileImagePath = "Characters/Archer/archer-profile.png";
     else if (std::string(heroType) == "SPEARMAN")
         profileImagePath = "Characters/Spearman/spearman-profile.png";
 
@@ -1257,24 +1317,24 @@ void PlayScene::UIBtnClicked(int id)
         preview = nullptr;
     }
 
-    if(PanelVisible)
-    switch (id)
-    {
-    case -1:
-        preview = new Axe(0, 0);
-        break;
-    case 0:
-        preview = new SmashBone(0, 0);
-        break;
-    case 1:
-        if (money >= BowTower::Price)
-            preview = new BowTower(0, 0);
-        break;
-    case 2:
-        if (money >= BasicWall::Price)
-            preview = new BasicWall(0, 0);
-        break;
-    }
+    if (PanelVisible)
+        switch (id)
+        {
+        case -1:
+            preview = new Axe(0, 0);
+            break;
+        case 0:
+            preview = new SmashBone(0, 0);
+            break;
+        case 1:
+            if (money >= BowTower::Price)
+                preview = new BowTower(0, 0);
+            break;
+        case 2:
+            if (money >= BasicWall::Price)
+                preview = new BasicWall(0, 0);
+            break;
+        }
     if (!preview)
         return;
     preview->Position = Engine::GameEngine::GetInstance().GetMousePosition();
@@ -1315,11 +1375,14 @@ Structure *PlayScene::GetStructureAt(int gx, int gy)
     return nullptr;
 }
 
-void PlayScene::DrawNightTime() const {
-    if (!isNight || !darknessOverlay) return;
+void PlayScene::DrawNightTime() const
+{
+    if (!isNight || !darknessOverlay)
+        return;
 
-    Player* player = GetPlayer();
-    if (!player) return;
+    Player *player = GetPlayer();
+    if (!player)
+        return;
 
     Engine::Point screenCenter = player->Position - camera;
     Engine::Point mousePos = Engine::GameEngine::GetInstance().GetMousePosition();
@@ -1327,16 +1390,17 @@ void PlayScene::DrawNightTime() const {
     int screenW = al_get_display_width(al_get_current_display());
     int screenH = al_get_display_height(al_get_current_display());
 
-    ALLEGRO_BITMAP* oldTarget = al_get_target_bitmap();
+    ALLEGRO_BITMAP *oldTarget = al_get_target_bitmap();
     al_set_target_bitmap(darknessOverlay);
 
     // Fill screen with almost-black (multiplicative blackout)
-    al_clear_to_color(al_map_rgb(2, 2, 8)); 
+    al_clear_to_color(al_map_rgb(2, 2, 8));
     int layers = 4;
     float baseRadius = 130.0f;
-    for (int i = 0; i < layers; ++i) {
+    for (int i = 0; i < layers; ++i)
+    {
         float r = baseRadius - i * 10.0f;
-        int brightness = 50 + i * 40; 
+        int brightness = 50 + i * 40;
         brightness = std::min(brightness, 255);
         al_draw_filled_circle(screenCenter.x, screenCenter.y, r, al_map_rgb(brightness * 0.425, brightness * 0.425, brightness));
     }
@@ -1365,23 +1429,27 @@ void PlayScene::DrawNightTime() const {
     al_set_blender(op, src, dst);
 }
 
-
-bool PlayScene::IsMouseOverUI(int mx, int my) {
+bool PlayScene::IsMouseOverUI(int mx, int my)
+{
     Engine::Point mouse(mx, my);
     // Check Pause Button
-    if (pauseButton && pauseButton->Visible) {
+    if (pauseButton && pauseButton->Visible)
+    {
         Engine::Point pos = pauseButton->Position;
         Engine::Point size = pauseButton->Size;
-        if (Engine::Collider::IsPointInRect(mouse, pos, size)) {
+        if (Engine::Collider::IsPointInRect(mouse, pos, size))
+        {
             return true;
         }
     }
 
     // Check Structure Panel
-    if (StructurePanel && StructurePanel->Visible) {
+    if (StructurePanel && StructurePanel->Visible)
+    {
         Engine::Point pos = StructurePanel->Position;
         Engine::Point size = StructurePanel->Size;
-        if (Engine::Collider::IsPointInRect(mouse, pos, size)) {
+        if (Engine::Collider::IsPointInRect(mouse, pos, size))
+        {
             return true;
         }
     }
