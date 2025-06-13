@@ -56,7 +56,9 @@ private:
     const float fadeDuration = 3.0f;
 
 protected:
-    int money = 1000;
+    int money = 200;
+    int totalMoneyEarned = 0;
+    int totalMoneySpent = 0;
     int killCount = 0;
     int waveCount = 1;
     int totalWaveSpawned = 0;
@@ -73,7 +75,7 @@ public:
     static Engine::Point SpawnGridPoint;
     static Engine::Point EndGridPoint;
     static const std::vector<int> CheatCode;
-    
+
     // Map tiles.
     Group *TileMapGroup;
     Group *GroundEffectGroup;
@@ -114,7 +116,11 @@ public:
     void OnKeyUp(int keyCode) override;
     bool IsMouseOverUI(int mx, int my);
 
-    int GetMoney() const;
+    int GetMoney() const { return money; }
+    int GetTotalMoneyEarned() const { return totalMoneyEarned; }
+    int GetTotalMoneySpent() const { return totalMoneySpent; }
+    void AddMoney(int amount);
+    bool SpendMoney(int amount);
     inline Player *GetPlayer() const
     {
         if (PlayerGroup->GetObjects().empty())
@@ -123,7 +129,6 @@ public:
     }
     TileType getTileType(int value) { return static_cast<TileType>(value); }
 
-    void EarnMoney(int money);
     void ReadMap();
     void ReadEnemyWave();
     void ConstructUI();

@@ -19,15 +19,26 @@ void ScoreScene::Initialize()
     float startY = screenH / 2 - 180;
     float spacing = 45;
 
+    displayScore = 0;
+    scoreTimer = 0;
+
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, screenW, screenH));
 
     PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
-    int score = play ? play->GetMoney() : 0;
     int time = play ? static_cast<int>(play->matchTime) : 0;
     int killCount = play ? play->GetKillCount() : 0;
     int waves = play ? play->GetWaveCount() : 0;
-    int gold = play ? play->GetMoney() : 0;
+    int goldLeft = play ? play->GetMoney() : 0;
+    int goldSpent = play ? play->GetTotalMoneySpent() : 0;
     std::string playerName = nameInput;
+
+    // ✅ Score calculation
+    score =
+        goldSpent * 2 +
+        killCount * 10 +
+        waves * 150 +
+        time * 1 +
+        goldLeft / 10;
 
     // Format time to HH:MM:SS
     int hours = time / 3600;
@@ -44,25 +55,24 @@ void ScoreScene::Initialize()
         std::time_t now = std::time(nullptr);
         char dateStr[11];
         std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now));
-
-        file << player_uid << "," << playerName << "," << score << "," << timeStr << "," << killCount << "," << waves << "," << gold << "," << dateStr << "\n";
+        file << player_uid << "," << playerName << "," << score << "," << timeStr << ","
+             << killCount << "," << waves << "," << goldLeft << "," << dateStr << "\n";
         file.close();
     }
 
-    // Title
+    // UI Elements
     AddNewObject(new Engine::Label("GAME SUMMARY", "RealwoodRegular.otf", 84, centerX, startY - 150, 255, 255, 255, 255, 0.5, 0.5));
-
-    // Score
     AddNewObject(new Engine::Label("Score", "RealwoodRegular.otf", 38, centerX, startY - 100, 200, 200, 255, 255, 0.5, 0.5));
-    scoreLabel = new Engine::Label(std::to_string(score), "RealwoodRegular.otf", 228, centerX, startY + 40, 255, 215, 0, 255, 0.5, 0.5);
+
+    scoreLabel = new Engine::Label(std::to_string(static_cast<int>(0)), "RealwoodRegular.otf", 238, centerX, startY + 50, 255, 215, 0, 255, 0.5, 0.5);
     AddNewObject(scoreLabel);
 
-    // Other indicators
-    AddNewObject(new Engine::Label("Time: " + std::string(timeStr), "RealwoodRegular.otf", 38, centerX, startY - 50 + spacing * 4.5, 255, 255, 255, 255, 0.5, 0.5));
-    AddNewObject(new Engine::Label("Enemies Defeated: " + std::to_string(killCount), "RealwoodRegular.otf", 38, centerX, startY - 50 + spacing * 5.5, 255, 255, 255, 255, 0.5, 0.5));
-    AddNewObject(new Engine::Label("Waves Survived: " + std::to_string(waves), "RealwoodRegular.otf", 38, centerX, startY - 50 + spacing * 6.5, 255, 255, 255, 255, 0.5, 0.5));
-    AddNewObject(new Engine::Label("Gold Earned: " + std::to_string(gold), "RealwoodRegular.otf", 38, centerX, startY - 50 + spacing * 7.5, 255, 255, 255, 255, 0.5, 0.5));
-    AddNewObject(new Engine::Label("Player: " + playerName, "RealwoodRegular.otf", 34, centerX, startY - 50 + spacing * 8.5, 200, 255, 200, 255, 0.5, 0.5));
+    // Info display
+    AddNewObject(new Engine::Label("Time: " + std::string(timeStr), "RealwoodRegular.otf", 38, centerX, startY - 20 + spacing * 4.0, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("Enemies Defeated: " + std::to_string(killCount), "RealwoodRegular.otf", 38, centerX, startY - 20 + spacing * 5.0, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("Waves Survived: " + std::to_string(waves), "RealwoodRegular.otf", 38, centerX, startY - 20 + spacing * 6.0, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("Gold: " + std::to_string(goldLeft), "RealwoodRegular.otf", 38, centerX, startY - 20 + spacing * 7.0, 255, 255, 255, 255, 0.5, 0.5));
+    AddNewObject(new Engine::Label("Player: " + playerName, "RealwoodRegular.otf", 34, centerX, startY - 20 + spacing * 8.0, 200, 255, 200, 255, 0.5, 0.5));
 
     // Back Button
     backButton = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", centerX - 240, 770, 480, 115);
@@ -75,4 +85,19 @@ void ScoreScene::Initialize()
 void ScoreScene::Terminate()
 {
     IScene::Terminate();
+}
+
+void ScoreScene::Update(float deltaTime)
+{
+    scoreTimer += deltaTime;
+    if (scoreTimer < scoreDuration)
+    {
+        float t = scoreTimer / scoreDuration;
+        displayScore = t * score;
+    }
+    else
+    {
+        displayScore = score;
+    }
+    scoreLabel->Text = std::to_string(static_cast<int>(displayScore));
 }

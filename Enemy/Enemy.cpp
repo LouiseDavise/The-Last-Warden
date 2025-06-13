@@ -52,7 +52,7 @@ void Enemy::Hit(float damage)
             it->Target = nullptr;
         for (auto &it : lockedProjectiles)
             it->Target = nullptr;
-        getPlayScene()->EarnMoney(money);
+        getPlayScene()->AddMoney(money);
         getPlayScene()->IncreaseKillCount();
         AudioHelper::PlayAudio("explosion.wav");
     }

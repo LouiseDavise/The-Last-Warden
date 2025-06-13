@@ -597,7 +597,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 sprite->Rotation = 0;
                 return;
             }
-            EarnMoney(-preview->GetPrice());
+            AddMoney(-preview->GetPrice());
             // Remove Preview.
             preview->GetObjectIterator()->first = false;
             UIGroup->RemoveObject(preview->GetObjectIterator());
@@ -668,7 +668,7 @@ void PlayScene::OnKeyDown(int keyCode)
     {
         EffectGroup->AddNewObject(new Cheat());
         AudioHelper::PlaySample("gun.wav");
-        EarnMoney(1000);
+        AddMoney(1000);
     }
 }
 
@@ -683,13 +683,6 @@ void PlayScene::OnKeyUp(int keyCode)
     }
     if (companion)
         companion->OnKeyUp(keyCode);
-}
-
-int PlayScene::GetMoney() const { return money; }
-
-void PlayScene::EarnMoney(int money)
-{
-    this->money += money;
 }
 
 void PlayScene::SetMapFile(const std::string &filename)
@@ -1232,6 +1225,23 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 
         EnemyGroup->AddNewObject(toSpawn);
     }
+}
+
+void PlayScene::AddMoney(int amount)
+{
+    money += amount;
+    totalMoneyEarned += amount;
+}
+
+bool PlayScene::SpendMoney(int amount)
+{
+    if (money >= amount)
+    {
+        money -= amount;
+        totalMoneySpent += amount;
+        return true;
+    }
+    return false;
 }
 
 void PlayScene::ConstructUI()
