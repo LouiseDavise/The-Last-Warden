@@ -19,6 +19,8 @@ void ScoreScene::Initialize()
     float startY = screenH / 2 - 180;
     float spacing = 45;
 
+    AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, screenW, screenH));
+
     PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
     int score = play ? play->GetMoney() : 0;
     int time = play ? static_cast<int>(play->matchTime) : 0;

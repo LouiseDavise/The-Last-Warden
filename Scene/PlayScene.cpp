@@ -217,6 +217,25 @@ void PlayScene::Update(float deltaTime)
         nightCycleTimer = 0.0f;
     }
 
+    if (enemyWaves.empty())
+    {
+        bool allEnemiesDead = true;
+        for (auto *obj : EnemyGroup->GetObjects())
+        {
+            Enemy *enemy = dynamic_cast<Enemy *>(obj);
+            if (enemy && enemy->GetHP() > 0)
+            {
+                allEnemiesDead = false;
+                break;
+            }
+        }
+        if (allEnemiesDead)
+        {
+            Engine::GameEngine::GetInstance().ChangeScene("score-scene");
+            return;
+        }
+    }
+
     while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp)
     {
         SpawnEnemy(enemyWaves.front());
@@ -231,7 +250,7 @@ void PlayScene::Update(float deltaTime)
         ticks += deltaTime;
         if (player && player->GetHP() <= 0)
         {
-            Engine::GameEngine::GetInstance().ChangeScene("lose-scene");
+            Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return; // stop further updates this frame
         }
     }
@@ -1111,21 +1130,6 @@ void PlayScene::UpdateBFSFromPlayer()
 bool PlayScene::IsWalkable(int x, int y)
 {
     return mapState[y][x] != TILE_OBSTRUCTION;
-}
-
-void PlayScene::ReadEnemyWave()
-{
-    std::string filename = std::string("Resource/enemy.txt");
-    // Read enemy file.
-    float type, wait, repeat;
-    enemyWaveData.clear();
-    std::ifstream fin(filename);
-    while (fin >> type && fin >> wait && fin >> repeat)
-    {
-        for (int i = 0; i < repeat; i++)
-            enemyWaveData.emplace_back(type, wait);
-    }
-    fin.close();
 }
 
 void PlayScene::LoadEnemyWaves(const std::string &filename)
