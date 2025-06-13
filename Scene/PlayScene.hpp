@@ -51,6 +51,9 @@ private:
     bool isNight = false;
     float nightCycleTimer = 0.0f;
     bool PanelVisible = true;
+    bool fadingToScore = false;
+    float fadeTimer = 0.0f;
+    const float fadeDuration = 3.0f;
 
 protected:
     int money = 1000;
@@ -132,7 +135,6 @@ public:
 
     // Enemy
     std::queue<EnemyWave> enemyWaves;
-    float totalTime;
     void LoadEnemyWaves(const std::string &filename);
     void SpawnEnemy(const EnemyWave &wave);
     bool IsWalkable(int x, int y);

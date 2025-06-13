@@ -72,9 +72,9 @@ void PlayScene::Initialize()
     keyStrokes.clear();
     ticks = 0;
     SpeedMult = 1;
-    totalTime = 0;
     matchTime = 0;
     isNight = false;
+    fadingToScore = false;
     money = 1000;
     paused = false;
 
@@ -217,21 +217,31 @@ void PlayScene::Update(float deltaTime)
         nightCycleTimer = 0.0f;
     }
 
-    if (enemyWaves.empty())
-    {
+    // WIN condition
+    if (!fadingToScore && enemyWaves.empty()) {
         bool allEnemiesDead = true;
-        for (auto *obj : EnemyGroup->GetObjects())
-        {
+        for (auto *obj : EnemyGroup->GetObjects()) {
             Enemy *enemy = dynamic_cast<Enemy *>(obj);
-            if (enemy->GetHP() > 0)
-            {
+            if (enemy->GetHP() > 0) {
                 allEnemiesDead = false;
                 break;
             }
         }
-        if (allEnemiesDead)
-        {
-            std::cout << "winnnnnnnnnnnnnnn" << std::endl;
+        if (allEnemiesDead) {
+            fadingToScore = true;
+            fadeTimer = 0;
+        }
+    }
+
+    // LOSE condition
+    if (player && player->isDead && !fadingToScore) {
+        fadingToScore = true;
+        fadeTimer = 0;
+    }
+
+    if (fadingToScore) {
+        fadeTimer += deltaTime;
+        if (fadeTimer >= fadeDuration) {
             Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return;
         }
@@ -249,11 +259,6 @@ void PlayScene::Update(float deltaTime)
     {
         IScene::Update(deltaTime);
         ticks += deltaTime;
-        if (player && player->GetHP() <= 0)
-        {
-            Engine::GameEngine::GetInstance().ChangeScene("score-scene");
-            return; // stop further updates this frame
-        }
     }
 
     if (preview)
@@ -283,16 +288,6 @@ void PlayScene::Update(float deltaTime)
     char buffer[16];
     std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, seconds);
     UITimerLabel->Text = buffer;
-
-    Spearman *spearman = dynamic_cast<Spearman *>(player);
-    if (spearman)
-    {
-        SpearWeapon *spear = spearman->GetSpear();
-        if (spear)
-        {
-            spear->Update(deltaTime);
-        }
-    }
 }
 
 void PlayScene::Draw() const
@@ -438,10 +433,13 @@ void PlayScene::Draw() const
     PanelGroup->Draw();
 
     totalCoin->Text = std::to_string(money);
-    if (totalCoin->Visible)
-        totalCoin->Draw();
-    if (totalCoinIcon->Visible)
-        totalCoinIcon->Draw();
+    if(totalCoin->Visible) totalCoin->Draw();
+    if(totalCoinIcon->Visible) totalCoinIcon->Draw();
+    if (fadingToScore) {
+        float alpha = std::min(fadeTimer / fadeDuration, 1.0f);
+        ALLEGRO_COLOR fadeColor = al_map_rgba_f(0, 0, 0, alpha);
+        al_draw_filled_rectangle(0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), fadeColor);
+    }
 }
 
 void PlayScene::OnMouseDown(int button, int mx, int my)

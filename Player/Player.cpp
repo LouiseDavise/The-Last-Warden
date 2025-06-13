@@ -18,9 +18,7 @@ Player::Player(std::string img, float x, float y, float hp, float MAXhp, float m
 
 void Player::Update(float dt)
 {
-    if (hp <= 0)
-        return;
-    UpdateMovement(dt);
+    if (hp > 0)UpdateMovement(dt);
 
     if (hp <= 0) {
         if(state != PlayerState::Death){
@@ -185,7 +183,9 @@ void Player::UpdateAnimation(float dt) {
                 deathTimer = 0;
                 currentFrame++;
                 if (currentFrame >= deathFrames.size()) {
-                    currentFrame = deathFrames.size() - 1; // Stay on last frame
+                    currentFrame = deathFrames.size() - 1;
+                    isDead = true;
+                    return;
                 }
             }
             break;

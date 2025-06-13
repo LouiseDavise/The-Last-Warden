@@ -8,7 +8,7 @@
 using Engine::Point;
 
 Mage::Mage(float x, float y)
-    : Player("Characters/Mage/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f) {
+    : Player("Characters/Mage/Idle/image1x1.png", x, y, 1.0f, 100.0f, 190.0f) {
     wand = new WandWeapon(PositionWeapon(), this);
     if (auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene()))
         scene->WeaponGroup->AddNewObject(wand);
@@ -34,7 +34,7 @@ Mage::Mage(float x, float y)
         hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 4; ++i)
+    for (int i = 1; i <= 9; ++i)
     {
         std::string path = "Characters/Mage/Death/image" + std::to_string(i) + "x1.png";
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
@@ -43,7 +43,7 @@ Mage::Mage(float x, float y)
     walkTimer = 0;
     walkInterval = 0.12f;
     deathTimer = 0;
-    deathInterval = 0.07f;
+    deathInterval = 0.12f;
     idleTimer = 0;
     idleInterval = 0.1f;
     hurtTimer = 0;

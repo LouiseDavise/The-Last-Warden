@@ -40,6 +40,7 @@ public:
     float GetSpeed() const { return moveSpeed; }
     float GetRadius() const { return CollisionRadius; }
     PlayerState GetState() const {return state;}
+    bool isDead = false;
 
 protected:
     void UpdateMovement(float dt);

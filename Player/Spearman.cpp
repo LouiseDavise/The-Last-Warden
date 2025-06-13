@@ -36,7 +36,7 @@ Spearman::Spearman(float x, float y)
         hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 3; ++i)
+    for (int i = 1; i <= 9; ++i)
     {
         std::string path = "Characters/Spearman/Death/image" + std::to_string(i) + "x1.png";
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
