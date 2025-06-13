@@ -45,7 +45,7 @@ private:
     ALLEGRO_SAMPLE_ID bgmId;
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> deathBGMInstance;
     Structure *highlightedStructure = nullptr;
-    ALLEGRO_BITMAP* darknessOverlay = nullptr;
+    ALLEGRO_BITMAP *darknessOverlay = nullptr;
     void DrawNightTime() const;
     bool isNight = false;
     float nightCycleTimer = 0.0f;
@@ -105,7 +105,7 @@ public:
     void OnKeyDown(int keyCode) override;
     void OnKeyUp(int keyCode) override;
     bool IsMouseOverUI(int mx, int my);
-    
+
     int GetMoney() const;
     inline Player *GetPlayer() const
     {
@@ -113,7 +113,7 @@ public:
             return nullptr;
         return dynamic_cast<Player *>(PlayerGroup->GetObjects().back());
     }
-    TileType getTileType(int value) {return static_cast<TileType>(value);}
+    TileType getTileType(int value) { return static_cast<TileType>(value); }
 
     void EarnMoney(int money);
     void ReadMap();
@@ -147,5 +147,20 @@ public:
     Engine::Image *playButton = nullptr;
     bool paused = false;
     Engine::Image *playerProfileImage = nullptr;
+
+    // Home and Pause Buttons
+    Engine::ImageButton *homeButton = nullptr;
+    Engine::ImageButton *pausePlayButton = nullptr;
+
+    // Confirmation UI
+    Engine::Image *homeConfirmBox = nullptr;
+    Engine::Label *homeConfirmText1 = nullptr;
+    Engine::Label *homeConfirmText2 = nullptr;
+    Engine::Label *homeWarning1 = nullptr;
+    Engine::Label *homeWarning2 = nullptr;
+    Engine::ImageButton *homeConfirmBtn = nullptr;
+    Engine::ImageButton *homeCancelBtn = nullptr;
+    Engine::Label *homeConfirmLabel = nullptr;
+    Engine::Label *homeCancelLabel = nullptr;
 };
 #endif // PLAYSCENE_HPP

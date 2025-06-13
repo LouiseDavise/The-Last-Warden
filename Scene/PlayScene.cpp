@@ -190,8 +190,11 @@ void PlayScene::Terminate()
 
 void PlayScene::Update(float deltaTime)
 {
+    UIGroup->Update(deltaTime);
     if (paused)
+    {
         return;
+    }
     Player *player = GetPlayer();
     if (player)
     {
@@ -419,6 +422,7 @@ void PlayScene::Draw() const
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
 {
+    UIGroup->OnMouseDown(button, mx, my);
     if ((button & 1))
     {
         if (pauseButton->Visible &&
@@ -1307,6 +1311,92 @@ void PlayScene::ConstructUI()
         "-", "pirulen.ttf", 16, w / 2 - 332 + 8 + 72 * 8 + 32, h - 90 + 71);
     priceLbl->Color = al_map_rgb(255, 255, 255);
     PanelGroup->AddNewObject(priceLbl);
+
+    int screenWidth = Engine::GameEngine::GetInstance().GetScreenSize().x;
+
+    // Home Button (top-right)
+    homeButton = new Engine::ImageButton("UI/home-button-transparant.png", "UI/home-button-transparant.png", screenWidth - 70, 20, 55, 55);
+    homeButton->SetOnClickCallback([this]()
+                                   {
+    paused = true; 
+    if (!homeConfirmBox) return;
+
+    homeConfirmBox->Visible = true;
+    homeConfirmText1->Visible = true;
+    homeConfirmText2->Visible = true;
+    homeWarning1->Visible = true;
+    homeWarning2->Visible = true;
+    homeConfirmBtn->Visible = true;
+    homeCancelBtn->Visible = true;
+    homeConfirmLabel->Visible = true;
+    homeCancelLabel->Visible = true; });
+    UIGroup->AddNewControlObject(homeButton);
+
+    // Move pause button to left of home
+    if (pauseButton)
+        pauseButton->Position.x = screenWidth - 140;
+    if (playButton)
+        playButton->Position.x = screenWidth - 140;
+
+    // Confirm UI
+    homeConfirmBox = new Engine::Image("UI/confirm-box.png", screenWidth / 2 - 300, 300, 600, 400);
+    homeConfirmBox->Visible = false;
+    UIGroup->AddNewObject(homeConfirmBox);
+
+    homeConfirmText1 = new Engine::Label(
+        "Are you sure you want to return to the main menu?",
+        "RealwoodRegular.otf", 30, screenWidth / 2, 380, 255, 255, 255, 255, 0.5, 0.5);
+    homeConfirmText2 = new Engine::Label(
+        "Your progress will be automatically recorded in the leaderboard.",
+        "RealwoodRegular.otf", 22, screenWidth / 2, 420, 255, 255, 255, 255, 0.5, 0.5);
+
+    homeConfirmText1->Visible = false;
+    homeConfirmText2->Visible = false;
+
+    UIGroup->AddNewObject(homeConfirmText1);
+    UIGroup->AddNewObject(homeConfirmText2);
+
+    homeWarning1 = new Engine::Label("Leaving now will end this game session.", "RealwoodRegular.otf", 20, screenWidth / 2, 470, 255, 100, 100, 255, 0.5, 0.5);
+    homeWarning1->Visible = false;
+    UIGroup->AddNewObject(homeWarning1);
+
+    homeWarning2 = new Engine::Label("Do you really want to go home?", "RealwoodRegular.otf", 20, screenWidth / 2, 495, 255, 100, 100, 255, 0.5, 0.5);
+    homeWarning2->Visible = false;
+    UIGroup->AddNewObject(homeWarning2);
+
+    // Confirm
+    homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 - 160, 550, 140, 65);
+    homeConfirmBtn->SetOnClickCallback([]()
+                                       {
+                                           Engine::GameEngine::GetInstance().ChangeScene("leaderboard-scene"); // Or "stage-select" depending on your logic
+                                       });
+    homeConfirmBtn->Visible = false;
+    UIGroup->AddNewControlObject(homeConfirmBtn);
+
+    homeConfirmLabel = new Engine::Label("Confirm", "pirulen.ttf", 17, screenWidth / 2 - 90, 580, 255, 255, 255, 255, 0.5, 0.5);
+    homeConfirmLabel->Visible = false;
+    UIGroup->AddNewObject(homeConfirmLabel);
+
+    // Cancel
+    homeCancelBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 + 40, 550, 140, 65);
+    homeCancelBtn->SetOnClickCallback([this]()
+                                      {
+    paused = false; 
+    homeConfirmBox->Visible = false;
+    homeConfirmText1->Visible = false;
+    homeConfirmText2->Visible = false;
+    homeWarning1->Visible = false;
+    homeWarning2->Visible = false;
+    homeConfirmBtn->Visible = false;
+    homeCancelBtn->Visible = false;
+    homeConfirmLabel->Visible = false;
+    homeCancelLabel->Visible = false; });
+    homeCancelBtn->Visible = false;
+    UIGroup->AddNewControlObject(homeCancelBtn);
+
+    homeCancelLabel = new Engine::Label("Cancel", "pirulen.ttf", 17, screenWidth / 2 + 110, 580, 255, 255, 255, 255, 0.5, 0.5);
+    homeCancelLabel->Visible = false;
+    UIGroup->AddNewObject(homeCancelLabel);
 }
 
 void PlayScene::UIBtnClicked(int id)
