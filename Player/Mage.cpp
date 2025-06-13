@@ -45,9 +45,9 @@ Mage::Mage(float x, float y)
     deathTimer = 0;
     deathInterval = 0.07f;
     idleTimer = 0;
-    idleInterval = 0.12f;
+    idleInterval = 0.1f;
     hurtTimer = 0;
-    hurtInterval = 0.05f;
+    hurtInterval = 0.07f;
     currentFrame = 0;
 }
 

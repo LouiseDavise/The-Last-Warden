@@ -56,9 +56,9 @@ void SelectHeroScene::Initialize()
     };
 
     HeroOption heroes[charCount] = {
-        {"Spearman", "A primitive but strong melee brawler.", "Characters/Spearman/image1x1.png"},
-        {"Archer", "Quick ranged attacker with high DPS.", "Characters/Archer/image1x1.png"},
-        {"Mage", "Master of elemental magic and AoE.", "Characters/Mage/image1x1.png"}};
+        {"Spearman", "A primitive but strong melee brawler.", "Characters/Spearman/Walk/image1x1.png"},
+        {"Archer", "Quick ranged attacker with high DPS.", "Characters/Archer/Walk/image1x1.png"},
+        {"Mage", "Master of elemental magic and AoE.", "Characters/Mage/Walk/image1x1.png"}};
 
     for (int i = 0; i < charCount; ++i)
     {

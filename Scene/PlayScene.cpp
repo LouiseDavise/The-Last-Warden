@@ -60,10 +60,7 @@ const std::vector<Engine::Point> PlayScene::directions = {
 int PlayScene::MapWidth, PlayScene::MapHeight;
 const int PlayScene::BlockSize = 64;
 const std::vector<int> PlayScene::CheatCode = {
-const std::vector<int> PlayScene::CheatCode = {
-    ALLEGRO_KEY_UP, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_DOWN,
-    ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT,
-    ALLEGRO_KEY_B, ALLEGRO_KEY_A, ALLEGRO_KEY_LSHIFT, ALLEGRO_KEY_ENTER};
+    ALLEGRO_KEY_HOME, ALLEGRO_KEY_PGUP, ALLEGRO_KEY_PGDN, ALLEGRO_KEY_END};
 Engine::Point PlayScene::GetClientSize()
 {
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);

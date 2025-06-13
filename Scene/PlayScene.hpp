@@ -30,8 +30,7 @@ namespace Engine
     class ImageButton;
     class Label;
     class Sprite;
-}
-}
+};
 
 class PlayScene final : public Engine::IScene
 {
