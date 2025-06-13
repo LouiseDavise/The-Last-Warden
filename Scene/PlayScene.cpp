@@ -487,9 +487,11 @@ void PlayScene::Draw() const
             fillColor = activeCompanion->IsMochiSkillReady() ? al_map_rgb(0, 255, 150) : // teal green when ready
                             al_map_rgb(255, 100, 100);                                   // reddish when recharging
         }
-        else
+        else if (type == "COMP3")
         {
-            return; // COMP3 or no skill
+            ratio = activeCompanion->IsZukoSkillReady() ? 1.0f : activeCompanion->GetzukoSkillCooldownProgress();
+            fillColor = activeCompanion->IsZukoSkillReady() ? al_map_rgb(0, 255, 150) : // teal green when ready
+                            al_map_rgb(255, 200, 100);                                  // reddish when recharging
         }
 
         // Background

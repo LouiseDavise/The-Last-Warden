@@ -8,6 +8,7 @@
 #include "Engine/Collider.hpp"
 #include "Scene/player_data.h"
 #include <allegro5/allegro_primitives.h>
+#include "UI/Animation/ZukoKnockbackWave.hpp"
 
 using Res = Engine::Resources;
 
@@ -35,6 +36,8 @@ Companion::Companion(float x, float y)
 
 void Companion::Update(float dt)
 {
+    PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+
     if (std::string(companionType) == "COMP1")
     {
         if (!wispSkillReady)
@@ -84,6 +87,19 @@ void Companion::Update(float dt)
         }
     }
 
+    if (std::string(companionType) == "COMP3")
+    {
+        if (!zukoSkillReady)
+        {
+            zukoSkillTimer += dt;
+            if (zukoSkillTimer >= zukoSkillCooldown)
+            {
+                zukoSkillReady = true;
+                zukoSkillTimer = 0.0f;
+            }
+        }
+    }
+
     if (hp <= 0)
         return;
 
@@ -109,7 +125,6 @@ void Companion::Update(float dt)
     {
         float len = std::sqrt(v.x * v.x + v.y * v.y);
         v = v / len * GetSpeed() * dt;
-        auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
         if (scene)
         {
             float nextX = Position.x + v.x;
@@ -159,7 +174,6 @@ void Companion::Update(float dt)
     }
 
     // Collision
-    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     bool attacked = false;
     if (scene)
     {
@@ -295,6 +309,18 @@ void Companion::OnKeyDown(int k)
             }
         }
     }
+
+    if (std::string(companionType) == "COMP3" && k == ALLEGRO_KEY_BACKSPACE && zukoSkillReady)
+    {
+        PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+        if (scene)
+        {
+            ZukoKnockbackWave *wave = new ZukoKnockbackWave(Position.x, Position.y);
+            scene->EffectGroup->AddNewObject(wave);
+            zukoSkillReady = false;
+            zukoSkillTimer = 0.0f;
+        }
+    }
 }
 
 void Companion::OnKeyUp(int k)
@@ -356,27 +382,27 @@ void Companion::Draw() const
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(180, 0, 255), 2);
     }
 
-    // Cooldown/Quota bar
-    float barWidth = 40;
-    float barHeight = 5;
-    float fillRatio = attackQuota / 100.0f;
-    float barX = Position.x - barWidth / 2;
-    float barY = Position.y - CollisionRadius - 20;
+    // // Cooldown/Quota bar
+    // float barWidth = 40;
+    // float barHeight = 5;
+    // float fillRatio = attackQuota / 100.0f;
+    // float barX = Position.x - barWidth / 2;
+    // float barY = Position.y - CollisionRadius - 20;
 
-    // background (dark)
-    al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(50, 50, 50));
+    // // background (dark)
+    // al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(50, 50, 50));
 
-    // fill (color depends on state)
-    ALLEGRO_COLOR fillColor = isRecharging ? al_map_rgb(100, 100 + 155 * fillRatio, 255) : // blueish while recharging
-                                  al_map_rgb(255 * (1 - fillRatio), 255 * fillRatio, 0);   // red→green while active
+    // // fill (color depends on state)
+    // ALLEGRO_COLOR fillColor = isRecharging ? al_map_rgb(100, 100 + 155 * fillRatio, 255) : // blueish while recharging
+    //                               al_map_rgb(255 * (1 - fillRatio), 255 * fillRatio, 0);   // red→green while active
 
-    al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, fillColor);
+    // al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, fillColor);
 
-    // border
-    al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+    // // border
+    // al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
 
-    if (std::string(companionType) == "COMP2" && mochiSkillActive)
-    {
-        al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
-    }
+    // if (std::string(companionType) == "COMP2" && mochiSkillActive)
+    // {
+    //     al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
+    // }
 }

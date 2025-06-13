@@ -128,6 +128,8 @@ add_executable(The_Last_Warden
     UI/Animation/AreaEffect.hpp
     UI/Animation/Cheat.cpp
     UI/Animation/Cheat.hpp
+    UI/Animation/ZukoKnockbackWave.cpp
+    UI/Animation/ZukoKnockbackWave.hpp
 
     UI/Component/Image.cpp
     UI/Component/Image.hpp

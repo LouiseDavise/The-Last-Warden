@@ -46,14 +46,23 @@ public:
     bool mochiSkillReady = true;
     bool mochiSkillActive = false;
     float mochiHealRadius = 200.0f;
-    float mochiHealAmount = 35.0f; // Adjust as needed
+    float mochiHealAmount = 35.0f;
     float mochiSkillDisplayTime = 1.5f;
     float mochiSkillVisualTimer = 0.0f;
     bool mochiHealingOngoing = false;
-    float mochiHealRate = 15.0f;    // HP per second
-    float mochiHealDuration = 5.0f; // Total duration
+    float mochiHealRate = 15.0f;
+    float mochiHealDuration = 5.0f;
     float mochiHealElapsed = 0.0f;
     bool IsMochiHealingOngoing() const { return mochiHealingOngoing; }
+
+    float zukoSkillCooldown = 30.0f;
+    float zukoSkillTimer = 0.0f;
+    bool zukoSkillReady = true;
+    bool IsZukoSkillReady() const { return zukoSkillReady; }
+    float GetzukoSkillCooldownProgress() const
+    {
+        return zukoSkillReady ? 1.0f : zukoSkillTimer / zukoSkillCooldown;
+    }
 
 private:
     bool keyUp = false,
