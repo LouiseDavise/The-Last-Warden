@@ -26,6 +26,15 @@ public:
     const float rechargeDelay = 4.0f;
     bool isRecharging = false;
     void Draw() const override;
+    std::string companionName;
+    float wispSkillCooldown = 30.0f;
+    float wispSkillTimer = 0.0f;
+    bool wispSkillReady = true;
+    bool IsWispSkillReady() const { return wispSkillReady; }
+    float GetWispCooldownProgress() const
+    {
+        return wispSkillReady ? 1.0f : wispSkillTimer / wispSkillCooldown;
+    }
 
 private:
     bool keyUp = false,

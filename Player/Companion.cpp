@@ -35,6 +35,18 @@ Companion::Companion(float x, float y)
 
 void Companion::Update(float dt)
 {
+    if (std::string(companionType) == "COMP1")
+    {
+        if (!wispSkillReady)
+        {
+            wispSkillTimer += dt;
+            if (wispSkillTimer >= wispSkillCooldown)
+            {
+                wispSkillReady = true;
+            }
+        }
+    }
+
     if (hp <= 0)
         return;
 
@@ -209,6 +221,25 @@ void Companion::OnKeyDown(int k)
             }
         }
     }
+    if (std::string(companionType) == "COMP1" && k == ALLEGRO_KEY_BACKSPACE && wispSkillReady)
+    {
+        PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
+        if (scene)
+        {
+            Player *player = scene->GetPlayer();
+            if (player)
+            {
+                // Swap positions
+                Engine::Point temp = Position;
+                Position = player->Position;
+                player->Position = temp;
+
+                // Set cooldown
+                wispSkillReady = false;
+                wispSkillTimer = 0.0f;
+            }
+        }
+    }
 }
 
 void Companion::OnKeyUp(int k)
@@ -265,7 +296,8 @@ void Companion::Draw() const
         Size.y / h,
         Rotation, 0);
 
-    if (PlayScene::DebugMode) {
+    if (PlayScene::DebugMode)
+    {
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(180, 0, 255), 2);
     }
 

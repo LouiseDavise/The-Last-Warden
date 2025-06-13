@@ -218,30 +218,37 @@ void PlayScene::Update(float deltaTime)
     }
 
     // WIN condition
-    if (!fadingToScore && enemyWaves.empty()) {
+    if (!fadingToScore && enemyWaves.empty())
+    {
         bool allEnemiesDead = true;
-        for (auto *obj : EnemyGroup->GetObjects()) {
+        for (auto *obj : EnemyGroup->GetObjects())
+        {
             Enemy *enemy = dynamic_cast<Enemy *>(obj);
-            if (enemy->GetHP() > 0) {
+            if (enemy->GetHP() > 0)
+            {
                 allEnemiesDead = false;
                 break;
             }
         }
-        if (allEnemiesDead) {
+        if (allEnemiesDead)
+        {
             fadingToScore = true;
             fadeTimer = 0;
         }
     }
 
     // LOSE condition
-    if (player && player->isDead && !fadingToScore) {
+    if (player && player->isDead && !fadingToScore)
+    {
         fadingToScore = true;
         fadeTimer = 0;
     }
 
-    if (fadingToScore) {
+    if (fadingToScore)
+    {
         fadeTimer += deltaTime;
-        if (fadeTimer >= fadeDuration) {
+        if (fadeTimer >= fadeDuration)
+        {
             Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return;
         }
@@ -288,6 +295,19 @@ void PlayScene::Update(float deltaTime)
     char buffer[16];
     std::snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d", hours, minutes, seconds);
     UITimerLabel->Text = buffer;
+
+    if (!activeCompanion)
+    {
+        for (auto *obj : PlayerGroup->GetObjects())
+        {
+            auto *comp = dynamic_cast<Companion *>(obj);
+            if (comp)
+            {
+                activeCompanion = std::shared_ptr<Companion>(comp, [](Companion *) {}); // non-owning reference
+                break;
+            }
+        }
+    }
 }
 
 void PlayScene::Draw() const
@@ -433,12 +453,37 @@ void PlayScene::Draw() const
     PanelGroup->Draw();
 
     totalCoin->Text = std::to_string(money);
-    if(totalCoin->Visible) totalCoin->Draw();
-    if(totalCoinIcon->Visible) totalCoinIcon->Draw();
-    if (fadingToScore) {
+    if (totalCoin->Visible)
+        totalCoin->Draw();
+    if (totalCoinIcon->Visible)
+        totalCoinIcon->Draw();
+    if (fadingToScore)
+    {
         float alpha = std::min(fadeTimer / fadeDuration, 1.0f);
         ALLEGRO_COLOR fadeColor = al_map_rgba_f(0, 0, 0, alpha);
         al_draw_filled_rectangle(0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), fadeColor);
+    }
+
+    if (activeCompanion && std::string(companionType) == "COMP1")
+    {
+        const float x = 95;
+        const float y = 90; // Right below weapon cooldown
+        const float width = 200;
+        const float height = 8;
+
+        float ratio = activeCompanion->IsWispSkillReady() ? 1.0f : activeCompanion->GetWispCooldownProgress(); // 0~1
+
+        // Background
+        al_draw_filled_rectangle(x, y, x + width, y + height, al_map_rgb(40, 40, 40));
+
+        // Fill
+        ALLEGRO_COLOR fillColor = activeCompanion->IsWispSkillReady() ? al_map_rgb(100, 255, 100) : // green when ready
+                                      al_map_rgb(255, 150, 0);                                      // orange when recharging
+
+        al_draw_filled_rectangle(x, y, x + width * ratio, y + height, fillColor);
+
+        // Border
+        al_draw_rectangle(x, y, x + width, y + height, al_map_rgb(255, 255, 255), 2);
     }
 }
 

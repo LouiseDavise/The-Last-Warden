@@ -179,5 +179,7 @@ public:
     int GetWaveCount() const { return waveCount; }
     void IncreaseKillCount() { killCount++; }
     void IncreaseWaveCount() { waveCount++; }
+
+    std::shared_ptr<Companion> activeCompanion;
 };
 #endif // PLAYSCENE_HPP
