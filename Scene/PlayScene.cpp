@@ -223,7 +223,7 @@ void PlayScene::Update(float deltaTime)
         for (auto *obj : EnemyGroup->GetObjects())
         {
             Enemy *enemy = dynamic_cast<Enemy *>(obj);
-            if (enemy && enemy->GetHP() > 0)
+            if (enemy->GetHP() > 0)
             {
                 allEnemiesDead = false;
                 break;
@@ -231,6 +231,7 @@ void PlayScene::Update(float deltaTime)
         }
         if (allEnemiesDead)
         {
+            std::cout << "winnnnnnnnnnnnnnn" << std::endl;
             Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return;
         }
@@ -1162,7 +1163,7 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
         bool valid = false;
 
         // Try multiple times in case edge tile is not walkable
-        for (int attempt = 0; attempt < 5 && !valid; ++attempt)
+        for (int attempt = 0; attempt < 100 && !valid; ++attempt)
         {
             int edge = edgeDist(rng);
             switch (edge)
@@ -1185,10 +1186,10 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
                 break;
             }
             valid = (mapState[gy][gx] == TILE_WALKABLE);
+            Engine::LOG(Engine::INFO) << "ATTEMPT (" << gy << "),(" << gx << ") : result->" << valid;
             if (valid)
                 break;
         }
-
         if (!valid)
             continue; // skip this spawn if no valid edge tile found
 
@@ -1333,6 +1334,7 @@ void PlayScene::ConstructUI()
     homeWarning1->Visible = true;
     homeWarning2->Visible = true;
     homeConfirmBtn->Visible = true;
+    homeConfirmBtn->Enabled = true;
     homeCancelBtn->Visible = true;
     homeConfirmLabel->Visible = true;
     homeCancelLabel->Visible = true; });
@@ -1376,6 +1378,7 @@ void PlayScene::ConstructUI()
                                        { Engine::GameEngine::GetInstance().ChangeScene("score-scene"); });
 
     homeConfirmBtn->Visible = false;
+    homeConfirmBtn->Enabled = false;
     UIGroup->AddNewControlObject(homeConfirmBtn);
 
     homeConfirmLabel = new Engine::Label("Confirm", "pirulen.ttf", 17, screenWidth / 2 - 90, 580, 255, 255, 255, 255, 0.5, 0.5);
@@ -1393,6 +1396,7 @@ void PlayScene::ConstructUI()
     homeWarning1->Visible = false;
     homeWarning2->Visible = false;
     homeConfirmBtn->Visible = false;
+    homeConfirmBtn->Enabled = false;
     homeCancelBtn->Visible = false;
     homeConfirmLabel->Visible = false;
     homeCancelLabel->Visible = false; });
