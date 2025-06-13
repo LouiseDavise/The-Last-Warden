@@ -80,14 +80,10 @@ add_executable(The_Last_Warden
     Engine/Sprite.cpp
     Engine/Sprite.hpp
 
-    Scene/LoseScene.cpp
-    Scene/LoseScene.hpp
     Scene/PlayScene.cpp
     Scene/PlayScene.hpp
     Scene/ModeSelectScene.cpp
     Scene/ModeSelectScene.hpp
-    Scene/WinScene.cpp
-    Scene/WinScene.hpp
     Scene/SettingScene.cpp
     Scene/SettingScene.hpp
     Scene/LeaderBoardScene.cpp

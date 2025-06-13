@@ -3,10 +3,8 @@
 // You can register your scenes here, and start the game.
 #include "Engine/GameEngine.hpp"
 #include "Engine/LOG.hpp"
-#include "Scene/LoseScene.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Scene/ModeSelectScene.hpp"
-#include "Scene/WinScene.hpp"
 #include "Scene/SettingScene.hpp"
 #include "Scene/LeaderBoardScene.hpp"
 #include "Scene/AuthScene.hpp"
@@ -22,8 +20,6 @@ int main(int argc, char **argv)
 	Engine::GameEngine &game = Engine::GameEngine::GetInstance();
 
 	game.AddNewScene("play", new PlayScene());
-	game.AddNewScene("lose-scene", new LoseScene());
-	game.AddNewScene("win-scene", new WinScene());
 	game.AddNewScene("mode-select", new ModeSelectScene());
 	game.AddNewScene("setting-scene", new SettingScene());
 	game.AddNewScene("leaderboard-scene", new LeaderBoardScene());
