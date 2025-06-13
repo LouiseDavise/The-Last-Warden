@@ -66,7 +66,6 @@ Engine::Point PlayScene::GetClientSize()
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
 
-
 void PlayScene::Initialize()
 {
     mapState.clear();
@@ -77,6 +76,7 @@ void PlayScene::Initialize()
     matchTime = 0;
     isNight = false;
     money = 1000;
+    paused = false;
 
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
@@ -264,7 +264,6 @@ void PlayScene::Update(float deltaTime)
             preview->Update(deltaTime);
     }
 
-
     auto screenSize = Engine::GameEngine::GetInstance().GetScreenSize();
 
     camera.x = player->Position.x - screenSize.x / 2;
@@ -439,8 +438,10 @@ void PlayScene::Draw() const
     PanelGroup->Draw();
 
     totalCoin->Text = std::to_string(money);
-    if(totalCoin->Visible) totalCoin->Draw();
-    if(totalCoinIcon->Visible) totalCoinIcon->Draw();
+    if (totalCoin->Visible)
+        totalCoin->Draw();
+    if (totalCoinIcon->Visible)
+        totalCoinIcon->Draw();
 }
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
@@ -474,12 +475,12 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 
     Player *player = GetPlayer();
     if ((button & 1) && !TargetTile->Visible && preview)
-    if ((button & 1) && !TargetTile->Visible && preview)
-    {
-        // Cancel turret construct.
-        UIGroup->RemoveObject(preview->GetObjectIterator());
-        preview = nullptr;
-    }
+        if ((button & 1) && !TargetTile->Visible && preview)
+        {
+            // Cancel turret construct.
+            UIGroup->RemoveObject(preview->GetObjectIterator());
+            preview = nullptr;
+        }
     IScene::OnMouseDown(button, mx, my);
     if (!IsMouseOverUI(mx, my))
         player->OnMouseDown(button, mx, my);
@@ -523,7 +524,6 @@ void PlayScene::OnMouseMove(int mx, int my)
     TargetTile->Position.x = x * BlockSize;
     TargetTile->Position.y = y * BlockSize;
 }
-
 
 void PlayScene::OnMouseUp(int button, int mx, int my)
 {
@@ -644,8 +644,8 @@ void PlayScene::OnKeyDown(int keyCode)
     {
         keyStrokes.push_back(keyCode);
         if (keyStrokes.size() > CheatCode.size())
-        if (keyStrokes.size() > CheatCode.size())
-            keyStrokes.pop_front();
+            if (keyStrokes.size() > CheatCode.size())
+                keyStrokes.pop_front();
     }
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
