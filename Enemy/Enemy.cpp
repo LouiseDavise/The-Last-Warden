@@ -50,6 +50,7 @@ void Enemy::Hit(float damage)
         for (auto &it : lockedProjectiles)
             it->Target = nullptr;
         getPlayScene()->EarnMoney(money);
+        getPlayScene()->IncreaseKillCount();
         AudioHelper::PlayAudio("explosion.wav");
     }else {
         state = State::Hurt;

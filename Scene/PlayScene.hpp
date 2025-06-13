@@ -52,7 +52,10 @@ private:
     bool PanelVisible = true;
 
 protected:
-    int money;
+    int money = 1000;
+    int killCount = 0;
+    int waveCount = 1;
+    int totalWaveSpawned = 0;
     int SpeedMult;
     Engine::Label *lifeTextLabel;
 
@@ -162,5 +165,10 @@ public:
     Engine::ImageButton *homeCancelBtn = nullptr;
     Engine::Label *homeConfirmLabel = nullptr;
     Engine::Label *homeCancelLabel = nullptr;
+
+    int GetKillCount() const { return killCount; }
+    int GetWaveCount() const { return waveCount; }
+    void IncreaseKillCount() { killCount++; }
+    void IncreaseWaveCount() { waveCount++; }
 };
 #endif // PLAYSCENE_HPP

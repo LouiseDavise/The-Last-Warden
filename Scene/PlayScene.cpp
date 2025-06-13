@@ -220,6 +220,8 @@ void PlayScene::Update(float deltaTime)
     while (!enemyWaves.empty() && matchTime >= enemyWaves.front().timestamp)
     {
         SpawnEnemy(enemyWaves.front());
+        waveCount = (totalWaveSpawned / 10) + 1;
+        totalWaveSpawned++;
         enemyWaves.pop();
     }
 
@@ -1367,34 +1369,7 @@ void PlayScene::ConstructUI()
     // Confirm
     homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 - 160, 550, 140, 65);
     homeConfirmBtn->SetOnClickCallback([]()
-                                       {
-    PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
-    if (!play) return;
-
-    // Score Calculation
-    int score = play->GetMoney();
-    float time = play->matchTime;
-
-    // Save to file
-    std::filesystem::create_directories("Data");
-    std::ofstream file("Data/scoreboard.txt", std::ios::app);
-    std::cout << "Writing to: " << std::filesystem::absolute("Data/scoreboard.txt") << std::endl;
-
-    if (file.is_open()) {
-        std::time_t now = std::time(nullptr);
-        char dateStr[11];
-        std::strftime(dateStr, sizeof(dateStr), "%Y-%m-%d", std::localtime(&now));
-
-        file << player_uid << "," << nameInput << "," << score << ","
-             << static_cast<int>(time) << "s" << "," << dateStr << "\n";
-        file.close();
-        std::cout << "Score saved to scoreboard.txt\n";
-    } else {
-        std::cout << "Failed to write score to file.\n";
-    }
-
-    // Switch scene
-    Engine::GameEngine::GetInstance().ChangeScene("leaderboard-scene"); });
+                                       { Engine::GameEngine::GetInstance().ChangeScene("score-scene"); });
 
     homeConfirmBtn->Visible = false;
     UIGroup->AddNewControlObject(homeConfirmBtn);
