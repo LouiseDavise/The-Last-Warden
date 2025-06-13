@@ -3,6 +3,7 @@
 #include "Enemy/Enemy.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Collider.hpp"
+#include "UI/Animation/AreaEffect.hpp"
 
 MagicBullet::MagicBullet(float x, float y, float damage, const Engine::Point &direction, float rotation)
     : Projectile("Projectiles/MagicBullet.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr)
@@ -63,6 +64,9 @@ void MagicBullet::OnExplode()
         if (distSqr <= radius * radius)
         {
             enemy->Hit(damage);
+            scene->EffectGroup->AddNewObject(
+                new AreaEffect(enemy->Position.x, enemy->Position.y, radius, 0.5f));
+
         }
     }
 

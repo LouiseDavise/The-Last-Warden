@@ -74,6 +74,7 @@ void PlayScene::Initialize()
     SpeedMult = 1;
     totalTime = 0;
     matchTime = 0;
+    isNight = false;
     money = 10000;
 
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));

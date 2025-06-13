@@ -118,6 +118,8 @@ add_executable(The_Last_Warden
     UI/Animation/DirtyEffect.hpp
     UI/Animation/ExplosionEffect.cpp
     UI/Animation/ExplosionEffect.hpp
+    UI/Animation/AreaEffect.cpp
+    UI/Animation/AreaEffect.hpp
     UI/Animation/Plane.cpp
     UI/Animation/Plane.hpp
 
