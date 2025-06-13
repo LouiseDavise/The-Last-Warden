@@ -59,6 +59,21 @@ namespace Engine {
                 it.second->Draw();
         }
     }
+
+    void Group::DrawCulled(float camX, float camY, float screenW, float screenH) const {
+        for (auto &it : objects) {
+            if (!it.second->Visible)
+                continue;
+            Engine::Point pos = it.second->Position;
+            Engine::Point size = it.second->Size;
+            if (pos.x + size.x < camX || pos.x > camX + screenW ||
+                pos.y + size.y < camY || pos.y > camY + screenH)
+                continue;
+            it.second->Draw();
+        }
+    }
+
+
     void Group::OnKeyDown(int keyCode) {
         for (auto it = controls.begin(); it != controls.end();) {
             auto preIt = it++;

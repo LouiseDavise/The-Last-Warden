@@ -268,14 +268,19 @@ void PlayScene::Update(float deltaTime)
 
 void PlayScene::Draw() const
 {
+    auto screenSize = Engine::GameEngine::GetInstance().GetScreenSize();
+    int left = std::max(0, static_cast<int>(camera.x) / BlockSize - 1);
+    int right = std::min(MapWidth, static_cast<int>(camera.x + screenSize.x) / BlockSize + 2);
+    int top = std::max(0, static_cast<int>(camera.y) / BlockSize - 1);
+    int bottom = std::min(MapHeight, static_cast<int>(camera.y + screenSize.y) / BlockSize + 2);
     ALLEGRO_TRANSFORM transform;
     al_identity_transform(&transform);
     al_translate_transform(&transform, -camera.x, -camera.y);
     al_use_transform(&transform);
-    TileMapGroup->Draw();
+    TileMapGroup->DrawCulled(camera.x, camera.y, screenSize.x, screenSize.y);
     GroundEffectGroup->Draw();
-    StructureGroup->Draw();
-    EnemyGroup->Draw();
+    StructureGroup->DrawCulled(camera.x, camera.y, screenSize.x, screenSize.y);
+    EnemyGroup->DrawCulled(camera.x, camera.y, screenSize.x, screenSize.y);
     PlayerGroup->Draw();
     WeaponGroup->Draw();
     ProjectileGroup->Draw();

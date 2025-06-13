@@ -77,6 +77,7 @@ namespace Engine {
         /// Delegate the draw event to all visible objects.
         /// </summary>
         void Draw() const override;
+        void DrawCulled(float camX, float camY, float screenW, float screenH) const;
         /// <summary>
         /// Delegate the key down event to all controls.
         /// </summary>
