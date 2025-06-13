@@ -25,13 +25,6 @@ void WandWeapon::Use(float tx, float ty)
     if (!available || coolingDown || currentQuota <= 0)
         return;
 
-    currentQuota--;
-    if (currentQuota == 0)
-    {
-        coolingDown = true;
-        cooldownTimer = 0.0f;
-    }
-
     Engine::Point direction = Engine::Point(tx, ty) - Position;
     if (direction.Magnitude() < 1e-3f)
         return;
@@ -44,14 +37,25 @@ void WandWeapon::Use(float tx, float ty)
     {
         MagicBullet *bullet = new MagicBullet(Position.x, Position.y, damage, direction, rotation);
         scene->ProjectileGroup->AddNewObject(static_cast<Engine::IObject *>(bullet));
+
+        if (!scene->IsMochiHealing())
+        {
+            currentQuota--;
+            if (currentQuota == 0)
+            {
+                coolingDown = true;
+                cooldownTimer = 0.0f;
+            }
+        }
     }
 }
 
 void WandWeapon::Update(float dt)
 {
     Sprite::Update(dt);
+    PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 
-    if (coolingDown)
+    if (coolingDown && !scene->IsMochiHealing())
     {
         cooldownTimer += dt;
         if (cooldownTimer >= cooldownTime)

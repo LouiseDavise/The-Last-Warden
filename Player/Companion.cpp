@@ -47,6 +47,43 @@ void Companion::Update(float dt)
         }
     }
 
+    if (companionType == std::string("COMP2"))
+    {
+        if (mochiHealingOngoing)
+        {
+            auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
+            if (scene)
+            {
+                Player *player = scene->GetPlayer();
+                if (player && Position.Distance(player->Position) <= mochiHealRadius)
+                {
+                    float deltaHeal = mochiHealRate * dt;
+                    player->HealPlayer(deltaHeal);
+                }
+            }
+
+            mochiHealElapsed += dt;
+            if (mochiHealElapsed >= mochiHealDuration)
+            {
+                mochiHealingOngoing = false;
+            }
+        }
+
+        if (!mochiSkillReady)
+        {
+            mochiSkillTimer += dt;
+            if (mochiSkillTimer >= mochiSkillCooldown)
+            {
+                mochiSkillReady = true;
+            }
+        }
+
+        if (mochiSkillActive && !mochiHealingOngoing)
+        {
+            mochiSkillActive = false;
+        }
+    }
+
     if (hp <= 0)
         return;
 
@@ -240,6 +277,24 @@ void Companion::OnKeyDown(int k)
             }
         }
     }
+    if (std::string(companionType) == "COMP2" && k == ALLEGRO_KEY_BACKSPACE && mochiSkillReady)
+    {
+        auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
+        if (scene)
+        {
+            Player *player = scene->GetPlayer();
+            if (player && Position.Distance(player->Position) <= mochiHealRadius)
+            {
+                mochiHealingOngoing = true;
+                mochiHealElapsed = 0.0f;
+
+                mochiSkillActive = true;
+                mochiSkillReady = false;
+                mochiSkillTimer = 0.0f;
+                mochiSkillVisualTimer = 0.0f;
+            }
+        }
+    }
 }
 
 void Companion::OnKeyUp(int k)
@@ -319,4 +374,9 @@ void Companion::Draw() const
 
     // border
     al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+
+    if (std::string(companionType) == "COMP2" && mochiSkillActive)
+    {
+        al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
+    }
 }

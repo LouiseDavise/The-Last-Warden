@@ -36,6 +36,25 @@ public:
         return wispSkillReady ? 1.0f : wispSkillTimer / wispSkillCooldown;
     }
 
+    bool IsMochiSkillReady() const { return mochiSkillReady; }
+    float GetMochiCooldownProgress() const
+    {
+        return mochiSkillReady ? 1.0f : mochiSkillTimer / mochiSkillCooldown;
+    }
+    float mochiSkillCooldown = 30.0f;
+    float mochiSkillTimer = 0.0f;
+    bool mochiSkillReady = true;
+    bool mochiSkillActive = false;
+    float mochiHealRadius = 200.0f;
+    float mochiHealAmount = 35.0f; // Adjust as needed
+    float mochiSkillDisplayTime = 1.5f;
+    float mochiSkillVisualTimer = 0.0f;
+    bool mochiHealingOngoing = false;
+    float mochiHealRate = 15.0f;    // HP per second
+    float mochiHealDuration = 5.0f; // Total duration
+    float mochiHealElapsed = 0.0f;
+    bool IsMochiHealingOngoing() const { return mochiHealingOngoing; }
+
 private:
     bool keyUp = false,
          keyDown = false, keyLeft = false, keyRight = false;

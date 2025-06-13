@@ -22,20 +22,13 @@ SpearWeapon::SpearWeapon(const Point &startPos, Player *owner)
 
 void SpearWeapon::Use(float tx, float ty)
 {
+    // Usability check
     if (!available || isFlying || coolingDown || currentQuota <= 0)
         return;
 
     Point dir = Point(tx, ty) - Position;
     if (dir.Magnitude() < 1e-3f)
-        return; // zero-length guard
-
-    currentQuota--;
-
-    if (currentQuota == 0)
-    {
-        coolingDown = true;
-        cooldownTimer = 0.0f;
-    }
+        return;
 
     dir = dir.Normalize();
     velocity = dir * speed;
@@ -43,6 +36,18 @@ void SpearWeapon::Use(float tx, float ty)
     isFlying = true;
     available = false;
     flightDist = 0.f;
+
+    // ✅ Only reduce quota and start cooldown IF not healing
+    PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (!(scene && scene->IsMochiHealing()))
+    {
+        currentQuota--;
+        if (currentQuota == 0)
+        {
+            coolingDown = true;
+            cooldownTimer = 0.0f;
+        }
+    }
 }
 
 void SpearWeapon::Update(float dt)

@@ -12,7 +12,8 @@ namespace Engine
     struct Point;
 }
 
-enum class PlayerState{
+enum class PlayerState
+{
     Idle,
     Walk,
     Hurt,
@@ -39,7 +40,13 @@ public:
     float GetHP() const { return hp; }
     float GetSpeed() const { return moveSpeed; }
     float GetRadius() const { return CollisionRadius; }
-    PlayerState GetState() const {return state;}
+    PlayerState GetState() const { return state; }
+    void HealPlayer(float value)
+    {
+        hp += value;
+        if (hp > 100.0f)
+            hp = 100.0f;
+    }
     bool isDead = false;
 
 protected:

@@ -464,24 +464,38 @@ void PlayScene::Draw() const
         al_draw_filled_rectangle(0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), fadeColor);
     }
 
-    if (activeCompanion && std::string(companionType) == "COMP1")
+    if (activeCompanion)
     {
+        std::string type = std::string(companionType);
         const float x = 95;
         const float y = 90; // Right below weapon cooldown
         const float width = 200;
         const float height = 8;
 
-        float ratio = activeCompanion->IsWispSkillReady() ? 1.0f : activeCompanion->GetWispCooldownProgress(); // 0~1
+        float ratio = 1.0f;
+        ALLEGRO_COLOR fillColor = al_map_rgb(255, 255, 255); // default white
+
+        if (type == "COMP1")
+        {
+            ratio = activeCompanion->IsWispSkillReady() ? 1.0f : activeCompanion->GetWispCooldownProgress();
+            fillColor = activeCompanion->IsWispSkillReady() ? al_map_rgb(100, 255, 100) : // green when ready
+                            al_map_rgb(255, 150, 0);                                      // orange when recharging
+        }
+        else if (type == "COMP2")
+        {
+            ratio = activeCompanion->IsMochiSkillReady() ? 1.0f : activeCompanion->GetMochiCooldownProgress();
+            fillColor = activeCompanion->IsMochiSkillReady() ? al_map_rgb(0, 255, 150) : // teal green when ready
+                            al_map_rgb(255, 100, 100);                                   // reddish when recharging
+        }
+        else
+        {
+            return; // COMP3 or no skill
+        }
 
         // Background
         al_draw_filled_rectangle(x, y, x + width, y + height, al_map_rgb(40, 40, 40));
-
         // Fill
-        ALLEGRO_COLOR fillColor = activeCompanion->IsWispSkillReady() ? al_map_rgb(100, 255, 100) : // green when ready
-                                      al_map_rgb(255, 150, 0);                                      // orange when recharging
-
         al_draw_filled_rectangle(x, y, x + width * ratio, y + height, fillColor);
-
         // Border
         al_draw_rectangle(x, y, x + width, y + height, al_map_rgb(255, 255, 255), 2);
     }
@@ -1612,6 +1626,15 @@ bool PlayScene::IsMouseOverUI(int mx, int my)
         {
             return true;
         }
+    }
+    return false;
+}
+
+bool PlayScene::IsMochiHealing() const
+{
+    if (activeCompanion && std::string(companionType) == "COMP2")
+    {
+        return activeCompanion->IsMochiHealingOngoing();
     }
     return false;
 }

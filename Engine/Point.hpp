@@ -1,11 +1,14 @@
 #ifndef POINT_HPP
 #define POINT_HPP
+#include <cmath>
 
-namespace Engine {
+namespace Engine
+{
     /// <summary>
     /// Can be used as 2D coordinate point or 2D vector.
     /// </summary>
-    struct Point {
+    struct Point
+    {
         // The coordinates of the point.
         float x, y;
         /// <summary>
@@ -69,7 +72,14 @@ namespace Engine {
         /// </summary>
         /// <returns>Magnitude of vector.</returns>
         float Magnitude() const;
+
+        float Distance(const Point &other) const
+        {
+            float dx = x - other.x;
+            float dy = y - other.y;
+            return std::sqrt(dx * dx + dy * dy);
+        }
     };
     Point operator*(const float &lhs, const Point &rhs);
 }
-#endif   // POINT_HPP
+#endif // POINT_HPP
