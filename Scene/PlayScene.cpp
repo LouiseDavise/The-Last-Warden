@@ -91,7 +91,7 @@ void PlayScene::Initialize()
     AddNewControlObject(UIGroup = new Group("UIGroup"));
     AddNewControlObject(PanelGroup = new Group("PanelGroup"));
 
-    std::ifstream fin("Resource/map1.txt");
+    std::ifstream fin(mapFile);
     if (!fin.is_open())
     {
         std::cerr << "Failed to open map file\n";
