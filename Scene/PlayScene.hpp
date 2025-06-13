@@ -49,6 +49,7 @@ private:
     void DrawNightTime() const;
     bool isNight = false;
     float nightCycleTimer = 0.0f;
+    bool PanelVisible = true;
 
 protected:
     int money;
@@ -76,6 +77,7 @@ public:
     Group *EffectGroup;
     Group *WeaponGroup;
     Group *UIGroup;
+    Group *PanelGroup;
 
     Engine::Label *UIMoney;
     Engine::Label *UILives;
@@ -100,7 +102,8 @@ public:
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
     void OnKeyUp(int keyCode) override;
-
+    bool IsMouseOverUI(int mx, int my);
+    
     int GetMoney() const;
     inline Player *GetPlayer() const
     {

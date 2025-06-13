@@ -86,6 +86,7 @@ void PlayScene::Initialize()
     AddNewObject(WeaponGroup = new Group("WeaponGroup"));
     AddNewObject(EffectGroup = new Group("EffectGroup"));
     AddNewControlObject(UIGroup = new Group("UIGroup"));
+    AddNewControlObject(PanelGroup = new Group("PanelGroup"));
 
     std::ifstream fin("Resource/map1.txt");
     if (!fin.is_open())
@@ -151,7 +152,7 @@ void PlayScene::Initialize()
 
     StructurePanel = new Engine::Image("UI/structure_bar.png", w / 2 - 332, h - 120, 664, 120, 0, 0);
     StructurePanel->Visible = true;
-    UIGroup->AddNewObject(StructurePanel);
+    PanelGroup->AddNewObject(StructurePanel);
 
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
     // UIGroup->AddNewObject(lifeTextLabel);
@@ -360,14 +361,13 @@ void PlayScene::Draw() const
     // float radius = 32;
     // al_draw_circle(centerX, centerY, radius + 1.5f, al_map_rgb(255, 255, 255), 5.0f);
     UIGroup->Draw();
+    PanelGroup->Draw();
 }
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
 {
     if ((button & 1))
     {
-        Engine::Point mouse(mx + camera.x, my + camera.y);
-
         if (pauseButton->Visible &&
             mx >= pauseButton->Position.x && mx <= pauseButton->Position.x + 55 &&
             my >= pauseButton->Position.y && my <= pauseButton->Position.y + 55)
@@ -400,7 +400,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         preview = nullptr;
     }
     IScene::OnMouseDown(button, mx, my);
-    player->OnMouseDown(button, mx, my);
+    if (!IsMouseOverUI(mx, my)) player->OnMouseDown(button, mx, my);
 }
 
 void PlayScene::OnMouseMove(int mx, int my)
@@ -440,6 +440,7 @@ void PlayScene::OnMouseMove(int mx, int my)
 
 void PlayScene::OnMouseUp(int button, int mx, int my)
 {
+    if (IsMouseOverUI(mx, my)) return;
     IScene::OnMouseUp(button, mx, my);
     int gx = (mx + camera.x) / BlockSize;
     int gy = (my + camera.y) / BlockSize;
@@ -453,6 +454,9 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 StructureGroup->RemoveObject(s->GetObjectIterator());
                 AudioHelper::PlaySample("win.wav");
                 mapState[gy][gx] = TILE_WALKABLE;
+            }else{
+                UIGroup->RemoveObject(preview->GetObjectIterator());
+                preview = nullptr;
             }
         }
         if (highlightedStructure)
@@ -480,6 +484,9 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 // Add new base tile
                 TileMapGroup->AddNewObject(new Engine::Image(basePath, gx * BlockSize, gy * BlockSize, BlockSize, BlockSize));
                 AudioHelper::PlaySample("win.wav");
+            }else{
+                UIGroup->RemoveObject(preview->GetObjectIterator());
+                preview = nullptr;
             }
         }
         return;
@@ -487,18 +494,16 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
 
     if (!TargetTile->Visible)
         return;
-    int x = (mx + camera.x) / BlockSize;
-    int y = (my + camera.y) / BlockSize;
     if (button & 1)
     {
-        if (mapState[y][x] != TILE_OCCUPIED)
+        if (mapState[gy][gx] != TILE_OCCUPIED)
         {
             if (!preview)
                 return;
-            if (!CheckSpaceValid(x, y))
+            if (!CheckSpaceValid(gx, gy))
             {
                 Engine::Sprite *sprite;
-                GroundEffectGroup->AddNewObject(sprite = new DirtyEffect("UI/target-invalid.png", 1, x * BlockSize + BlockSize / 2, y * BlockSize + BlockSize / 2));
+                GroundEffectGroup->AddNewObject(sprite = new DirtyEffect("UI/target-invalid.png", 1, gx * BlockSize + BlockSize / 2, gy * BlockSize + BlockSize / 2));
                 sprite->Rotation = 0;
                 return;
             }
@@ -506,20 +511,20 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             // Remove Preview.
             preview->GetObjectIterator()->first = false;
             UIGroup->RemoveObject(preview->GetObjectIterator());
-            preview->Position.x = x * BlockSize + BlockSize / 2;
-            preview->Position.y = y * BlockSize + BlockSize / 2;
+            preview->Position.x = gx * BlockSize + BlockSize / 2;
+            preview->Position.y = gy * BlockSize + BlockSize / 2;
             preview->Enabled = true;
             preview->Preview = false;
             preview->Tint = al_map_rgba(255, 255, 255, 255);
-            preview->occupyX = x;
-            preview->occupyY = y;
+            preview->occupyX = gx;
+            preview->occupyY = gy;
             StructureGroup->AddNewObject(preview);
             // To keep responding when paused.
             preview->Update(0);
             // Remove Preview.
             preview = nullptr;
 
-            mapState[y][x] = TILE_OCCUPIED;
+            mapState[gy][gx] = TILE_OCCUPIED;
             OnMouseMove(mx, my);
         }
     }
@@ -556,6 +561,12 @@ void PlayScene::OnKeyDown(int keyCode)
         UIGroup->RemoveObject(preview->GetObjectIterator());
         preview = nullptr;
         return;
+    }
+    else if (keyCode == ALLEGRO_KEY_H) {
+        PanelVisible = !PanelVisible;
+        for (auto* obj : PanelGroup->GetObjects()) {
+            obj->Visible = !obj->Visible;
+        }
     }
 
     if (keyStrokes.size() == CheatCode.size() && std::equal(CheatCode.begin(), CheatCode.end(), keyStrokes.begin()))
@@ -1169,7 +1180,7 @@ void PlayScene::ConstructUI()
                                                    Engine::Sprite(b.sprite, b.x + 36, b.y + 30, 0, 0, 0.5, 0.5),
                                                    b.x, b.y, b.price);
         btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, b.btnId));
-        UIGroup->AddNewControlObject(btn);
+        PanelGroup->AddNewControlObject(btn);
 
         float pricePanelCenter = b.x + 37;
         ALLEGRO_FONT *font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
@@ -1180,9 +1191,9 @@ void PlayScene::ConstructUI()
             priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20) / 2, b.y + 73);
         priceLbl->Color = al_map_rgb(255, 255, 255);
 
-        UIGroup->AddNewObject(priceLbl);
+        PanelGroup->AddNewObject(priceLbl);
         Engine::Image *coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20) / 2 + textW, b.y + 71, 24, 24);
-        UIGroup->AddNewObject(coinImg);
+        PanelGroup->AddNewObject(coinImg);
     }
 
     // Axe UI
@@ -1191,7 +1202,7 @@ void PlayScene::ConstructUI()
                                                Engine::Sprite("Structures/Axe.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
                                                w / 2 - 332 + 8 + 72 * 7, h - 94, Axe::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, -1));
-    UIGroup->AddNewControlObject(btn);
+    PanelGroup->AddNewControlObject(btn);
     float pricePanelCenter = w / 2 - 332 + 8 + 72 * 7 + 37;
     ALLEGRO_FONT *font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
     std::string priceStr = std::to_string(Axe::Price);
@@ -1200,9 +1211,9 @@ void PlayScene::ConstructUI()
     auto *priceLbl = new Engine::Label(
         priceStr, "pirulen.ttf", 16, pricePanelCenter - (textW + 20) / 2, h - 94 + 73);
     priceLbl->Color = al_map_rgb(255, 255, 255);
-    UIGroup->AddNewObject(priceLbl);
+    PanelGroup->AddNewObject(priceLbl);
     Engine::Image *coinImg = new Engine::Image("UI/coin-icon.png", pricePanelCenter - (textW + 20) / 2 + textW, h - 94 + 71, 24, 24);
-    UIGroup->AddNewObject(coinImg);
+    PanelGroup->AddNewObject(coinImg);
 
     // SmashBone UI
     btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
@@ -1210,11 +1221,11 @@ void PlayScene::ConstructUI()
                               Engine::Sprite("Structures/SmashBone.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
                               w / 2 - 332 + 8 + 72 * 8, h - 94, SmashBone::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
-    UIGroup->AddNewControlObject(btn);
+    PanelGroup->AddNewControlObject(btn);
     priceLbl = new Engine::Label(
         "-", "pirulen.ttf", 16, w / 2 - 332 + 8 + 72 * 8 + 32, h - 90 + 71);
     priceLbl->Color = al_map_rgb(255, 255, 255);
-    UIGroup->AddNewObject(priceLbl);
+    PanelGroup->AddNewObject(priceLbl);
 }
 
 void PlayScene::UIBtnClicked(int id)
@@ -1225,6 +1236,7 @@ void PlayScene::UIBtnClicked(int id)
         preview = nullptr;
     }
 
+    if(PanelVisible)
     switch (id)
     {
     case -1:
@@ -1332,3 +1344,25 @@ void PlayScene::DrawNightTime() const {
     al_set_blender(op, src, dst);
 }
 
+
+bool PlayScene::IsMouseOverUI(int mx, int my) {
+    Engine::Point mouse(mx, my);
+    // Check Pause Button
+    if (pauseButton && pauseButton->Visible) {
+        Engine::Point pos = pauseButton->Position;
+        Engine::Point size = pauseButton->Size;
+        if (Engine::Collider::IsPointInRect(mouse, pos, size)) {
+            return true;
+        }
+    }
+
+    // Check Structure Panel
+    if (StructurePanel && StructurePanel->Visible) {
+        Engine::Point pos = StructurePanel->Position;
+        Engine::Point size = StructurePanel->Size;
+        if (Engine::Collider::IsPointInRect(mouse, pos, size)) {
+            return true;
+        }
+    }
+    return false;
+}
