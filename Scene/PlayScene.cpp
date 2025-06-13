@@ -31,7 +31,7 @@
 #include "Structure/Defense/SmashBone.hpp"
 #include "Structure/Defense/Axe.hpp"
 #include "UI/Animation/DirtyEffect.hpp"
-#include "UI/Animation/Plane.hpp"
+#include "UI/Animation/Cheat.hpp"
 #include "UI/Component/Label.hpp"
 #include "UI/Component/ImageButton.hpp"
 #include "player_data.h"
@@ -75,7 +75,7 @@ void PlayScene::Initialize()
     totalTime = 0;
     matchTime = 0;
     isNight = false;
-    money = 10000;
+    money = 1000;
 
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));
@@ -154,6 +154,14 @@ void PlayScene::Initialize()
     StructurePanel = new Engine::Image("UI/structure_bar.png", w / 2 - 332, h - 120, 664, 120, 0, 0);
     StructurePanel->Visible = true;
     PanelGroup->AddNewObject(StructurePanel);
+
+    std::string moneyStr = std::to_string(money);
+    totalCoin = new Engine::Label(
+        moneyStr, "pirulen.ttf", 16, w / 2- 37, h - 119);
+            totalCoin->Color = al_map_rgb(255, 255, 255);
+    totalCoinIcon = new Engine::Image("UI/coin-icon.png", w/2 + 15, h - 120, 24, 24);
+    AddNewObject(totalCoinIcon);
+    AddNewObject(totalCoin);
 
     // lifeTextLabel = new Engine::Label("", "pirulen.ttf", 20, 1375 + 100,  108 + 15, 255,255,255,255, 0.5f, 0.5f);
     // UIGroup->AddNewObject(lifeTextLabel);
@@ -363,6 +371,10 @@ void PlayScene::Draw() const
     // al_draw_circle(centerX, centerY, radius + 1.5f, al_map_rgb(255, 255, 255), 5.0f);
     UIGroup->Draw();
     PanelGroup->Draw();
+
+    totalCoin->Text = std::to_string(money);
+    totalCoin->Draw();
+    totalCoinIcon->Draw();
 }
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
@@ -565,6 +577,8 @@ void PlayScene::OnKeyDown(int keyCode)
     }
     else if (keyCode == ALLEGRO_KEY_H) {
         PanelVisible = !PanelVisible;
+        totalCoin->Visible = !totalCoin->Visible;
+        totalCoinIcon->Visible = !totalCoinIcon->Visible;
         for (auto* obj : PanelGroup->GetObjects()) {
             obj->Visible = !obj->Visible;
         }
@@ -572,9 +586,9 @@ void PlayScene::OnKeyDown(int keyCode)
 
     if (keyStrokes.size() == CheatCode.size() && std::equal(CheatCode.begin(), CheatCode.end(), keyStrokes.begin()))
     {
-        EffectGroup->AddNewObject(new Plane());
+        EffectGroup->AddNewObject(new Cheat());
         AudioHelper::PlaySample("gun.wav");
-        EarnMoney(10000);
+        EarnMoney(1000);
     }
 }
 

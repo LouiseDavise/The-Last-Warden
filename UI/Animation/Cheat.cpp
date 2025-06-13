@@ -11,27 +11,27 @@
 #include "Engine/IScene.hpp"
 #include "Engine/Point.hpp"
 #include "Engine/Resources.hpp"
-#include "Plane.hpp"
+#include "Cheat.hpp"
 #include "Scene/PlayScene.hpp"
 
-PlayScene *Plane::getPlayScene() {
+PlayScene *Cheat::getPlayScene() {
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
-Plane::Plane() : Sprite("play/plane.png", -100, Engine::GameEngine::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
+Cheat::Cheat() : Sprite("Structures/blank.png", -100, Engine::GameEngine::GetInstance().GetScreenHeight() / 2), stage(0), timeTicks(0) {
     for (int i = 1; i <= 10; i++) {
-        bmps.push_back(Engine::Resources::GetInstance().GetBitmap("play/light-" + std::to_string(i) + ".png"));
+        bmps.push_back(Engine::Resources::GetInstance().GetBitmap("Effects/light-" + std::to_string(i) + ".png"));
     }
-    shockwave = Engine::Resources::GetInstance().GetBitmap("play/shockwave.png");
-    Velocity = Engine::Point(800, 0);
+    shockwave = Engine::Resources::GetInstance().GetBitmap("Effects/shockwave.png");
+    Velocity = Engine::Point(9999, 0);
 }
-void Plane::Update(float deltaTime) {
+void Cheat::Update(float deltaTime) {
     int phase;
     float scaleExp;
     switch (stage) {
         case 0:
             // Check if out of boundary.
             if (!Engine::Collider::IsRectOverlap(Position - Size / 2, Position + Size / 2, Engine::Point(-100, 0), PlayScene::GetClientSize())) {
-                Position = PlayScene::GetClientSize() / 2;
+                Position = Engine::Point(getPlayScene()->GetPlayer()->Position);
                 Velocity = Engine::Point();
                 bmp = bmps[0];
                 Size.x = GetBitmapWidth() * minScale;
@@ -81,10 +81,7 @@ void Plane::Update(float deltaTime) {
     }
     Sprite::Update(deltaTime);
 }
-void Plane::Draw() const {
-    // FIXME: known issue
-    // On MacOS, the explosion effect cannot be drawn correctly.
-    // If you know how to fix it, please let us know.
+void Cheat::Draw() const {
     unsigned int phase = floor(timeTicks / timeSpanLight * bmps.size());
     float phaseRatio = timeTicks / timeSpanLight * bmps.size() - phase;
     if (stage == 1 || stage == 2) {

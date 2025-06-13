@@ -1,5 +1,5 @@
-#ifndef PLANE_HPP
-#define PLANE_HPP
+#ifndef CHEAT_HPP
+#define CHEAT_HPP
 #include <allegro5/bitmap.h>
 #include <memory>
 #include <vector>
@@ -8,10 +8,10 @@
 
 class PlayScene;
 
-class Plane : public Engine::Sprite {
+class Cheat : public Engine::Sprite {
 protected:
     PlayScene *getPlayScene();
-    const float timeSpanLight = 1;
+    const float timeSpanLight = 0.5f;
     const float timeSpanShockwave = 1;
     const float shockWaveRadius = 180;
     const float minScale = 1.0f / 8;
@@ -23,8 +23,8 @@ protected:
     std::shared_ptr<ALLEGRO_BITMAP> shockwave;
 
 public:
-    Plane();
+    Cheat();
     void Update(float deltaTime) override;
     void Draw() const override;
 };
-#endif   // PLANE_HPP
+#endif   // CHEAT_HPP
