@@ -12,7 +12,7 @@
 using Res = Engine::Resources;
 
 Companion::Companion(float x, float y)
-    : Player(x, y, 100.0f, 190.0f, "Characters/Support-1/image1x1.png", "image", 10, 10.0f), damage(1)
+    : Player("Characters/Support-1/image1x1.png", x, y, 100.0f, 100.0f, 190.0f), damage(1)
 {
     std::string folder;
     if (std::string(companionType) == "COMP1")
@@ -30,7 +30,6 @@ Companion::Companion(float x, float y)
 
     for (int i = 11; i <= 16; ++i)
         attackFrames.push_back(Res::GetInstance().GetBitmap("Characters/" + folder + "/image" + std::to_string(i) + "x1.png"));
-
     currentBitmap = idleFrames[0];
 }
 
@@ -250,7 +249,26 @@ void Companion::TeleportToPlayer()
 
 void Companion::Draw() const
 {
-    Player::Draw();
+    ALLEGRO_BITMAP *bmp = currentBitmap.get();
+    float w = al_get_bitmap_width(bmp);
+    float h = al_get_bitmap_height(bmp);
+    float scaleX = faceRight ? 1.0f : -1.0f;
+    float anchorX = faceRight ? Anchor.x : (1.0f - Anchor.x);
+
+    ALLEGRO_COLOR tintColor = knockbackTime > 0 ? al_map_rgba_f(1.0f, 0.2f, 0.2f, 1.0f) : Tint;
+
+    al_draw_tinted_scaled_rotated_bitmap(
+        bmp, tintColor,
+        anchorX * w, Anchor.y * h,
+        Position.x, Position.y,
+        scaleX * (Size.x / w),
+        Size.y / h,
+        Rotation, 0);
+
+    if (PlayScene::DebugMode) {
+        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(180, 0, 255), 2);
+    }
+
     // Cooldown/Quota bar
     float barWidth = 40;
     float barHeight = 5;

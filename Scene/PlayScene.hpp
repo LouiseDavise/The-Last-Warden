@@ -27,8 +27,10 @@ namespace Engine
     class Group;
     class Image;
     class ImageButton;
+    class ImageButton;
     class Label;
     class Sprite;
+}
 }
 
 class PlayScene final : public Engine::IScene
@@ -60,6 +62,7 @@ protected:
     Engine::Label *lifeTextLabel;
 
 public:
+    float ticks;
     float matchTime;
     static bool DebugMode;
     static const std::vector<Engine::Point> directions;
@@ -68,7 +71,7 @@ public:
     static Engine::Point SpawnGridPoint;
     static Engine::Point EndGridPoint;
     static const std::vector<int> CheatCode;
-    float ticks;
+    
     // Map tiles.
     Group *TileMapGroup;
     Group *GroundEffectGroup;

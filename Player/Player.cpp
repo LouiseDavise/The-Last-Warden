@@ -9,27 +9,11 @@
 using Engine::Point;
 using Res = Engine::Resources;
 
-Player::Player(float x, float y, float hp, float moveSpeed, const std::string &firstFramePath, const std::string &namePrefix, int frames, float animFPS)
-    : Sprite(firstFramePath, x, y),
-      hp(hp), maxHP(hp), moveSpeed(moveSpeed)
+Player::Player(std::string img, float x, float y, float hp, float MAXhp, float moveSpeed)
+    : Sprite(img, x, y), hp(hp), MAXhp(MAXhp), moveSpeed(moveSpeed)
 {
-    Anchor = Point(0.5f, 0.5f);
-    animInterval = 1.0f / animFPS;
-    LoadAnimation(firstFramePath.substr(0,
-                                        firstFramePath.find_last_of('/') + 1) +
-                      namePrefix,
-                  frames);
-    currentBitmap = framesRight[0];
-}
-
-void Player::LoadAnimation(const std::string &prefix, int frames)
-{
-    framesRight.clear();
-    for (int i = 1; i <= frames; ++i)
-    {
-        std::string path = prefix + std::to_string(i) + "x1.png";
-        framesRight.push_back(Res::GetInstance().GetBitmap(path));
-    }
+    Anchor.x = 0.5f;
+    Anchor.y = 0.75f;
 }
 
 void Player::Update(float dt)
@@ -37,6 +21,28 @@ void Player::Update(float dt)
     if (hp <= 0)
         return;
     UpdateMovement(dt);
+
+    if (hp <= 0) {
+        if(state != PlayerState::Death){
+            state = PlayerState::Death;
+            currentFrame = 0;
+        }
+    }
+    else if (knockbackTime > 0) {
+        if(state != PlayerState::Hurt){
+            state = PlayerState::Hurt;
+            currentFrame = 0;
+        }
+    }
+    else if (movingFlag) {
+        if(state != PlayerState::Walk) currentFrame = 0;
+        state = PlayerState::Walk;
+    }
+    else {
+        if(state != PlayerState::Idle) currentFrame = 0;
+        state = PlayerState::Idle;
+    }
+
     UpdateAnimation(dt);
     Sprite::Update(dt);
 
@@ -143,24 +149,65 @@ void Player::UpdateMovement(float dt)
     }
 }
 
-void Player::UpdateAnimation(float dt)
-{
-    if (!movingFlag)
-        return;
-    animTimer += dt;
-    if (animTimer >= animInterval)
-    {
-        animTimer = 0;
-        currentFrame = (currentFrame + 1) % framesRight.size();
-        currentBitmap = framesRight[currentFrame];
+void Player::UpdateAnimation(float dt) {
+    switch (state) {
+        case PlayerState::Walk:
+            walkTimer += dt;
+            if (walkTimer >= walkInterval && walkFrames.size() > 0) {
+                walkTimer = 0;
+                currentFrame = (currentFrame + 1) % walkFrames.size();
+            }
+            break;
+
+        case PlayerState::Idle:
+            idleTimer += dt;
+            if (idleTimer >= idleInterval && idleFrames.size() > 0) {
+                idleTimer = 0;
+                currentFrame = (currentFrame + 1) % idleFrames.size();
+            }
+            break;
+
+        case PlayerState::Hurt:
+            hurtTimer += dt;
+            if (hurtTimer >= hurtInterval && hurtFrames.size() > 0) {
+                hurtTimer = 0;
+                currentFrame++;
+                if (currentFrame >= hurtFrames.size()) {
+                    state = movingFlag ? PlayerState::Walk : PlayerState::Idle;
+                    currentFrame = 0;
+                }
+            }
+            break;
+
+        case PlayerState::Death:
+            deathTimer += dt;
+            if (deathTimer >= deathInterval && deathFrames.size() > 0) {
+                deathTimer = 0;
+                currentFrame++;
+                if (currentFrame >= deathFrames.size()) {
+                    currentFrame = deathFrames.size() - 1; // Stay on last frame
+                }
+            }
+            break;
     }
 }
 
+
 void Player::Draw() const
 {
-    if (!currentBitmap)
-        return;
-    ALLEGRO_BITMAP *bmp = currentBitmap.get();
+    ALLEGRO_BITMAP* bmp = [&]() {
+        switch (state) {
+            case PlayerState::Walk:
+                return walkFrames[currentFrame].get();
+            case PlayerState::Idle:
+                return idleFrames[currentFrame].get();
+            case PlayerState::Hurt:
+                return hurtFrames[currentFrame].get();
+            case PlayerState::Death:
+                return deathFrames[currentFrame].get();
+        }
+        return walkFrames[0].get(); // fallback
+    }();
     float w = al_get_bitmap_width(bmp);
     float h = al_get_bitmap_height(bmp);
     float scaleX = faceRight ? 1.0f : -1.0f;

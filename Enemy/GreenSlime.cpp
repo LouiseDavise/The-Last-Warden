@@ -34,7 +34,6 @@ GreenSlime::GreenSlime(float x, float y)
         hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-
     // Initial image
     bmp = runFrames[0];
     Velocity = Engine::Point(0, 0);

@@ -13,6 +13,7 @@ public:
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> idleFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> walkFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> attackFrames;
+    std::shared_ptr<ALLEGRO_BITMAP> currentBitmap;
     bool isAttacking = false;
     float attackTimer = 0;
     const float attackDuration = 0.4f;
@@ -30,4 +31,6 @@ private:
     bool keyUp = false,
          keyDown = false, keyLeft = false, keyRight = false;
     int damage = 1;
+    float animTimer = 0.0f;
+    float animInterval = 0.1f;
 };

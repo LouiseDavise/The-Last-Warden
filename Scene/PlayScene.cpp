@@ -60,6 +60,7 @@ const std::vector<Engine::Point> PlayScene::directions = {
 int PlayScene::MapWidth, PlayScene::MapHeight;
 const int PlayScene::BlockSize = 64;
 const std::vector<int> PlayScene::CheatCode = {
+const std::vector<int> PlayScene::CheatCode = {
     ALLEGRO_KEY_UP, ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_DOWN,
     ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT,
     ALLEGRO_KEY_B, ALLEGRO_KEY_A, ALLEGRO_KEY_LSHIFT, ALLEGRO_KEY_ENTER};
@@ -67,6 +68,7 @@ Engine::Point PlayScene::GetClientSize()
 {
     return Engine::Point(MapWidth * BlockSize, MapHeight * BlockSize);
 }
+
 
 void PlayScene::Initialize()
 {
@@ -97,7 +99,6 @@ void PlayScene::Initialize()
         std::cerr << "Failed to open map file\n";
         return;
     }
-
     std::string line;
     int scanWidth = 0, scanHeight = 0;
     while (std::getline(fin, line))
@@ -107,6 +108,8 @@ void PlayScene::Initialize()
         scanHeight++;
     }
     fin.close();
+    MapWidth = scanWidth;
+    MapHeight = scanHeight;
     MapWidth = scanWidth;
     MapHeight = scanHeight;
     ReadMap();
@@ -263,6 +266,7 @@ void PlayScene::Update(float deltaTime)
         if (!preview->IsSmashBone())
             preview->Update(deltaTime);
     }
+
 
     auto screenSize = Engine::GameEngine::GetInstance().GetScreenSize();
 
@@ -438,8 +442,8 @@ void PlayScene::Draw() const
     PanelGroup->Draw();
 
     totalCoin->Text = std::to_string(money);
-    totalCoin->Draw();
-    totalCoinIcon->Draw();
+    if(totalCoin->Visible) totalCoin->Draw();
+    if(totalCoinIcon->Visible) totalCoinIcon->Draw();
 }
 
 void PlayScene::OnMouseDown(int button, int mx, int my)
@@ -472,6 +476,7 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
     }
 
     Player *player = GetPlayer();
+    if ((button & 1) && !TargetTile->Visible && preview)
     if ((button & 1) && !TargetTile->Visible && preview)
     {
         // Cancel turret construct.
@@ -511,12 +516,17 @@ void PlayScene::OnMouseMove(int mx, int my)
     if (!preview || x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
     {
         TargetTile->Visible = false;
+        TargetTile->Visible = false;
         return;
     }
     TargetTile->Visible = true;
     TargetTile->Position.x = x * BlockSize;
     TargetTile->Position.y = y * BlockSize;
+    TargetTile->Visible = true;
+    TargetTile->Position.x = x * BlockSize;
+    TargetTile->Position.y = y * BlockSize;
 }
+
 
 void PlayScene::OnMouseUp(int button, int mx, int my)
 {
@@ -636,6 +646,7 @@ void PlayScene::OnKeyDown(int keyCode)
     else
     {
         keyStrokes.push_back(keyCode);
+        if (keyStrokes.size() > CheatCode.size())
         if (keyStrokes.size() > CheatCode.size())
             keyStrokes.pop_front();
     }

@@ -285,6 +285,8 @@ build CMakeFiles/2025_I2P2_TowerDefense.dir/Turret/Turret.cpp.obj: CXX_COMPILER_
 
 build CMakeFiles/2025_I2P2_TowerDefense.dir/Turret/StructureButton.cpp.obj: CXX_COMPILER__2025_I2P2_TowerDefense_unscanned_Debug D$:/NTHU/I2P2/2025_I2P2_TowerDefense/Turret/StructureButton.cpp || cmake_object_order_depends_target_2025_I2P2_TowerDefense
   DEP_FILE = CMakeFiles\2025_I2P2_TowerDefense.dir\Turret\StructureButton.cpp.obj.d
+build CMakeFiles/2025_I2P2_TowerDefense.dir/Turret/StructureButton.cpp.obj: CXX_COMPILER__2025_I2P2_TowerDefense_unscanned_Debug D$:/NTHU/I2P2/2025_I2P2_TowerDefense/Turret/StructureButton.cpp || cmake_object_order_depends_target_2025_I2P2_TowerDefense
+  DEP_FILE = CMakeFiles\2025_I2P2_TowerDefense.dir\Turret\StructureButton.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -ID:/NTHU/I2P2/2025_I2P2_TowerDefense/. -ID:/NTHU/I2P2/2025_I2P2_TowerDefense/Resource -IC:/allegro/include
   OBJECT_DIR = CMakeFiles\2025_I2P2_TowerDefense.dir
