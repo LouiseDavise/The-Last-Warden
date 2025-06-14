@@ -1,6 +1,14 @@
-// [main.cpp]
-// This is the entry point of your game.
-// You can register your scenes here, and start the game.
+// ===================================================
+//  Copyright (c) 2025 Louise Davise & Amartyananda Chang
+//  All rights reserved.
+//
+//  This source code is part of a student project.
+//  Unauthorized copying, distribution, or modification
+//  of this file is strictly prohibited.
+//
+//  Created by: Louise Davise & Amartyananda Chang
+// ===================================================
+
 #include "Engine/GameEngine.hpp"
 #include "Engine/LOG.hpp"
 #include "Scene/PlayScene.hpp"
