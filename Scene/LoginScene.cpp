@@ -24,12 +24,12 @@ void LoginScene::Initialize()
     AddNewObject(new Engine::Label("ENTER YOUR UID", "RealwoodRegular.otf", 70, halfW, 280, 255, 255, 255, 255, 0.5, 0.5));
     AddNewObject(new Engine::Label("Load your saved progress with your unique ID.", "RealwoodRegular.otf", 30, halfW, h / 6 + 150, 200, 200, 200, 255, 0.5, 0.5));
 
-    auto *submit = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 630, 480, 115);
+    auto *submit = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - 480) / 2, 630, 480, 115);
     submit->SetOnClickCallback(std::bind(&LoginScene::OnSubmitClick, this, 0));
     AddNewControlObject(submit);
     AddNewObject(new Engine::Label("NEXT", "RealwoodRegular.otf", 56, halfW, 640 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 
-    auto *back = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 770, 480, 115);
+    auto *back = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - 480) / 2, 770, 480, 115);
     back->SetOnClickCallback(std::bind(&LoginScene::OnBackClick, this, 0));
     AddNewControlObject(back);
     AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, 780 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));

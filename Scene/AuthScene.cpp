@@ -48,7 +48,7 @@ void AuthScene::Initialize()
     int newBtnX = (w - newBtnW) / 2;
     int newBtnY = halfH - 80;
 
-    auto *btnNew = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", newBtnX, newBtnY - 5, newBtnW, newBtnH);
+    auto *btnNew = new Engine::ImageButton("UI/button.png", "UI/button.png", newBtnX, newBtnY - 5, newBtnW, newBtnH);
     btnNew->SetOnClickCallback(std::bind(&AuthScene::OnLoginClick, this));
     AddNewControlObject(btnNew);
 
@@ -59,7 +59,7 @@ void AuthScene::Initialize()
     int oldBtnX = (w - oldBtnW) / 2;
     int oldBtnY = halfH + 70;
 
-    auto *btnOld = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", oldBtnX, oldBtnY - 5, oldBtnW, oldBtnH);
+    auto *btnOld = new Engine::ImageButton("UI/button.png", "UI/button.png", oldBtnX, oldBtnY - 5, oldBtnW, oldBtnH);
     btnOld->SetOnClickCallback(std::bind(&AuthScene::OnRegisterClick, this));
     AddNewControlObject(btnOld);
 

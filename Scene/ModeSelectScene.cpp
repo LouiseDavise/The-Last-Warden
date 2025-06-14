@@ -47,7 +47,7 @@ void ModeSelectScene::Initialize()
 
     // Leaderboard button
     auto *leaderboardBtn = new Engine::ImageButton(
-        "UI/leaderboard-button.png", "UI/leaderboard-button-transparant.png",
+        "UI/leaderboard-button.png", "UI/leaderboard-button.png",
         w - 2 * (buttonSize + padding), padding,
         buttonSize, buttonSize);
     leaderboardBtn->SetOnClickCallback(std::bind(&ModeSelectScene::ScoreboardOnClick, this));
@@ -55,7 +55,7 @@ void ModeSelectScene::Initialize()
 
     // Settings button
     auto *settingsBtn = new Engine::ImageButton(
-        "UI/setting-button.png", "UI/setting-button-transparant.png",
+        "UI/setting-button.png", "UI/setting-button.png",
         w - (buttonSize + padding), padding,
         buttonSize, buttonSize);
     settingsBtn->SetOnClickCallback(std::bind(&ModeSelectScene::SettingsOnClick, this));
@@ -87,14 +87,14 @@ void ModeSelectScene::Initialize()
     startY += titleHeight + spacing;
 
     // 1-PLAYER Button
-    auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
+    auto *btn = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 1));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("1-PLAYER", "RealwoodRegular.otf", 56, halfW, 10 + startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
     startY += buttonHeight + spacing;
 
     // 2-PLAYER Button
-    btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
+    btn = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - buttonWidth) / 2, startY, buttonWidth, buttonHeight);
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 2));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, 10 + startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));

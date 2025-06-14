@@ -73,7 +73,7 @@ void SelectHeroScene::Initialize()
         AddNewObject(new Engine::Label(heroes[i].description, "pirulen.ttf", 12, x + 75, charY + 200, 200, 200, 200, 255, 0.5, 0.0));
 
         // Choose button
-        auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", x + 10, charY + 250, 130, 60);
+        auto *btn = new Engine::ImageButton("UI/button.png", "UI/button.png", x + 10, charY + 250, 130, 60);
         btn->SetOnClickCallback(std::bind(&SelectHeroScene::OnSelectClick, this, i));
         AddNewControlObject(btn);
         AddNewObject(new Engine::Label("Select", "RealwoodRegular.otf", 28, x + 75, charY + 280, 255, 255, 255, 255, 0.5, 0.5));
@@ -101,7 +101,7 @@ void SelectHeroScene::Initialize()
     AddNewObject(warningText2);
 
     // Confirm button
-    confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 160, 600, 140, 65);
+    confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 160, 600, 140, 65);
     confirmBtn->SetOnClickCallback([this]()
                                    {
     const char* types[] = {"SPEARMAN", "ARCHER", "MAGE"};
@@ -121,7 +121,7 @@ void SelectHeroScene::Initialize()
     AddNewObject(confirmLabel);
 
     // Cancel button
-    cancelBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW + 40, 600, 140, 65);
+    cancelBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW + 40, 600, 140, 65);
     cancelBtn->SetOnClickCallback([this]()
                                   {
     confirmBox->Visible = false;

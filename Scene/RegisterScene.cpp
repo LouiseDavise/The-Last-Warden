@@ -34,7 +34,6 @@ void generate_player_uid(const char *player_name, char *uid_buffer)
     snprintf(uid_buffer, 20, "%lu", hashed_value);
 }
 
-
 void RegisterScene::Initialize()
 {
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
@@ -50,13 +49,13 @@ void RegisterScene::Initialize()
     AddNewObject(new Engine::Label("This will be displayed in the game.", "pirulen.ttf", 24, halfW, h / 6 + 150, 180, 180, 180, 255, 0.5, 0.5));
 
     // NEXT Button
-    auto *btnNext = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 630, 480, 115);
+    auto *btnNext = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - 480) / 2, 630, 480, 115);
     btnNext->SetOnClickCallback(std::bind(&RegisterScene::OnNextClick, this, 0));
     AddNewControlObject(btnNext);
     AddNewObject(new Engine::Label("NEXT", "RealwoodRegular.otf", 56, halfW, 640 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 
     // BACK Button
-    auto *btnBack = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", (w - 480) / 2, 770, 480, 115);
+    auto *btnBack = new Engine::ImageButton("UI/button.png", "UI/button.png", (w - 480) / 2, 770, 480, 115);
     btnBack->SetOnClickCallback(std::bind(&RegisterScene::OnBackClick, this, 0));
     AddNewControlObject(btnBack);
     AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, 780 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));

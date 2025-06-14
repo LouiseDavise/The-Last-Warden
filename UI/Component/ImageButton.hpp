@@ -8,11 +8,13 @@
 #include "Engine/IControl.hpp"
 #include "Image.hpp"
 
-namespace Engine {
+namespace Engine
+{
     /// <summary>
     /// A clickable button, changes image when mouse move.
     /// </summary>
-    class ImageButton : public Image, public IControl {
+    class ImageButton : public Image, public IControl
+    {
     protected:
         // Determines whether mouse is in the button.
         bool mouseIn = false;
@@ -22,10 +24,12 @@ namespace Engine {
         std::shared_ptr<ALLEGRO_BITMAP> imgIn;
         // The callback function to call when button clicked.
         std::function<void()> OnClickCallback;
+        std::shared_ptr<ALLEGRO_BITMAP> imgOverlay;
 
     public:
         // Whether the button can be pressed.
         bool Enabled = true;
+        float HoverOpacity = 0.5f;
         /// <summary>
         /// Construct a image object.
         /// </summary>
@@ -56,6 +60,8 @@ namespace Engine {
         /// <param name="mx">Mouse x coordinate in window space.</param>
         /// <param name="my">Mouse y coordinate in window space.</param>
         void OnMouseMove(int mx, int my) override;
+
+        void Draw() const override;
     };
 }
-#endif   // IMAGEBUTTON_HPP
+#endif // IMAGEBUTTON_HPP

@@ -1357,8 +1357,8 @@ void PlayScene::ConstructUI()
 
     int screenW = al_get_display_width(al_get_current_display());
 
-    pauseButton = new Engine::Image("UI/pause-button-transparant.png", screenW - 80, 20, 55, 55);
-    playButton = new Engine::Image("UI/play-button-transparant.png", screenW - 80, 20, 55, 55);
+    pauseButton = new Engine::Image("UI/pause-button.png", screenW - 80, 20, 55, 55);
+    playButton = new Engine::Image("UI/play-button.png", screenW - 80, 20, 55, 55);
     playButton->Visible = false;
 
     pauseButton->Visible = true;
@@ -1439,7 +1439,7 @@ void PlayScene::ConstructUI()
     int screenWidth = Engine::GameEngine::GetInstance().GetScreenSize().x;
 
     // Home Button (top-right)
-    homeButton = new Engine::ImageButton("UI/home-button-transparant.png", "UI/home-button-transparant.png", screenWidth - 70, 20, 55, 55);
+    homeButton = new Engine::ImageButton("UI/home-button.png", "UI/home-button.png", screenWidth - 70, 20, 55, 55);
     homeButton->SetOnClickCallback([this]()
                                    {
     paused = true; 
@@ -1490,7 +1490,7 @@ void PlayScene::ConstructUI()
     UIGroup->AddNewObject(homeWarning2);
 
     // Confirm
-    homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 - 160, 550, 140, 65);
+    homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", screenWidth / 2 - 160, 550, 140, 65);
     homeConfirmBtn->SetOnClickCallback([]()
                                        { 
                                         auto &engine = Engine::GameEngine::GetInstance();
@@ -1511,7 +1511,7 @@ void PlayScene::ConstructUI()
     UIGroup->AddNewObject(homeConfirmLabel);
 
     // Cancel
-    homeCancelBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 + 40, 550, 140, 65);
+    homeCancelBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", screenWidth / 2 + 40, 550, 140, 65);
     homeCancelBtn->SetOnClickCallback([this]()
                                       {
     paused = false; 

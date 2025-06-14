@@ -21,6 +21,7 @@ namespace Engine
             bmp = imgOut;
         else
             bmp = this->imgIn;
+        imgOverlay = Resources::GetInstance().GetBitmap("UI/button-transparant.png");
     }
     void ImageButton::SetOnClickCallback(std::function<void(void)> onClickCallback)
     {
@@ -45,4 +46,60 @@ namespace Engine
         else
             bmp = imgIn;
     }
+
+    void ImageButton::Draw() const
+    {
+        ALLEGRO_BITMAP *rawBmp = bmp.get();
+        bool isButtonImage = (imgOut.get() == Resources::GetInstance().GetBitmap("UI/button.png").get());
+
+        if (mouseIn && Enabled)
+        {
+            if (isButtonImage && imgOverlay)
+            {
+                // Apply opacity to imgIn.
+                al_draw_tinted_scaled_bitmap(
+                    imgIn.get(),
+                    al_map_rgba_f(1.0, 1.0, 1.0, HoverOpacity), // Tint with alpha
+                    0, 0,
+                    al_get_bitmap_width(imgIn.get()), al_get_bitmap_height(imgIn.get()),
+                    Position.x - Anchor.x * Size.x,
+                    Position.y - Anchor.y * Size.y,
+                    Size.x, Size.y,
+                    0);
+                al_draw_tinted_scaled_bitmap(
+                    imgOverlay.get(),
+                    al_map_rgba_f(1.0, 1.0, 1.0, 1.0), // fully opaque overlay (adjust if needed)
+                    0, 0,
+                    al_get_bitmap_width(imgOverlay.get()), al_get_bitmap_height(imgOverlay.get()),
+                    Position.x - Anchor.x * Size.x,
+                    Position.y - Anchor.y * Size.y,
+                    Size.x, Size.y,
+                    0);
+            }
+            else
+            {
+                al_draw_scaled_bitmap(
+                    rawBmp,
+                    0, 0,
+                    al_get_bitmap_width(rawBmp), al_get_bitmap_height(rawBmp),
+                    Position.x - Anchor.x * Size.x,
+                    Position.y - Anchor.y * Size.y,
+                    Size.x, Size.y,
+                    0);
+            }
+        }
+        else
+        {
+            // Normal draw
+            al_draw_scaled_bitmap(
+                rawBmp,
+                0, 0,
+                al_get_bitmap_width(rawBmp), al_get_bitmap_height(rawBmp),
+                Position.x - Anchor.x * Size.x,
+                Position.y - Anchor.y * Size.y,
+                Size.x, Size.y,
+                0);
+        }
+    }
+
 }

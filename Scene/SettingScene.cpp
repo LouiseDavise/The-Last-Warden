@@ -47,7 +47,7 @@ void SettingScene::Initialize()
     sliderSFX->SetValue(AudioHelper::SFXVolume);
 
     // Back Button
-    btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 200, halfH / 2 + 420, 400, 100);
+    btn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 200, halfH / 2 + 420, 400, 100);
     btn->SetOnClickCallback(std::bind(&SettingScene::BackOnClick, this, 2));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 475, 255, 255, 255, 255, 0.5, 0.5));
@@ -65,7 +65,7 @@ void SettingScene::BGMSlideOnValueChanged(float value)
 {
     AudioHelper::BGMVolume = value;
 
-    auto& engine = Engine::GameEngine::GetInstance();
+    auto &engine = Engine::GameEngine::GetInstance();
     if (engine.GlobalBGMInstance)
         AudioHelper::ChangeSampleVolume(engine.GlobalBGMInstance, value);
 }

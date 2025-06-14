@@ -28,17 +28,17 @@ void LeaderBoardScene::Initialize()
 
     AddNewObject(new Engine::Label("LEADERBOARD", "RealwoodRegular.otf", 78, halfW, h / 8 + 20, 255, 255, 255, 255, 0.5, 0.5));
 
-    Engine::ImageButton *nextBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW + 250, halfH / 2 + 475, 100, 50);
+    Engine::ImageButton *nextBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW + 250, halfH / 2 + 475, 100, 50);
     nextBtn->SetOnClickCallback(std::bind(&LeaderBoardScene::OnNextClick, this));
     AddNewControlObject(nextBtn);
     AddNewObject(new Engine::Label("Next", "RealwoodRegular.otf", 24, halfW + 300, halfH / 2 + 500, 255, 255, 255, 255, 0.5, 0.5));
 
-    Engine::ImageButton *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 200, halfH / 2 + 450, 400, 100);
+    Engine::ImageButton *btn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 200, halfH / 2 + 450, 400, 100);
     btn->SetOnClickCallback(std::bind(&LeaderBoardScene::BackOnClick, this));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("Back", "RealwoodRegular.otf", 56, halfW, halfH / 2 + 505, 255, 255, 255, 255, 0.5, 0.5));
 
-    Engine::ImageButton *prevBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 350, halfH / 2 + 475, 100, 50);
+    Engine::ImageButton *prevBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 350, halfH / 2 + 475, 100, 50);
     prevBtn->SetOnClickCallback(std::bind(&LeaderBoardScene::OnBackClick, this));
     AddNewControlObject(prevBtn);
     AddNewObject(new Engine::Label("Prev", "RealwoodRegular.otf", 24, halfW - 300, halfH / 2 + 500, 255, 255, 255, 255, 0.5, 0.5));

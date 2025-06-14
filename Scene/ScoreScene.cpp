@@ -76,7 +76,7 @@ void ScoreScene::Initialize()
     AddNewObject(new Engine::Label("Player: " + playerName, "RealwoodRegular.otf", 34, centerX, startY - 20 + spacing * 8.0, 200, 255, 200, 255, 0.5, 0.5));
 
     // Back Button
-    backButton = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", centerX - 240, 770, 480, 115);
+    backButton = new Engine::ImageButton("UI/button.png", "UI/button.png", centerX - 240, 770, 480, 115);
     backButton->SetOnClickCallback([]()
                                    { 
                                     cameFromScoreScene = true;

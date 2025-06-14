@@ -51,7 +51,7 @@ void SelectCompanionScene::Initialize()
             AddNewObject(new Engine::Label(companions[i].desc2, "pirulen.ttf", 12, x + 75, compY + 225, 200, 200, 200, 255, 0.5, 0.0));
 
         // Select button
-        auto *btn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", x + 10, compY + 250, 130, 60);
+        auto *btn = new Engine::ImageButton("UI/button.png", "UI/button.png", x + 10, compY + 250, 130, 60);
         btn->SetOnClickCallback(std::bind(&SelectCompanionScene::OnSelectClick, this, i));
         AddNewControlObject(btn);
         AddNewObject(new Engine::Label("Select", "RealwoodRegular.otf", 28, x + 75, compY + 280, 255, 255, 255, 255, 0.5, 0.5));
@@ -77,7 +77,7 @@ void SelectCompanionScene::Initialize()
     AddNewObject(warningText2);
 
     // Confirm button
-    confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 160, 600, 140, 65);
+    confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 160, 600, 140, 65);
     confirmBtn->SetOnClickCallback([this]()
                                    {
         const char* types[] = {"COMP1", "COMP2", "COMP3"};
@@ -98,7 +98,7 @@ void SelectCompanionScene::Initialize()
     AddNewObject(confirmLabel);
 
     // Cancel button
-    cancelBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW + 40, 600, 140, 65);
+    cancelBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW + 40, 600, 140, 65);
     cancelBtn->SetOnClickCallback([this]()
                                   {
         confirmBox->Visible = false;
@@ -117,7 +117,7 @@ void SelectCompanionScene::Initialize()
     AddNewObject(cancelLabel);
 
     // Back Button
-    auto *backButton = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", halfW - 240, 790, 480, 115);
+    auto *backButton = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 240, 790, 480, 115);
     backButton->SetOnClickCallback([]()
                                    { Engine::GameEngine::GetInstance().ChangeScene("mode-select"); });
     AddNewControlObject(backButton);
