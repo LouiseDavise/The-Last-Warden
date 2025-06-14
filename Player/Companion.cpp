@@ -382,27 +382,27 @@ void Companion::Draw() const
         al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(180, 0, 255), 2);
     }
 
-    // // Cooldown/Quota bar
-    // float barWidth = 40;
-    // float barHeight = 5;
-    // float fillRatio = attackQuota / 100.0f;
-    // float barX = Position.x - barWidth / 2;
-    // float barY = Position.y - CollisionRadius - 20;
+    // Cooldown/Quota bar
+    float barWidth = 40;
+    float barHeight = 5;
+    float fillRatio = attackQuota / 100.0f;
+    float barX = Position.x - barWidth / 2;
+    float barY = Position.y - CollisionRadius - 20;
 
-    // // background (dark)
-    // al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(50, 50, 50));
+    // background (dark)
+    al_draw_filled_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(50, 50, 50));
 
-    // // fill (color depends on state)
-    // ALLEGRO_COLOR fillColor = isRecharging ? al_map_rgb(100, 100 + 155 * fillRatio, 255) : // blueish while recharging
-    //                               al_map_rgb(255 * (1 - fillRatio), 255 * fillRatio, 0);   // red→green while active
+    // fill (color depends on state)
+    ALLEGRO_COLOR fillColor = isRecharging ? al_map_rgb(100, 100 + 155 * fillRatio, 255) : // blueish while recharging
+                                  al_map_rgb(255 * (1 - fillRatio), 255 * fillRatio, 0);   // red→green while active
 
-    // al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, fillColor);
+    al_draw_filled_rectangle(barX, barY, barX + barWidth * fillRatio, barY + barHeight, fillColor);
 
-    // // border
-    // al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
+    // border
+    al_draw_rectangle(barX, barY, barX + barWidth, barY + barHeight, al_map_rgb(255, 255, 255), 1);
 
-    // if (std::string(companionType) == "COMP2" && mochiSkillActive)
-    // {
-    //     al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
-    // }
+    if (std::string(companionType) == "COMP2" && mochiSkillActive)
+    {
+        al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
+    }
 }
