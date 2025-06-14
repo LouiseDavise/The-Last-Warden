@@ -150,11 +150,8 @@ void PlayScene::Initialize()
     int h = al_get_display_height(al_get_current_display());
 
     preview = nullptr;
-    TargetTile = new Engine::Image("UI/target.png", 0, 0);
-    TargetTile->Visible = false;
-    UIGroup->AddNewObject(TargetTile);
 
-    StructurePanel = new Engine::Image("UI/structure_bar.png", w / 2 - 332, h - 120, 664, 120, 0, 0);
+    StructurePanel = new Engine::Image("UI/structure_bar.png", w / 2 - 188, h - 120, 376, 120, 0, 0);
     StructurePanel->Visible = true;
     PanelGroup->AddNewObject(StructurePanel);
 
@@ -534,14 +531,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
     }
 
     Player *player = GetPlayer();
-    if ((button & 1) && !TargetTile->Visible && preview)
-        if ((button & 1) && !TargetTile->Visible && preview)
-        {
-            // Cancel construct.
-            UIGroup->RemoveObject(preview->GetObjectIterator());
-            preview = nullptr;
-        }
     IScene::OnMouseDown(button, mx, my);
+    if((preview && preview->IsSmashBone()) || preview && preview->IsAxe()) return;
     if (!IsMouseOverUI(mx, my))
         player->OnMouseDown(button, mx, my);
 }
@@ -551,11 +542,11 @@ void PlayScene::OnMouseMove(int mx, int my)
     IScene::OnMouseMove(mx, my);
     int x = mx / BlockSize;
     int y = my / BlockSize;
+    int gx = (mx + camera.x) / BlockSize;
+    int gy = (my + camera.y) / BlockSize;
 
     if (preview && preview->IsSmashBone())
     {
-        int gx = (mx + camera.x) / BlockSize;
-        int gy = (my + camera.y) / BlockSize;
         preview->Position = Engine::Point{(float)gx, (float)gy};
         Structure *tgt = GetStructureAt(gx, gy);
         if (tgt != highlightedStructure)
@@ -566,22 +557,8 @@ void PlayScene::OnMouseMove(int mx, int my)
                 tgt->Tint = al_map_rgba(255, 60, 60, 255); // bright red
             highlightedStructure = tgt;
         }
-        TargetTile->Visible = false;
         return;
     }
-
-    if (!preview || x < 0 || x >= MapWidth || y < 0 || y >= MapHeight)
-    {
-        TargetTile->Visible = false;
-        TargetTile->Visible = false;
-        return;
-    }
-    TargetTile->Visible = true;
-    TargetTile->Position.x = x * BlockSize;
-    TargetTile->Position.y = y * BlockSize;
-    TargetTile->Visible = true;
-    TargetTile->Position.x = x * BlockSize;
-    TargetTile->Position.y = y * BlockSize;
 }
 
 void PlayScene::OnMouseUp(int button, int mx, int my)
@@ -629,6 +606,7 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
                 std::string basePath = "Tileset/base/image1x" + std::to_string(baseIdx) + ".png";
 
                 mapState[gy][gx] = TILE_WALKABLE;
+                AddMoney(-preview->GetPrice());
 
                 // Add new base tile
                 TileMapGroup->AddNewObject(new Engine::Image(basePath, gx * BlockSize, gy * BlockSize, BlockSize, BlockSize));
@@ -643,8 +621,6 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
         return;
     }
 
-    if (!TargetTile->Visible)
-        return;
     if (button & 1)
     {
         if (mapState[gy][gx] != TILE_OCCUPIED)
@@ -708,7 +684,8 @@ void PlayScene::OnKeyDown(int keyCode)
     }
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
-    else if (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsSmashBone())
+    else if ((keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsSmashBone())
+        || (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsAxe()))
     {
         UIGroup->RemoveObject(preview->GetObjectIterator());
         preview = nullptr;
@@ -1340,9 +1317,9 @@ void PlayScene::ConstructUI()
         float yOff;
     };
     std::vector<BtnInfo> btns = {
-        {w / 2 - 332 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png", 0},
-        {w / 2 - 332 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png", 3},
-        {w / 2 - 332 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}
+        {w / 2 - 188 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png", 0},
+        {w / 2 - 188 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/WoodenWall.png", "Structures/blank.png", 10},
+        {w / 2 - 188 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}
     };
 
     for (auto &b : btns)
@@ -1370,12 +1347,12 @@ void PlayScene::ConstructUI()
 
     // Axe UI
     StructureButton *btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-                                               Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
-                                               Engine::Sprite("Structures/Axe.png", w / 2 - 332 + 8 + 72 * 7 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
-                                               w / 2 - 332 + 8 + 72 * 7, h - 94, Axe::Price);
+                                               Engine::Sprite("Structures/blank.png", w / 2 - 188 + 8 + 72 * 3 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
+                                               Engine::Sprite("Structures/Axe.png", w / 2 - 188 + 8 + 72 * 3 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
+                                               w / 2 - 188 + 8 + 72 * 3, h - 94, Axe::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, -1));
     PanelGroup->AddNewControlObject(btn);
-    float pricePanelCenter = w / 2 - 332 + 8 + 72 * 7 + 37;
+    float pricePanelCenter = w / 2 - 188 + 8 + 72 * 3 + 37;
     ALLEGRO_FONT *font = al_load_ttf_font("Resource/fonts/pirulen.ttf", 16, 0);
     std::string priceStr = std::to_string(Axe::Price);
     float textW = al_get_text_width(font, priceStr.c_str());
@@ -1389,13 +1366,13 @@ void PlayScene::ConstructUI()
 
     // SmashBone UI
     btn = new StructureButton("UI/structurebtn.png", "UI/structurebtn_hovered.png",
-                              Engine::Sprite("Structures/blank.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
-                              Engine::Sprite("Structures/SmashBone.png", w / 2 - 332 + 8 + 72 * 8 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
-                              w / 2 - 332 + 8 + 72 * 8, h - 94, SmashBone::Price);
+                              Engine::Sprite("Structures/blank.png", w / 2 - 188 + 8 + 72 * 4 + 36, h - 94 + 38, 0, 0, 0.5, 0.5),
+                              Engine::Sprite("Structures/SmashBone.png", w / 2 - 188 + 8 + 72 * 4 + 36, h - 90 + 30, 0, 0, 0.5, 0.5),
+                              w / 2 - 188 + 8 + 72 * 4, h - 94, SmashBone::Price);
     btn->SetOnClickCallback(std::bind(&PlayScene::UIBtnClicked, this, 0));
     PanelGroup->AddNewControlObject(btn);
     priceLbl = new Engine::Label(
-        "-", "pirulen.ttf", 16, w / 2 - 332 + 8 + 72 * 8 + 32, h - 90 + 71);
+        "-", "pirulen.ttf", 16, w / 2 - 188 + 8 + 72 * 4 + 32, h - 90 + 71);
     priceLbl->Color = al_map_rgb(255, 255, 255);
     PanelGroup->AddNewObject(priceLbl);
 

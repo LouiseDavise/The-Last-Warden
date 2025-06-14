@@ -94,7 +94,6 @@ public:
     Engine::Label *UIMoney;
     Engine::Label *UILives;
     Engine::Label *UITimerLabel;
-    Engine::Image *TargetTile;
     Engine::Image *StructurePanel;
     Engine::Image *totalCoinIcon;
     Engine::Label *totalCoin;
