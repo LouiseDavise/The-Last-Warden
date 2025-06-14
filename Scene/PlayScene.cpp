@@ -47,6 +47,7 @@
 #include "Enemy/LavaSlime.hpp"
 #include "Enemy/Orc.hpp"
 #include "Enemy/HighOrc.hpp"
+#include "Enemy/Vampire.hpp"
 #include "Player/Companion.hpp"
 
 bool PlayScene::DebugMode = false;
@@ -81,7 +82,7 @@ void PlayScene::Initialize()
     matchTime = 0;
     isNight = false;
     fadingToScore = false;
-    money = 1000;
+    money = 200;
     paused = false;
 
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
@@ -1317,6 +1318,9 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
             break;
         case 5:
             toSpawn = new HighOrc(spawnX, spawnY);
+            break;
+        case 6:
+            toSpawn = new Vampire(spawnX, spawnY);
             break;
         }
 

@@ -1,44 +1,41 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/color.h>
-#include "LavaSlime.hpp"
+#include "Vampire.hpp"
 #include "Engine/Resources.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Engine/Collider.hpp"
 #include "Structure/Structure.hpp"
-#include "Structure/Offense/Tower.hpp"
-#include "UI/Animation/AreaEffect.hpp"
-
 #include <cmath>
 
-LavaSlime::LavaSlime(float x, float y)
-    : Enemy("Enemies/LavaSlime/Run/image1x1.png", x, y, 32, 140, 50, 50, 20, 1.0f, 30)
+Vampire::Vampire(float x, float y)
+    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 200, 200, 20, 0.6f, 35)
 {
-    Size.x = 128;
-    Size.y = 128;
-    idleMark = 7;
+    Size.x = 192;
+    Size.y = 192;
+    idleMark = 12;
     for (int i = 1; i <= 8; ++i)
     {
-        std::string path = "Enemies/LavaSlime/Run/image" + std::to_string(i) + "x1.png";
+        std::string path = "Enemies/Vampire/Run/image" + std::to_string(i) + "x1.png";
         runFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 10; ++i)
+    for (int i = 1; i <= 11; ++i)
     {
-        std::string path = "Enemies/LavaSlime/Death/image" + std::to_string(i) + "x1.png";
+        std::string path = "Enemies/Vampire/Death/image" + std::to_string(i) + "x1.png";
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 13; ++i)
+    for (int i = 1; i <= 16; ++i)
     {
         std::string path;
-        if(i <= idleMark) path = "Enemies/LavaSlime/Attack/image" + std::to_string(i) + "x1.png";
-        else path = "Enemies/LavaSlime/Idle/image" + std::to_string(i-idleMark) + "x1.png";
+        if(i <= idleMark) path = "Enemies/Vampire/Attack/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/Vampire/Idle/image" + std::to_string(i-idleMark) + "x1.png";
         attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 5; ++i)
+    for (int i = 1; i <= 4; ++i)
     {
-        std::string path = "Enemies/LavaSlime/Hurt/image" + std::to_string(i) + "x1.png";
+        std::string path = "Enemies/Vampire/Hurt/image" + std::to_string(i) + "x1.png";
         hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
@@ -52,27 +49,18 @@ LavaSlime::LavaSlime(float x, float y)
     deathTimer = 0;
     deathInterval = 0.12f;
     attackTimer = 0;
-    attackInterval = 0.07f;
+    attackInterval = 0.055f;
     hurtTimer = 0;
     hurtInterval = 0.05f;
     currentFrame = 0;
 }
 
-void LavaSlime::Update(float deltaTime)
+void Vampire::Update(float deltaTime)
 {
     auto* scene = getPlayScene();
     auto* player = scene->GetPlayer();
 
     bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius) && player->GetHP() > 0 && hp > 0;
-
-    Structure* collidedStructure = nullptr;
-    for (auto* obj : scene->StructureGroup->GetObjects()) {
-        Structure* structure = dynamic_cast<Structure*>(obj);
-        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius)) {
-            collidedStructure = structure;
-            break;
-        }
-    }
 
     if (state == State::Run)
     {
@@ -114,7 +102,7 @@ void LavaSlime::Update(float deltaTime)
             attackTimer = 0;
             if(currentFrame < idleMark - 1)currentFrame++;
             if(currentFrame >= idleMark - 1){
-                if(!playerCollide && !collidedStructure){
+                if(!playerCollide){
                     state = State::Run;
                     currentFrame = 0;
                 }
@@ -130,9 +118,7 @@ void LavaSlime::Update(float deltaTime)
             currentFrame = 0;
 
             if (playerCollide) {
-                AOEAttack();
-            } else if (collidedStructure) {
-                AOEAttack();
+                player->Hit(GetDamage(), Position);
             }else{
                 state = State::Run;
             }
@@ -177,18 +163,7 @@ void LavaSlime::Update(float deltaTime)
             attackTimer = 0;
             Velocity = Engine::Point(0, 0); // Stop movement
         }
-        AOEAttack();
-    }
-    else if (collidedStructure)
-    {
-        if (state != State::Attacking)
-        {
-            state = State::Attacking;
-            currentFrame = 0;
-            attackTimer = 0;
-            Velocity = Engine::Point(0, 0); // Stop movement
-        }
-        AOEAttack();
+        player->Hit(GetDamage(), Position);
     }
     else if (scene->validLine(Position, player->Position))
     {
@@ -291,26 +266,4 @@ void LavaSlime::Update(float deltaTime)
     {
         faceRight = Velocity.x > 0;
     }
-}
-
-void LavaSlime::AOEAttack() {
-    auto* scene = getPlayScene();
-    const float aoeRadius = 96.0f;
-
-    for (auto* obj : scene->StructureGroup->GetObjects()) {
-        Structure* s = dynamic_cast<Structure*>(obj);
-        if (!s) continue;
-        if (Engine::Collider::IsCircleOverlap(Position, aoeRadius, s->Position, s->CollisionRadius)) {
-            s->Hit(GetDamage());
-        }
-    }
-
-    // Optionally: also damage the player
-    auto* player = scene->GetPlayer();
-    if (player && Engine::Collider::IsCircleOverlap(Position, aoeRadius, player->Position, player->CollisionRadius)) {
-        player->Hit(GetDamage(), Position);
-    }
-
-    // Optional visual effect:
-    scene->EffectGroup->AddNewObject(new AreaEffect(Position.x, Position.y, 96.0f, 0.5f, al_map_rgb(255, 0, 0)));
 }

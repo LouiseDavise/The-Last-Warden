@@ -54,6 +54,8 @@ add_executable(The_Last_Warden
     Enemy/Orc.hpp
     Enemy/HighOrc.cpp 
     Enemy/HighOrc.hpp
+    Enemy/Vampire.cpp 
+    Enemy/Vampire.hpp
 
     Engine/Allegro5Exception.cpp
     Engine/Allegro5Exception.hpp
