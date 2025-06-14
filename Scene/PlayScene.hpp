@@ -27,7 +27,6 @@ namespace Engine
     class Group;
     class Image;
     class ImageButton;
-    class ImageButton;
     class Panel;
     class Label;
     class Sprite;
@@ -99,9 +98,13 @@ public:
     Engine::Image *StructurePanel;
     Engine::Panel *structureInfoPanel;
     std::vector<Engine::Label*> structureInfoLabels;
+    Engine::ImageButton *enhanceButton;
+    Engine::Label *enhancePriceLabel;
+    Engine::Image *enhanceCoinIcon;
     Engine::Image *totalCoinIcon;
     Engine::Label *totalCoin;
     Structure *preview;
+    Structure* selectedStructure;
 
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
@@ -119,6 +122,9 @@ public:
     void OnMouseUp(int button, int mx, int my) override;
     void OnKeyDown(int keyCode) override;
     void OnKeyUp(int keyCode) override;
+    void OnRightClick(int mx, int my);
+    int selectedGX = -1;   // last grid-x that showed the panel
+    int selectedGY = -1; 
     bool IsMouseOverUI(int mx, int my);
 
     int GetMoney() const { return money; }
