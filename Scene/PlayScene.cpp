@@ -74,6 +74,8 @@ void PlayScene::Initialize()
     std::cout << "Hello";
     Engine::GameEngine::GetInstance().GlobalBGMInstance = AudioHelper::PlaySample("gameplay-2.ogg", true, AudioHelper::BGMVolume);
     std::cout << "World";
+    if (companion)
+        companion->Reset();
     mapState.clear();
     keyStrokes.clear();
     ticks = 0;

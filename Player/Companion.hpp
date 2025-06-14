@@ -63,6 +63,7 @@ public:
     {
         return zukoSkillReady ? 1.0f : zukoSkillTimer / zukoSkillCooldown;
     }
+    void Reset();
 
 private:
     bool keyUp = false,

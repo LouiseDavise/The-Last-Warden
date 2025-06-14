@@ -406,3 +406,24 @@ void Companion::Draw() const
         al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
     }
 }
+
+void Companion::Reset()
+{
+    isAttacking = false;
+    attackTimer = 0;
+    attackQuota = 100.0f;
+    timeSinceLastAttack = 0.0f;
+    isRecharging = false;
+    animTimer = 0.0f;
+    currentFrame = 0;
+    wispSkillTimer = 0.0f;
+    wispSkillReady = true;
+    mochiSkillTimer = 0.0f;
+    mochiSkillReady = true;
+    mochiSkillActive = false;
+    mochiHealingOngoing = false;
+    mochiHealElapsed = 0.0f;
+    mochiSkillVisualTimer = 0.0f;
+    zukoSkillTimer = 0.0f;
+    zukoSkillReady = true;
+}
