@@ -1,5 +1,6 @@
 #include "WandWeapon.hpp"
 #include <cmath>
+#include <allegro5/allegro_primitives.h>
 #include "Engine/GameEngine.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Enemy/Enemy.hpp"
@@ -132,4 +133,25 @@ bool WandWeapon::PointInsideRotatedRect(const Point &p, const Point &c, float ha
     float lx = dx * cosR - dy * sinR;
     float ly = dx * sinR + dy * cosR;
     return std::abs(lx) <= halfL && std::abs(ly) <= halfW;
+}
+
+void WandWeapon::Draw() const
+{
+    if (!isFlying && available && owner)
+    {
+        auto scene = GetPlayScene();
+        if (scene)
+        {
+            Engine::Point mouse = Engine::GameEngine::GetInstance().GetMousePosition();
+            Engine::Point worldMouse = mouse + scene->camera;
+
+            Point dir = worldMouse - Position;
+            if (dir.Magnitude() >= 1e-3f)
+            {
+                Point end = Position + dir.Normalize() * maxDistance;
+                al_draw_line(Position.x, Position.y, end.x, end.y, al_map_rgb(237, 255, 181), 0.2f);
+            }
+        }
+    }
+    Weapon::Draw();
 }

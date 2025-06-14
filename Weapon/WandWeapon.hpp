@@ -3,7 +3,8 @@
 
 class Enemy;
 
-class WandWeapon final : public Weapon {
+class WandWeapon final : public Weapon
+{
 public:
     explicit WandWeapon(const Engine::Point &startPos, Player *owner = nullptr);
 
@@ -13,16 +14,19 @@ public:
     int GetQuota() const { return currentQuota; }
     int GetMaxQuota() const { return maxQuota; }
     bool IsCoolingDown() const { return coolingDown; }
-    float GetCooldownPercent() const {
+    void Draw() const override;
+    float GetCooldownPercent() const
+    {
         return coolingDown ? cooldownTimer / cooldownTime : 1.0f;
     }
+    void DrawAimLine() const;
 
 private:
     // flight-state
     bool isFlying = false;
     Engine::Point velocity;
     float flightDist = 0.f;
-    float maxDistance = 600.f; // slightly longer range than spear
+    float maxDistance = 600.f;
 
     // helpers
     void TryHitEnemies();

@@ -182,7 +182,7 @@ void SpearWeapon::TryHitEnemies()
                 hitEnemiesForward.insert(e);
 
             scene->EffectGroup->AddNewObject(new ClashEffect(e->Position.x, e->Position.y));
-            scene->EffectGroup->AddNewObject(new AreaEffect(e->Position.x, e->Position.y, isReturning ? 50.0f : 64.0f, 0.5f,al_map_rgb(255, 244, 79)));
+            scene->EffectGroup->AddNewObject(new AreaEffect(e->Position.x, e->Position.y, isReturning ? 50.0f : 64.0f, 0.5f, al_map_rgb(255, 244, 79)));
         }
     }
 }
@@ -219,6 +219,23 @@ bool SpearWeapon::PointInsideRotatedRect(const Point &p, const Point &c, float h
 
 void SpearWeapon::Draw() const
 {
+    if (!isFlying && !isReturning && !isSpinningBeforeReturn && available && owner)
+    {
+        auto scene = GetPlayScene();
+        if (scene)
+        {
+            Engine::Point mouse = Engine::GameEngine::GetInstance().GetMousePosition();
+            Engine::Point worldMouse = mouse + scene->camera;
+
+            Point dir = worldMouse - Position;
+            if (dir.Magnitude() >= 1e-3f)
+            {
+                Point end = Position + dir.Normalize() * maxDistance;
+                al_draw_line(Position.x, Position.y, end.x, end.y, al_map_rgb(237, 255, 181), 0.1f);
+            }
+        }
+    }
+
     Weapon::Draw();
 
     if (PlayScene::DebugMode && isFlying)
