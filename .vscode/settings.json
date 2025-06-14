@@ -94,6 +94,7 @@
         "memory_resource": "cpp",
         "cinttypes": "cpp",
         "set": "cpp",
-        "__config": "cpp"
+        "__config": "cpp",
+        "unordered_set": "cpp"
     }
 }

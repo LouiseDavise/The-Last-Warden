@@ -76,8 +76,10 @@ void Spearman::OnMouseDown(int button, int mx, int my)
     float worldY = scene->camera.y + my;
 
     spear->Use(worldX, worldY);
-    spear->Position.x = PositionWeapon().x;
-    spear->Position.y = PositionWeapon().y;
+    if (!spear->IsFlying() && !spear->IsSpinningBeforeReturn() && !spear->IsReturning())
+    {
+        spear->Position = PositionWeapon();
+    }
 }
 
 Point Spearman::PositionWeapon() const
