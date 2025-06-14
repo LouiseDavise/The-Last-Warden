@@ -24,11 +24,11 @@ public:
     virtual std::vector<std::string> GetInfoLines() const {
         return {"Structure", "HP: ?", "Price: ?"};
     }
-    virtual std::string GetInfoTitle();              // NEW: default to "Structure"
+    // virtual std::string GetInfoTitle();              // NEW: default to "Structure"
 
-    Engine::Panel* GetInfoPanel() const { return infoPanel; }
+    // Engine::Panel* GetInfoPanel() const { return infoPanel; }
 
-    void TogglePanel();         // Called when clicked
+    // void TogglePanel();         // Called when clicked
     bool Preview = false;
     bool Enabled = true;
     StructureType type;   
