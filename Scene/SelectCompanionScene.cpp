@@ -1,4 +1,5 @@
 #include "SelectCompanionScene.hpp"
+#include <allegro5/allegro_primitives.h>
 #include "Engine/GameEngine.hpp"
 #include "Engine/Resources.hpp"
 #include "UI/Component/ImageButton.hpp"
@@ -80,16 +81,17 @@ void SelectCompanionScene::Initialize()
     confirmBtn = new Engine::ImageButton("UI/button.png", "UI/button.png", halfW - 160, 600, 140, 65);
     confirmBtn->SetOnClickCallback([this]()
                                    {
-        const char* types[] = {"COMP1", "COMP2", "COMP3"};
-        strncpy(companionType, types[pendingCompanionId], sizeof(companionType));
-        companionType[sizeof(companionType) - 1] = '\0';
-        auto &engine = Engine::GameEngine::GetInstance();
-        if (engine.GlobalBGMInstance)
-        {
-            AudioHelper::StopSample(engine.GlobalBGMInstance);
-            engine.GlobalBGMInstance = nullptr;
-        }
-        Engine::GameEngine::GetInstance().ChangeScene("play"); });
+    const char* types[] = {"COMP1", "COMP2", "COMP3"};
+    strncpy(companionType, types[pendingCompanionId], sizeof(companionType));
+    companionType[sizeof(companionType) - 1] = '\0';
+    auto &engine = Engine::GameEngine::GetInstance();
+    if (engine.GlobalBGMInstance) {
+        AudioHelper::StopSample(engine.GlobalBGMInstance);
+        engine.GlobalBGMInstance = nullptr;
+    }
+    fadingToPlay = true;
+    fadeTimer = 0; });
+
     confirmBtn->Visible = false;
     AddNewControlObject(confirmBtn);
 
@@ -138,6 +140,31 @@ void SelectCompanionScene::OnSelectClick(int compId)
     cancelBtn->Visible = true;
     confirmLabel->Visible = true;
     cancelLabel->Visible = true;
+}
+
+void SelectCompanionScene::Update(float deltaTime) {
+    if (fadingToPlay) {
+        fadeTimer += deltaTime;
+        if (fadeTimer >= fadeDuration) {
+            fadeTimer = fadeDuration;
+            Engine::GameEngine::GetInstance().ChangeScene("play");
+        }
+    }
+    IScene::Update(deltaTime);
+}
+
+void SelectCompanionScene::Draw() const {
+    IScene::Draw();
+    if (fadingToPlay) {
+        float alpha = std::min(fadeTimer / fadeDuration, 1.0f);
+        ALLEGRO_COLOR fadeColor = al_map_rgba_f(0, 0, 0, alpha);
+        al_draw_filled_rectangle(
+            0, 0,
+            al_get_display_width(al_get_current_display()),
+            al_get_display_height(al_get_current_display()),
+            fadeColor
+        );
+    }
 }
 
 void SelectCompanionScene::Terminate()

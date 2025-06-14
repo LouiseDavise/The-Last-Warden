@@ -1,4 +1,5 @@
 #include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_primitives.h>
 #include <functional>
 #include <memory>
 #include <string>
@@ -123,7 +124,11 @@ void ModeSelectScene::PlayOnClick(int mode)
             scene->SetMapFile("Resource/map1.txt");
             scene->SetWaveFile("Resource/single_wave.txt");
             scene->SetTwoPlayerMode(false);
-            engine.ChangeScene("play");
+            if (!fadingToPlay)
+            {
+                fadingToPlay = true;
+                fadeTimer = 0;
+            }
         }
         else if (mode == 2)
         {
@@ -143,4 +148,29 @@ void ModeSelectScene::ScoreboardOnClick()
 void ModeSelectScene::SettingsOnClick()
 {
     Engine::GameEngine::GetInstance().ChangeScene("setting-scene");
+}
+
+void ModeSelectScene::Update(float deltaTime)
+{
+    if (fadingToPlay)
+    {
+        fadeTimer += deltaTime;
+        if (fadeTimer >= fadeDuration)
+        {
+            fadeTimer = fadeDuration;
+            Engine::GameEngine::GetInstance().ChangeScene("play");
+        }
+    }
+    IScene::Update(deltaTime);
+}
+
+void ModeSelectScene::Draw() const
+{
+    IScene::Draw();
+    if (fadingToPlay)
+    {
+        float alpha = std::min(fadeTimer / fadeDuration, 1.0f);
+        ALLEGRO_COLOR fadeColor = al_map_rgba_f(0, 0, 0, alpha);
+        al_draw_filled_rectangle(0, 0, al_get_display_width(al_get_current_display()), al_get_display_height(al_get_current_display()), fadeColor);
+    }
 }

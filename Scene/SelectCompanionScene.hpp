@@ -7,7 +7,8 @@
 #include "UI/Component/Label.hpp"
 #include "UI/Component/ImageButton.hpp"
 
-class SelectCompanionScene final : public Engine::IScene {
+class SelectCompanionScene final : public Engine::IScene
+{
 private:
     std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
     int pendingCompanionId = -1;
@@ -24,7 +25,12 @@ public:
     explicit SelectCompanionScene() = default;
     void Initialize() override;
     void Terminate() override;
-    void OnSelectClick(int compId);  // 0 = COMP1, 1 = COMP2, 2 = COMP3
+    void OnSelectClick(int compId); // 0 = COMP1, 1 = COMP2, 2 = COMP3
+    bool fadingToPlay = false;
+    float fadeTimer = 0.0f;
+    const float fadeDuration = 1.5f;
+    void Update(float deltaTime) override;
+    void Draw() const override;
 };
 
 #endif

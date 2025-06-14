@@ -18,6 +18,11 @@ public:
     bool stopBGMOnTerminate = false;
     void BGMSlideOnValueChanged(float value);
     void SFXSlideOnValueChanged(float value);
+    void Update(float deltaTime) override;
+    void Draw() const override;
+    bool fadingToPlay = false;
+    float fadeTimer = 0.0f;
+    const float fadeDuration = 1.5f;
 };
 
 #endif // MODESELECTSCENE_HPP
