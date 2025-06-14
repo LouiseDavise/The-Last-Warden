@@ -7,7 +7,7 @@
 using Engine::Point;
 
 BowWeapon::BowWeapon(const Point &startPos, Player *owner)
-    : Weapon("Weapons/Bow.png", 30, 800.0f, startPos, owner)
+    : Weapon("Weapons/archer-bow.png", 30, 800.0f, startPos, owner)
 {
     Anchor = Point(0.5f, 0.5f);
     Size.x = 64;

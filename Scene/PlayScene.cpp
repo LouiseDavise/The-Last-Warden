@@ -180,6 +180,32 @@ void PlayScene::Initialize()
         SidePanelGroup->AddNewObject(label);
     }
 
+    // Enhance Button UI
+    enhanceButton = new Engine::ImageButton("UI/enhancebutton.png", "UI/enhancebutton.png", w - 320 + 90, h / 2 - 220 + 380, 140, 40);
+    // enhanceButton->SetOnClickCallback([this]() {
+    //     if (selectedStructure && selectedStructure->CanEnhance()) {
+    //         int enhanceCost = selectedStructure->GetEnhancePrice();
+    //         if (SpendMoney(enhanceCost)) {
+    //             selectedStructure->Enhance();
+    //             AudioHelper::PlaySample("coin.wav");
+    //         } else {
+    //             AudioHelper::PlaySample("incorrect.wav");
+    //         }
+    //     }
+    // });
+    enhanceButton->Visible = false;
+    SidePanelGroup->AddNewControlObject(enhanceButton);
+
+    // Enhance Price Label
+    enhancePriceLabel = new Engine::Label("200", "pirulen.ttf", 16, w - 320 + 100, h / 2 - 220 + 350, 255, 255, 255);
+    enhancePriceLabel->Visible = false;
+    SidePanelGroup->AddNewObject(enhancePriceLabel);
+
+    // Coin Icon
+    enhanceCoinIcon = new Engine::Image("UI/coin-icon.png", w - 320 + 140, h / 2 - 220 + 347, 24, 24);
+    enhanceCoinIcon->Visible = false;
+    SidePanelGroup->AddNewObject(enhanceCoinIcon);
+
     std::string moneyStr = std::to_string(money);
     totalCoin = new Engine::Label(
         moneyStr, "pirulen.ttf", 16, w / 2 - 37, h - 119);
@@ -479,6 +505,17 @@ void PlayScene::Draw() const
     UIGroup->Draw();
     PanelGroup->Draw();
     SidePanelGroup->Draw();
+    if (enhanceButton->Visible) {
+        float bx = enhanceButton->Position.x;
+        float by = enhanceButton->Position.y;
+        float bw = enhanceButton->Size.x;
+        float bh = enhanceButton->Size.y;
+
+        ALLEGRO_FONT* enhanceFont = al_load_ttf_font("Resource/fonts/pirulen.ttf", 18, 0);
+        al_draw_text(enhanceFont, al_map_rgb(255, 255, 255),
+                    bx + bw / 2, by + (bh - al_get_font_line_height(enhanceFont)) / 2,
+                    ALLEGRO_ALIGN_CENTER, "ENHANCE");
+    }
 
     totalCoin->Text = std::to_string(money);
     if (totalCoin->Visible)
@@ -558,52 +595,9 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 
         if (paused)
             return; // Don't allow game actions while paused
-    }
-    else if (button & 2)
-    {
-        int gx = (mx + camera.x) / BlockSize;
-        int gy = (my + camera.y) / BlockSize;
-        Structure *s = GetStructureAt(gx, gy);
-        static Structure *lastClickedStructure = nullptr;
-
-        if (s)
-        {
-            if (structureInfoPanel->Visible && s == lastClickedStructure)
-            {
-                // Toggle off if clicking the same structure again
-                structureInfoPanel->Visible = false;
-                for (auto *lbl : structureInfoLabels)
-                    lbl->Visible = false;
-                lastClickedStructure = nullptr;
-            }
-            else
-            {
-                // Show new structure info
-                std::vector<std::string> lines = s->GetInfoLines();
-                structureInfoPanel->Visible = true;
-
-                for (size_t i = 0; i < structureInfoLabels.size(); ++i)
-                {
-                    if (i < lines.size())
-                    {
-                        structureInfoLabels[i]->Text = lines[i];
-                        structureInfoLabels[i]->Visible = true;
-                    }
-                    else
-                    {
-                        structureInfoLabels[i]->Visible = false;
-                    }
-                }
-                lastClickedStructure = s;
-            }
-        }
-        else
-        {
-            structureInfoPanel->Visible = false;
-            for (auto *lbl : structureInfoLabels)
-                lbl->Visible = false;
-            lastClickedStructure = nullptr;
-        }
+    }else if(button & 2){
+        //OnRightClick(mx, my);
+        //return;    
     }
 
     Player *player = GetPlayer();
@@ -1752,4 +1746,57 @@ bool PlayScene::IsMochiHealing() const
         return activeCompanion->IsMochiHealingOngoing();
     }
     return false;
+}
+
+void PlayScene::OnRightClick(int mx, int my) {
+    const int gx = (mx + camera.x) / BlockSize;
+    const int gy = (my + camera.y) / BlockSize;
+    Structure* s = GetStructureAt(gx, gy);
+
+    auto hideInfo = [&] {
+        structureInfoPanel->Visible = false;
+        enhanceButton->Visible      = false;
+        enhancePriceLabel->Visible  = false;
+        enhanceCoinIcon->Visible    = false;
+        for (auto* lbl : structureInfoLabels) lbl->Visible = false;
+        selectedGX = selectedGY = -1;
+    };
+
+    if (!s) {              
+        std::cout << "[DEBUG] Clicked empty tile at (" << gx << ", " << gy << ")\n"; // empty tile ── just close the panel
+        hideInfo();
+        return;
+    }
+
+    // same cell clicked twice → toggle off
+    if (structureInfoPanel->Visible && gx == selectedGX && gy == selectedGY) {
+        std::cout << "[DEBUG] Toggled off structure info panel for (" << gx << ", " << gy << ")\n";
+        hideInfo();
+        return;
+    }
+ std::cout << "[DEBUG] Clicked structure at (" << gx << ", " << gy << "): " << typeid(*s).name() << std::endl;
+
+    // show new structure info
+    try{const std::vector<std::string> lines = s->GetInfoLines();
+    structureInfoPanel->Visible = true;
+    enhanceButton->Visible      = true;
+    enhancePriceLabel->Visible  = true;
+    enhanceCoinIcon->Visible    = true;
+
+    for (size_t i = 0; i < structureInfoLabels.size(); ++i) {
+        if (i < lines.size()) {
+            structureInfoLabels[i]->Text    = lines[i];
+            structureInfoLabels[i]->Visible = true;
+        } else {
+            structureInfoLabels[i]->Visible = false;
+        }
+    }
+    selectedGX = gx;
+    selectedGY = gy;
+}
+catch (const std::exception& e) {
+    std::cerr << "[ERROR] Exception from GetInfoLines(): " << e.what() << std::endl;
+} catch (...) {
+    std::cerr << "[ERROR] Unknown exception occurred in GetInfoLines().\n";
+}
 }
