@@ -1,4 +1,5 @@
 #include "SpearWeapon.hpp"
+#include <allegro5/allegro_primitives.h>
 #include <cmath>
 #include "Engine/GameEngine.hpp"
 #include "Scene/PlayScene.hpp"
@@ -12,7 +13,6 @@ using Engine::Point;
 
 static constexpr float PI = 3.1415926f;
 
-// weap_path, dmg, speed, startPos, owner
 SpearWeapon::SpearWeapon(const Point &startPos, Player *owner)
     : Weapon("Weapons/Spear.png", 30, 750.f, startPos, owner)
 {
@@ -24,7 +24,6 @@ SpearWeapon::SpearWeapon(const Point &startPos, Player *owner)
 
 void SpearWeapon::Use(float tx, float ty)
 {
-    // Usability check
     if (!available || isFlying || coolingDown || currentQuota <= 0)
         return;
 
@@ -38,8 +37,8 @@ void SpearWeapon::Use(float tx, float ty)
     isFlying = true;
     available = false;
     flightDist = 0.f;
-    hitEnemies.clear(); // Clear hit record for new throw
-    // Only reduce quota and start cooldown IF not healing
+    hitEnemies.clear();
+
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!(scene && scene->IsMochiHealing()))
     {
@@ -83,7 +82,7 @@ void SpearWeapon::Update(float dt)
     }
     else
     {
-        TryReclaim(); // lying on ground or already in hand
+        TryReclaim();
         Weapon::Update(dt);
     }
 }
@@ -94,23 +93,25 @@ void SpearWeapon::TryHitEnemies()
     if (!scene)
         return;
 
-    float halfLen = Size.x * 0.5f;                // spear length  (texture width)
-    float halfW = std::max(4.0f, Size.y * 0.25f); // and small thickness
+    float halfLen = Size.x * 0.5f;
+    float halfW = std::max(4.0f, Size.y * 0.25f);
 
     for (auto *obj : scene->EnemyGroup->GetObjects())
     {
         auto *e = dynamic_cast<Enemy *>(obj);
         if (!e || !e->Visible)
             continue;
-        if (hitEnemies.count(e)) continue;
+        if (hitEnemies.count(e))
+            continue;
 
-        if (PointInsideRotatedRect(e->Position, Position, halfLen, halfW, Rotation)){
+        if (PointInsideRotatedRect(e->Position, Position, halfLen, halfW + e->GetRadius(), Rotation))
+        {
             e->Hit(damage);
             hitEnemies.insert(e);
             scene->EffectGroup->AddNewObject(new ClashEffect(e->Position.x, e->Position.y));
-            scene->EffectGroup->AddNewObject(new AreaEffect(Position.x, Position.y, 64.0f, 0.5f, al_map_rgb(255,244,79)));
+            scene->EffectGroup->AddNewObject(new AreaEffect(Position.x, Position.y, 64.0f, 0.5f, al_map_rgb(255, 244, 79)));
         }
-    }  
+    }
 }
 
 void SpearWeapon::TryReclaim()
@@ -122,7 +123,7 @@ void SpearWeapon::TryReclaim()
     const float pickR = 35.f;
     if ((owner->Position - Position).MagnitudeSquared() <= pickR * pickR)
     {
-        Reclaim(); // base-class sets available=true and snaps to hand
+        Reclaim();
         isFlying = false;
     }
 }
@@ -136,4 +137,30 @@ bool SpearWeapon::PointInsideRotatedRect(const Point &p, const Point &c, float h
     float lx = dx * cosR - dy * sinR;
     float ly = dx * sinR + dy * cosR;
     return std::abs(lx) <= halfL && std::abs(ly) <= halfW;
+}
+
+void SpearWeapon::Draw() const
+{
+    Weapon::Draw(); // Draws the weapon normally
+
+    if (PlayScene::DebugMode && isFlying)
+    {
+        float halfLen = Size.x * 0.5f;
+        float halfW = std::max(4.0f, Size.y * 0.25f);
+        float cosR = std::cos(Rotation);
+        float sinR = std::sin(Rotation);
+
+        Engine::Point corners[4];
+        corners[0] = Position + Engine::Point(-halfLen * cosR - halfW * sinR, -halfLen * sinR + halfW * cosR);
+        corners[1] = Position + Engine::Point(halfLen * cosR - halfW * sinR, halfLen * sinR + halfW * cosR);
+        corners[2] = Position + Engine::Point(halfLen * cosR + halfW * sinR, halfLen * sinR - halfW * cosR);
+        corners[3] = Position + Engine::Point(-halfLen * cosR + halfW * sinR, -halfLen * sinR - halfW * cosR);
+
+        for (int i = 0; i < 4; ++i)
+        {
+            al_draw_line(corners[i].x, corners[i].y,
+                         corners[(i + 1) % 4].x, corners[(i + 1) % 4].y,
+                         al_map_rgb(255, 0, 0), 2);
+        }
+    }
 }
