@@ -28,6 +28,7 @@ namespace Engine
     class Image;
     class ImageButton;
     class ImageButton;
+    class Panel;
     class Label;
     class Sprite;
 };
@@ -90,12 +91,14 @@ public:
     Group *WeaponGroup;
     Group *UIGroup;
     Group *PanelGroup;
-    Group *IlluminatedGroup;
+    Group *SidePanelGroup;
 
     Engine::Label *UIMoney;
     Engine::Label *UILives;
     Engine::Label *UITimerLabel;
     Engine::Image *StructurePanel;
+    Engine::Panel *structureInfoPanel;
+    std::vector<Engine::Label*> structureInfoLabels;
     Engine::Image *totalCoinIcon;
     Engine::Label *totalCoin;
     Structure *preview;

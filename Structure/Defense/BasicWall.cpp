@@ -1,6 +1,6 @@
 #include "BasicWall.hpp"
 
-const int BasicWall::Price = 10;
+const int BasicWall::Price = 20;
 BasicWall::BasicWall(float x, float y)
-    : Wall("Structures/WoodenWall.png", x, y, Price, 100, 100, 32) {
+    : Wall("Structures/BasicWall.png", x, y, Price, 150, 150, 32) {
 }

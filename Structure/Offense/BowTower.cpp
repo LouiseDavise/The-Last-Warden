@@ -9,9 +9,8 @@
 #include "BowTower.hpp"
 #include "Scene/PlayScene.hpp"
 
-const int BowTower::Price = 100;
-BowTower::BowTower(float x, float y) : Tower("Structures/tower-base.png", "Structures/BowTower.png", x, y, Price, 100, 100, 32, 0.45, 500)
-{
+const int BowTower::Price = 70;
+BowTower::BowTower(float x, float y) : Tower("Structures/tower-base.png", "Structures/BowTower.png", x, y, Price, 70, 70, 32, 0.45, 350) {
     // Move center downward, since head is slightly biased upward.
     Anchor.y += 8.0f / GetBitmapHeight();
 }

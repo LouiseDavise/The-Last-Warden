@@ -141,6 +141,8 @@ add_executable(The_Last_Warden
 
     UI/Component/Image.cpp
     UI/Component/Image.hpp
+    UI/Component/Panel.cpp
+    UI/Component/Panel.hpp
     UI/Component/ImageButton.cpp
     UI/Component/ImageButton.hpp
     UI/Component/Label.cpp

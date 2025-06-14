@@ -19,6 +19,9 @@ public:
     virtual bool IsSmashBone() const { return false; }
     virtual bool IsAxe() const { return false; }
     int GetPrice() const {return price;}
+    virtual std::vector<std::string> GetInfoLines() const {
+        return {"Structure", "HP: ?", "Price: ?"};
+    }
     bool Preview = false;
     bool Enabled = true;
     StructureType type;   

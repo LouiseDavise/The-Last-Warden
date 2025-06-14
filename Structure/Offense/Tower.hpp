@@ -13,6 +13,7 @@ class Tower : public Structure {
 protected:
     float coolDown;
     float range;
+    float damage;
     float reload = 0;
     float rotateRadian = 2 * ALLEGRO_PI;
     Sprite imgBase;
