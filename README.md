@@ -74,3 +74,5 @@ This is a student project developed as part of a course assignment. Game feature
    ```bash
    git clone https://github.com/yourusername/The-Last-Warden.git
    cd The-Last-Warden
+
+© 2025 Louise Davise & Amartyananda Chang. All rights reserved.
