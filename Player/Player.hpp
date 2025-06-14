@@ -26,6 +26,7 @@ public:
     Player(std::string img, float x, float y, float hp, float MAXhp, float moveSpeed);
 
     void Hit(float dmg, const Engine::Point &from);
+    void Hit(float dmg);
     void OnKeyDown(int keyCode);
     void OnKeyUp(int keyCode);
 
@@ -52,7 +53,7 @@ public:
 protected:
     void UpdateMovement(float dt);
     void UpdateAnimation(float dt);
-    void LoadAnimation(const std::string &prefix, int frames);
+    void UpdateToxicEffect(float dt);
 
     bool keyW{}, keyA{}, keyS{}, keyD{};
     bool movingFlag = false;
@@ -63,6 +64,7 @@ protected:
     float radius;
     Engine::Point knockbackVelocity = Engine::Point{0, 0};
     float knockbackTime = 0.0f; // duration left
+    float toxicTime = 0;
 
     //---------------- Animation ----------------
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> idleFrames;

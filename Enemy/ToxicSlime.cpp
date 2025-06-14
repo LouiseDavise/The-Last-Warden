@@ -3,6 +3,7 @@
 #include "ToxicSlime.hpp"
 #include "Engine/Resources.hpp"
 #include "Scene/PlayScene.hpp"
+#include "UI/Animation/ToxicEffect.hpp"
 #include <cmath>
 
 ToxicSlime::ToxicSlime(float x, float y)
@@ -34,7 +35,6 @@ ToxicSlime::ToxicSlime(float x, float y)
         hurtFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-
     // Initial image
     bmp = runFrames[0];
     Velocity = Engine::Point(0, 0);
@@ -48,4 +48,28 @@ ToxicSlime::ToxicSlime(float x, float y)
     hurtTimer = 0;
     hurtInterval = 0.05f;
     currentFrame = 0;
+}
+
+void ToxicSlime::Hit(float damage) {
+    Enemy::Hit(damage);
+
+    if (hp <= 0 && !toxicSpawned) {
+        toxicSpawned = true;
+        PlayScene* scene = getPlayScene();
+        if (scene) {
+            int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
+            int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
+
+            if (gx >= 0 && gx < PlayScene::MapWidth && gy >= 0 && gy < PlayScene::MapHeight) {
+                scene->mapState[gy][gx] = scene->getTileType(5);
+
+                scene->TileMapGroup->AddNewObject(new Engine::Sprite(
+                    "Effects/toxic_mask.png", 
+                    gx * PlayScene::BlockSize + PlayScene::BlockSize / 2,
+                    gy * PlayScene::BlockSize + PlayScene::BlockSize / 2
+                ));
+            }
+        }
+    }
+
 }

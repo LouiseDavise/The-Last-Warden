@@ -42,6 +42,7 @@ void Player::Update(float dt)
     }
 
     UpdateAnimation(dt);
+    UpdateToxicEffect(dt);
     Sprite::Update(dt);
 
     float mapW = PlayScene::MapWidth * PlayScene::BlockSize;
@@ -272,4 +273,23 @@ void Player::Hit(float dmg, const Engine::Point &from)
 
 void Player::OnMouseDown(int button, int mx, int my)
 {
+}
+
+void Player::UpdateToxicEffect(float dt) {
+    PlayScene* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (!scene || hp <= 0) return;
+
+    int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
+    int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
+
+    if (gx >= 0 && gx < PlayScene::MapWidth && gy >= 0 && gy < PlayScene::MapHeight &&
+        scene->mapState[gy][gx] == scene->getTileType(5)) {
+        toxicTime += dt;
+        if (toxicTime >= 0.7f) {  // Damage every 0.7 second
+            toxicTime = 0;
+            Hit(5, Position);  // Adjust damage as needed
+        }
+    } else {
+        toxicTime = 0; // reset if off toxic
+    }
 }

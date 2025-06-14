@@ -1,5 +1,6 @@
 #pragma once
 #include "Weapon.hpp"
+#include<unordered_set>
 
 class Enemy;
 
@@ -24,6 +25,8 @@ public:
     {
         return coolingDown ? cooldownTimer / cooldownTime : 1.0f;
     }
+protected:
+    std::unordered_set<Enemy*> hitEnemies;
 
 private:
     // flight-state

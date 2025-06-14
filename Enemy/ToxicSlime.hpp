@@ -11,6 +11,8 @@ class ToxicSlime : public Enemy
 {
 public:
     ToxicSlime(float x, float y);
+    void Hit(float damage) override;
+    bool toxicSpawned = false;
 };
 
 #endif // TOXICSLIME_HPP

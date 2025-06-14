@@ -3,6 +3,7 @@
 #include "Enemy/Enemy.hpp"
 #include "Engine/GameEngine.hpp"
 #include "Engine/Collider.hpp"
+#include "UI/Animation/CyanExplosion.hpp"
 #include "UI/Animation/AreaEffect.hpp"
 
 MagicBullet::MagicBullet(float x, float y, float damage, const Engine::Point &direction, float rotation)
@@ -43,6 +44,11 @@ void MagicBullet::Update(float deltaTime)
     if (flightDist >= maxDist)
     {
         OnExplode();
+        scene->EffectGroup->AddNewObject(
+                new AreaEffect(Position.x, Position.y, 96.0f, 0.5f, al_map_rgb(0,184,255)));
+        
+        scene->EffectGroup->AddNewObject(
+            new CyanExplosion(Position.x, Position.y));
         return;
     }
 }
@@ -53,7 +59,7 @@ void MagicBullet::OnExplode()
     if (!scene)
         return;
 
-    const float radius = 64.0f;
+    const float radius = 96.0f;
     for (auto *obj : scene->EnemyGroup->GetObjects())
     {
         auto *enemy = dynamic_cast<Enemy *>(obj);
@@ -65,8 +71,10 @@ void MagicBullet::OnExplode()
         {
             enemy->Hit(damage);
             scene->EffectGroup->AddNewObject(
-                new AreaEffect(enemy->Position.x, enemy->Position.y, radius, 0.5f));
-
+                 new AreaEffect(enemy->Position.x, enemy->Position.y, radius, 0.5f, al_map_rgb(0,184,255)));
+            
+            scene->EffectGroup->AddNewObject(
+                new CyanExplosion(enemy->Position.x, enemy->Position.y));
         }
     }
 

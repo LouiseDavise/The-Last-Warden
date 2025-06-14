@@ -128,6 +128,12 @@ add_executable(The_Last_Warden
     UI/Animation/ExplosionEffect.hpp
     UI/Animation/AreaEffect.cpp
     UI/Animation/AreaEffect.hpp
+    UI/Animation/ToxicEffect.cpp
+    UI/Animation/ToxicEffect.hpp
+    UI/Animation/CyanExplosion.cpp
+    UI/Animation/CyanExplosion.hpp
+    UI/Animation/ClashEffect.cpp
+    UI/Animation/ClashEffect.hpp
     UI/Animation/Cheat.cpp
     UI/Animation/Cheat.hpp
     UI/Animation/ZukoKnockbackWave.cpp

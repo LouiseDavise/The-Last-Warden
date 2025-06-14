@@ -5,6 +5,8 @@
 #include "Enemy/Enemy.hpp"
 #include "Engine/Collider.hpp"
 #include "Engine/LOG.hpp"
+#include "UI/Animation/ClashEffect.hpp"
+#include "UI/Animation/AreaEffect.hpp"
 
 using Engine::Point;
 
@@ -36,8 +38,8 @@ void SpearWeapon::Use(float tx, float ty)
     isFlying = true;
     available = false;
     flightDist = 0.f;
-
-    // ✅ Only reduce quota and start cooldown IF not healing
+    hitEnemies.clear(); // Clear hit record for new throw
+    // Only reduce quota and start cooldown IF not healing
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!(scene && scene->IsMochiHealing()))
     {
@@ -100,10 +102,15 @@ void SpearWeapon::TryHitEnemies()
         auto *e = dynamic_cast<Enemy *>(obj);
         if (!e || !e->Visible)
             continue;
+        if (hitEnemies.count(e)) continue;
 
-        if (PointInsideRotatedRect(e->Position, Position, halfLen, halfW, Rotation))
+        if (PointInsideRotatedRect(e->Position, Position, halfLen, halfW, Rotation)){
             e->Hit(damage);
-    }
+            hitEnemies.insert(e);
+            scene->EffectGroup->AddNewObject(new ClashEffect(e->Position.x, e->Position.y));
+            scene->EffectGroup->AddNewObject(new AreaEffect(Position.x, Position.y, 64.0f, 0.5f, al_map_rgb(255,244,79)));
+        }
+    }  
 }
 
 void SpearWeapon::TryReclaim()

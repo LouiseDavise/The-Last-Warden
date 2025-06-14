@@ -10,7 +10,7 @@ PlayScene *AreaEffect::getPlayScene() {
     return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
 }
 
-AreaEffect::AreaEffect(float x, float y, float maxRadius, float duration):Sprite("Structures/blank.png", x, y), _duration(duration), _maxRadius(maxRadius){
+AreaEffect::AreaEffect(float x, float y, float maxRadius, float duration, ALLEGRO_COLOR color):Sprite("Structures/blank.png", x, y), _duration(duration), _maxRadius(maxRadius), _color(color){
 }
 
 void AreaEffect::Update(float deltaTime) {
@@ -25,8 +25,8 @@ void AreaEffect::Draw() const {
     float radius = _maxRadius * t;
     int alpha = static_cast<int>(255 * (1 - t));
 
-    ALLEGRO_COLOR fill = al_map_rgba(255, 0, 0, alpha/2);
-    ALLEGRO_COLOR border = al_map_rgba(255, 0, 0, alpha);
+    ALLEGRO_COLOR fill = al_map_rgba_f(_color.r, _color.g, _color.b, alpha / 2.0f / 255.0f);
+    ALLEGRO_COLOR border = al_map_rgba_f(_color.r, _color.g, _color.b, alpha / 255.0f);
 
     al_draw_filled_circle(Position.x, Position.y, radius, fill);
     al_draw_circle(Position.x, Position.y, radius, border, 2.0f);

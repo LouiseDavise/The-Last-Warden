@@ -212,7 +212,7 @@ void PlayScene::Update(float deltaTime)
 
     matchTime += deltaTime;
     nightCycleTimer += deltaTime;
-    if (nightCycleTimer >= 5.0f)
+    if (nightCycleTimer >= 100.0f)
     {
         isNight = !isNight;
         nightCycleTimer = 0.0f;
