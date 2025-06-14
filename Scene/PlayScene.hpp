@@ -97,14 +97,14 @@ public:
     Engine::Label *UITimerLabel;
     Engine::Image *StructurePanel;
     Engine::Panel *structureInfoPanel;
-    std::vector<Engine::Label*> structureInfoLabels;
+    std::vector<Engine::Label *> structureInfoLabels;
     Engine::ImageButton *enhanceButton;
     Engine::Label *enhancePriceLabel;
     Engine::Image *enhanceCoinIcon;
     Engine::Image *totalCoinIcon;
     Engine::Label *totalCoin;
     Structure *preview;
-    Structure* selectedStructure;
+    Structure *selectedStructure;
 
     std::vector<std::vector<TileType>> mapState;
     std::vector<std::vector<int>> mapDistance;
@@ -123,8 +123,8 @@ public:
     void OnKeyDown(int keyCode) override;
     void OnKeyUp(int keyCode) override;
     void OnRightClick(int mx, int my);
-    int selectedGX = -1;   // last grid-x that showed the panel
-    int selectedGY = -1; 
+    int selectedGX = -1; // last grid-x that showed the panel
+    int selectedGY = -1;
     bool IsMouseOverUI(int mx, int my);
 
     int GetMoney() const { return money; }

@@ -31,6 +31,6 @@ int main(int argc, char **argv)
 	game.AddNewScene("select-companion", new SelectCompanionScene());
 	game.AddNewScene("score-scene", new ScoreScene());
 	game.AddNewScene("splash-scene", new SplashScene());
-	game.Start("auth-scene", 60, 1920, 1280);
+	game.Start("splash-scene", 60, 1920, 1280);
 	return 0;
 }
