@@ -6,10 +6,10 @@
 #include <cmath>
 
 Orc::Orc(float x, float y)
-    : Enemy("Enemies/Orc/Run/image1x1.png", x, y, 32, 110, 150, 150, 15, 0.6f, 35)
+    : Enemy("Enemies/Orc/Run/image1x1.png", x, y, 48, 120, 150, 150, 15, 0.6f, 35)
 {
-    Size.x = 128;
-    Size.y = 128;
+    Size.x = 192;
+    Size.y = 192;
     idleMark = 6;
     for (int i = 1; i <= 8; ++i)
     {

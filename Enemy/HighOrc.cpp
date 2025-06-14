@@ -6,10 +6,10 @@
 #include <cmath>
 
 HighOrc::HighOrc(float x, float y)
-    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 32, 85, 250, 250, 20, 0.75f, 50)
+    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 48, 85, 380, 380, 30, 0.75f, 50)
 {
-    Size.x = 128;
-    Size.y = 128;
+    Size.x = 192;
+    Size.y = 192;
     idleMark = 6;
     for (int i = 1; i <= 8; ++i)
     {

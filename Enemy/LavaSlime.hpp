@@ -11,6 +11,8 @@ class LavaSlime : public Enemy
 {
 public:
     LavaSlime(float x, float y);
+    virtual void Update(float deltaTime) override;
+    void AOEAttack();
 };
 
 #endif // LAVASLIME_HPP

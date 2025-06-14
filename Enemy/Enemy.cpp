@@ -16,7 +16,6 @@
 #include "Scene/PlayScene.hpp"
 #include "Structure/Structure.hpp"
 #include "Structure/Offense/Tower.hpp"
-#include "UI/Animation/DirtyEffect.hpp"
 #include "UI/Animation/ExplosionEffect.hpp"
 
 PlayScene *Enemy::getPlayScene()

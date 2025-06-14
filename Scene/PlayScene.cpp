@@ -597,11 +597,6 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
         if (paused)
             return; // Don't allow game actions while paused
     }
-    else if (button & 2)
-    {
-        // OnRightClick(mx, my);
-        // return;
-    }
 
     Player *player = GetPlayer();
     IScene::OnMouseDown(button, mx, my);
