@@ -84,6 +84,8 @@ void PlayScene::Initialize()
     fadingToScore = false;
     money = 200;
     paused = false;
+    nightCycleTimer = 0.0f;
+    enemyWaves = std::queue<EnemyWave>(); // Clear all previously queued waves
 
     AddNewObject(TileMapGroup = new Group("TileMapGroup"));
     AddNewObject(GroundEffectGroup = new Group("GroundEffectGroup"));

@@ -27,7 +27,7 @@ public:
     bool isRecharging = false;
     void Draw() const override;
     std::string companionName;
-    float wispSkillCooldown = 30.0f;
+    float wispSkillCooldown = 10.0f;
     float wispSkillTimer = 0.0f;
     bool wispSkillReady = true;
     bool IsWispSkillReady() const { return wispSkillReady; }
@@ -41,7 +41,7 @@ public:
     {
         return mochiSkillReady ? 1.0f : mochiSkillTimer / mochiSkillCooldown;
     }
-    float mochiSkillCooldown = 30.0f;
+    float mochiSkillCooldown = 32.0f;
     float mochiSkillTimer = 0.0f;
     bool mochiSkillReady = true;
     bool mochiSkillActive = false;
@@ -55,7 +55,7 @@ public:
     float mochiHealElapsed = 0.0f;
     bool IsMochiHealingOngoing() const { return mochiHealingOngoing; }
 
-    float zukoSkillCooldown = 30.0f;
+    float zukoSkillCooldown = 23.0f;
     float zukoSkillTimer = 0.0f;
     bool zukoSkillReady = true;
     bool IsZukoSkillReady() const { return zukoSkillReady; }

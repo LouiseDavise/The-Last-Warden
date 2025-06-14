@@ -15,7 +15,7 @@ public:
 private:
     float timer = 0;
     float duration = 0.5f; // short burst
-    float maxRadius = 150; // very small range
+    float maxRadius = 500; // very small range
     std::shared_ptr<ALLEGRO_BITMAP> waveBmp;
 };
 

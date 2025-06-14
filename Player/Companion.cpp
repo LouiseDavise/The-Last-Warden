@@ -403,7 +403,7 @@ void Companion::Draw() const
 
     if (std::string(companionType) == "COMP2" && mochiSkillActive)
     {
-        al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(0, 255, 0, 50));
+        al_draw_filled_circle(Position.x, Position.y, mochiHealRadius, al_map_rgba(255, 91, 0, 50));
     }
 }
 

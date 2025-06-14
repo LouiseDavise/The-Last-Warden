@@ -33,9 +33,9 @@ void SelectCompanionScene::Initialize()
     };
 
     CompanionOption companions[count] = {
-        {"Wisp", "Swaps place with player", "", "Characters/Support-1/image1x1.png"},
-        {"Mochi", "Heals player nearby & unlimited", "attack within range", "Characters/Support-2/image1x1.png"},
-        {"Zuko", "Knocks back enemies", "", "Characters/Support-3/image1x1.png"}};
+        {"Wisp", "Playful Teleports", "", "Characters/Support-1/image1x1.png"},
+        {"Mochi", "Healing & Counterattack", "Characters/Support-2/image1x1.png"},
+        {"Zuko", "Knockback & Damage", "", "Characters/Support-3/image1x1.png"}};
 
     for (int i = 0; i < count; ++i)
     {
