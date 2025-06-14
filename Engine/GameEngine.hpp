@@ -1,6 +1,8 @@
 #ifndef GAMEENGINE_HPP
 #define GAMEENGINE_HPP
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_audio.h>
+#include <memory>
 #include <string>
 #include <unordered_map>
 
@@ -9,12 +11,17 @@
 /// <summary>
 /// All general classes are under this namespace for clarity.
 /// </summary>
-namespace Engine {
+namespace Engine
+{
     class IScene;
     /// <summary>
     /// The one and only GameEngine for the entire program. Responsible for low-level initialization and window events.
     /// </summary>
-    class GameEngine final {
+    class GameEngine final
+    {
+    public:
+        std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> GlobalBGMInstance;
+
     private:
         // Allegro5 settings, frames per second, screen width, screen height, maximum simultaneous audio samples.
         int fps{}, screenW{}, screenH{}, reserveSamples{};
@@ -157,4 +164,4 @@ namespace Engine {
         static GameEngine &GetInstance();
     };
 }
-#endif   // GAMEENGINE_HPP
+#endif // GAMEENGINE_HPP

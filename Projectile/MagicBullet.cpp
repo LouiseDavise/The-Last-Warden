@@ -5,12 +5,14 @@
 #include "Engine/Collider.hpp"
 #include "UI/Animation/CyanExplosion.hpp"
 #include "UI/Animation/AreaEffect.hpp"
+#include "Engine/AudioHelper.hpp"
 
 MagicBullet::MagicBullet(float x, float y, float damage, const Engine::Point &direction, float rotation)
     : Projectile("Projectiles/MagicBullet.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr)
 {
     float speed = 600.0f;
     velocity = direction.Normalize() * speed;
+    AudioHelper::PlayAudio("mage-attack.mp3");
 }
 
 void MagicBullet::Update(float deltaTime)
@@ -45,8 +47,8 @@ void MagicBullet::Update(float deltaTime)
     {
         OnExplode();
         scene->EffectGroup->AddNewObject(
-                new AreaEffect(Position.x, Position.y, 96.0f, 0.5f, al_map_rgb(0,184,255)));
-        
+            new AreaEffect(Position.x, Position.y, 96.0f, 0.5f, al_map_rgb(0, 184, 255)));
+
         scene->EffectGroup->AddNewObject(
             new CyanExplosion(Position.x, Position.y));
         return;
@@ -71,8 +73,8 @@ void MagicBullet::OnExplode()
         {
             enemy->Hit(damage);
             scene->EffectGroup->AddNewObject(
-                 new AreaEffect(enemy->Position.x, enemy->Position.y, radius, 0.5f, al_map_rgb(0,184,255)));
-            
+                new AreaEffect(enemy->Position.x, enemy->Position.y, radius, 0.5f, al_map_rgb(0, 184, 255)));
+
             scene->EffectGroup->AddNewObject(
                 new CyanExplosion(enemy->Position.x, enemy->Position.y));
         }

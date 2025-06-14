@@ -4,3 +4,5 @@ extern int nameInputLen;
 extern char heroType[10];
 extern char player_uid[20];
 extern char companionType[10];
+extern bool cameFromScoreScene;
+extern char current_bgm[32];

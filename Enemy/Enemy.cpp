@@ -54,7 +54,6 @@ void Enemy::Hit(float damage)
             it->Target = nullptr;
         getPlayScene()->AddMoney(money);
         getPlayScene()->IncreaseKillCount();
-        AudioHelper::PlayAudio("explosion.wav");
     }
     else
     {

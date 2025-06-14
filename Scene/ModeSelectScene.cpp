@@ -17,11 +17,17 @@
 
 void ModeSelectScene::Initialize()
 {
+    stopBGMOnTerminate = false;
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;
     int halfW = w / 2;
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
+    if (cameFromScoreScene)
+    {
+        Engine::GameEngine::GetInstance().GlobalBGMInstance =
+            AudioHelper::PlaySample(current_bgm, true, AudioHelper::BGMVolume);
+    }
 
     // Layout parameters
     const int buttonWidth = 480;
@@ -92,15 +98,10 @@ void ModeSelectScene::Initialize()
     btn->SetOnClickCallback(std::bind(&ModeSelectScene::PlayOnClick, this, 2));
     AddNewControlObject(btn);
     AddNewObject(new Engine::Label("2-PLAYER", "RealwoodRegular.otf", 56, halfW, 10 + startY + buttonHeight / 2, 255, 255, 255, 255, 0.5, 0.5));
-
-    // BGM
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
 }
 
 void ModeSelectScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
 
@@ -112,6 +113,13 @@ void ModeSelectScene::PlayOnClick(int mode)
     {
         if (mode == 1)
         {
+            auto &engine = Engine::GameEngine::GetInstance();
+
+            if (engine.GlobalBGMInstance)
+            {
+                AudioHelper::StopSample(engine.GlobalBGMInstance);
+                engine.GlobalBGMInstance = nullptr;
+            }
             scene->SetMapFile("Resource/map1.txt");
             scene->SetWaveFile("Resource/single_wave.txt");
             scene->SetTwoPlayerMode(false);

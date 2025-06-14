@@ -43,7 +43,6 @@ void SettingScene::Initialize()
     AddNewControlObject(sliderSFX);
     AddNewObject(new Engine::Label("SFX:", "RealwoodRegular.otf", 40, sliderX - 120, halfH - 30 + sliderHeight / 2, 255, 255, 255, 255, 0.0, 0.5));
 
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
     sliderBGM->SetValue(AudioHelper::BGMVolume);
     sliderSFX->SetValue(AudioHelper::SFXVolume);
 
@@ -55,8 +54,6 @@ void SettingScene::Initialize()
 }
 void SettingScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
 void SettingScene::BackOnClick(int stage)
@@ -66,8 +63,11 @@ void SettingScene::BackOnClick(int stage)
 
 void SettingScene::BGMSlideOnValueChanged(float value)
 {
-    AudioHelper::ChangeSampleVolume(bgmInstance, value);
     AudioHelper::BGMVolume = value;
+
+    auto& engine = Engine::GameEngine::GetInstance();
+    if (engine.GlobalBGMInstance)
+        AudioHelper::ChangeSampleVolume(engine.GlobalBGMInstance, value);
 }
 void SettingScene::SFXSlideOnValueChanged(float value)
 {

@@ -21,8 +21,6 @@ void LoginScene::Initialize()
     isInvalidUID = false;
     switch_key = false;
 
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
-
     AddNewObject(new Engine::Label("ENTER YOUR UID", "RealwoodRegular.otf", 70, halfW, 280, 255, 255, 255, 255, 0.5, 0.5));
     AddNewObject(new Engine::Label("Load your saved progress with your unique ID.", "RealwoodRegular.otf", 30, halfW, h / 6 + 150, 200, 200, 200, 255, 0.5, 0.5));
 
@@ -39,8 +37,6 @@ void LoginScene::Initialize()
 
 void LoginScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = nullptr;
     IScene::Terminate();
 }
 

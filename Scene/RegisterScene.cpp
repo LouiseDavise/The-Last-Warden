@@ -43,7 +43,6 @@ void RegisterScene::Initialize()
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
 
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
     onEnterNameScene = true;
 
     // Title
@@ -65,8 +64,6 @@ void RegisterScene::Initialize()
 
 void RegisterScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
 

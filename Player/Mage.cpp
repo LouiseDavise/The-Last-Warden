@@ -8,9 +8,10 @@
 using Engine::Point;
 
 Mage::Mage(float x, float y)
-    : Player("Characters/Mage/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f) {
+    : Player("Characters/Mage/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f)
+{
     wand = new WandWeapon(PositionWeapon(), this);
-    if (auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene()))
+    if (auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene()))
         scene->WeaponGroup->AddNewObject(wand);
 
     CollisionRadius = 32;
@@ -51,20 +52,23 @@ Mage::Mage(float x, float y)
     currentFrame = 0;
 }
 
-void Mage::Update(float dt) {
+void Mage::Update(float dt)
+{
     Player::Update(dt);
     wand->Update(dt);
 }
 
-void Mage::Draw() const {
+void Mage::Draw() const
+{
     Player::Draw();
 }
 
-void Mage::OnMouseDown(int button, int mx, int my) {
+void Mage::OnMouseDown(int button, int mx, int my)
+{
     if (!(button & 1))
         return;
 
-    auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
+    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!scene)
         return;
 
@@ -75,7 +79,8 @@ void Mage::OnMouseDown(int button, int mx, int my) {
     wand->Position = PositionWeapon();
 }
 
-Point Mage::PositionWeapon() const {
+Point Mage::PositionWeapon() const
+{
     float offX = FacingRight() ? 2 : -2;
     return Point{Position.x + offX, Position.y + 7};
 }

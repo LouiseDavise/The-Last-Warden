@@ -39,7 +39,6 @@ void SelectHeroScene::Initialize()
     int halfW = w / 2;
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
 
     AddNewObject(new Engine::Label("CHOOSE YOUR HERO", "RealwoodRegular.otf", 72, halfW, 250, 255, 255, 255, 255, 0.5, 0.5));
 
@@ -161,7 +160,5 @@ void SelectHeroScene::OnSelectClick(int heroId)
 
 void SelectHeroScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }

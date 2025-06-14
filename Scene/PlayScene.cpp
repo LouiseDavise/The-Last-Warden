@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include <random>
+#include <iostream>
 #include <limits>
 
 #include "Player/Player.hpp"
@@ -69,6 +70,9 @@ Engine::Point PlayScene::GetClientSize()
 
 void PlayScene::Initialize()
 {
+    std::cout << "Hello";
+    Engine::GameEngine::GetInstance().GlobalBGMInstance = AudioHelper::PlaySample("gameplay-2.ogg", true, AudioHelper::BGMVolume);
+    std::cout << "World";
     mapState.clear();
     keyStrokes.clear();
     ticks = 0;
@@ -174,13 +178,10 @@ void PlayScene::Initialize()
     darknessOverlay = al_create_bitmap(screenW, screenH);
     // Preload Lose Scene
     deathBGMInstance = Engine::Resources::GetInstance().GetSampleInstance("astronomia.ogg");
-    // Start BGM.
-    bgmId = AudioHelper::PlayBGM("play.ogg");
 }
 
 void PlayScene::Terminate()
 {
-    AudioHelper::StopBGM(bgmId);
     AudioHelper::StopSample(deathBGMInstance);
     deathBGMInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
@@ -247,6 +248,13 @@ void PlayScene::Update(float deltaTime)
         fadeTimer += deltaTime;
         if (fadeTimer >= fadeDuration)
         {
+            auto &engine = Engine::GameEngine::GetInstance();
+
+            if (engine.GlobalBGMInstance)
+            {
+                AudioHelper::StopSample(engine.GlobalBGMInstance);
+                engine.GlobalBGMInstance = nullptr;
+            }
             Engine::GameEngine::GetInstance().ChangeScene("score-scene");
             return;
         }
@@ -532,7 +540,8 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 
     Player *player = GetPlayer();
     IScene::OnMouseDown(button, mx, my);
-    if((preview && preview->IsSmashBone()) || preview && preview->IsAxe()) return;
+    if ((preview && preview->IsSmashBone()) || preview && preview->IsAxe())
+        return;
     if (!IsMouseOverUI(mx, my))
         player->OnMouseDown(button, mx, my);
 }
@@ -576,8 +585,8 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
             if (s)
             {
                 StructureGroup->RemoveObject(s->GetObjectIterator());
-                AudioHelper::PlaySample("win.wav");
                 mapState[gy][gx] = TILE_WALKABLE;
+                AudioHelper::PlaySample("smashbone.mp3");
             }
             else
             {
@@ -610,7 +619,6 @@ void PlayScene::OnMouseUp(int button, int mx, int my)
 
                 // Add new base tile
                 TileMapGroup->AddNewObject(new Engine::Image(basePath, gx * BlockSize, gy * BlockSize, BlockSize, BlockSize));
-                AudioHelper::PlaySample("win.wav");
             }
             else
             {
@@ -684,8 +692,7 @@ void PlayScene::OnKeyDown(int keyCode)
     }
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
-    else if ((keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsSmashBone())
-        || (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsAxe()))
+    else if ((keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsSmashBone()) || (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsAxe()))
     {
         UIGroup->RemoveObject(preview->GetObjectIterator());
         preview = nullptr;
@@ -1319,8 +1326,7 @@ void PlayScene::ConstructUI()
     std::vector<BtnInfo> btns = {
         {w / 2 - 188 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png", 0},
         {w / 2 - 188 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/WoodenWall.png", "Structures/blank.png", 10},
-        {w / 2 - 188 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}
-    };
+        {w / 2 - 188 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}};
 
     for (auto &b : btns)
     {
@@ -1432,7 +1438,15 @@ void PlayScene::ConstructUI()
     // Confirm
     homeConfirmBtn = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", screenWidth / 2 - 160, 550, 140, 65);
     homeConfirmBtn->SetOnClickCallback([]()
-                                       { Engine::GameEngine::GetInstance().ChangeScene("score-scene"); });
+                                       { 
+                                        auto &engine = Engine::GameEngine::GetInstance();
+
+                                        if (engine.GlobalBGMInstance)
+                                        {
+                                            AudioHelper::StopSample(engine.GlobalBGMInstance);
+                                            engine.GlobalBGMInstance = nullptr;
+                                        }
+                                        Engine::GameEngine::GetInstance().ChangeScene("score-scene"); });
 
     homeConfirmBtn->Visible = false;
     homeConfirmBtn->Enabled = false;
@@ -1556,9 +1570,11 @@ void PlayScene::DrawNightTime() const
     // Fill screen with almost-black (multiplicative blackout)
     al_clear_to_color(al_map_rgb(2, 2, 8));
 
-    if(isTwoPlayer) {
-        Player* companion = GetCompanion();
-        if(!companion) return;
+    if (isTwoPlayer)
+    {
+        Player *companion = GetCompanion();
+        if (!companion)
+            return;
         Engine::Point screenCenter = companion->Position - camera;
         int layers = 4;
         float baseRadius = 130.0f;
@@ -1594,20 +1610,21 @@ void PlayScene::DrawNightTime() const
 
     al_draw_filled_triangle(screenCenter.x, screenCenter.y, x1, y1, x2, y2, al_map_rgb(170 * 0.425, 170 * 0.425, 170));
 
-    for (auto& obj : StructureGroup->GetObjects()) {
-        if (!obj || !obj->isLightSource) continue;
+    for (auto &obj : StructureGroup->GetObjects())
+    {
+        if (!obj || !obj->isLightSource)
+            continue;
         Engine::Point lightCenter = obj->Position - camera;
-        for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 2; ++i)
+        {
             float r = baseRadius - i * 10.0f;
-            int brightness =  160 + i * 40;
+            int brightness = 160 + i * 40;
             brightness = std::min(brightness, 255);
             al_draw_filled_circle(
                 lightCenter.x, lightCenter.y,
                 r,
-                al_map_rgb(brightness, brightness * 0.8, brightness * 0.5)
-            );
+                al_map_rgb(brightness, brightness * 0.8, brightness * 0.5));
         }
-        
     }
 
     // Blend onto screen using multiplicative light blending

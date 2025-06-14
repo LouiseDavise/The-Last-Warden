@@ -1,5 +1,7 @@
 #pragma once
 #include "Player.hpp"
+#include <allegro5/allegro_audio.h>
+#include <memory>
 #include "Weapon/SpearWeapon.hpp"
 #include <memory>
 
@@ -9,6 +11,8 @@ class Spearman : public Player
 {
 public:
     Spearman(float x, float y);
+    std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> spearLoopAudio;
+    bool wasReturning = false;
 
     void Update(float dt) override;
     void Draw() const override;

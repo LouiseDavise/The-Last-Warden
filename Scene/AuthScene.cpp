@@ -6,12 +6,16 @@
 #include "UI/Component/ImageButton.hpp"
 #include "UI/Component/Label.hpp"
 #include "player_data.h"
+#include <cstdlib>
+#include <ctime>
 
 char nameInput[17] = "PLAYER";
 int nameInputLen = 6;
 char heroType[10] = "";
 char player_uid[20] = "";
 char companionType[10] = "";
+bool cameFromScoreScene = false;
+char current_bgm[32] = "";
 
 void AuthScene::Initialize()
 {
@@ -22,8 +26,18 @@ void AuthScene::Initialize()
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
 
-    // Use existing audio
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
+    // audio
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    int randomIndex = std::rand() % 6 + 1;
+
+    std::string filename = "scene-" + std::to_string(randomIndex) + ".ogg";
+
+    std::strncpy(current_bgm, filename.c_str(), sizeof(current_bgm));
+    current_bgm[sizeof(current_bgm) - 1] = '\0'; // null-terminate
+
+    Engine::GameEngine::GetInstance().GlobalBGMInstance =
+        AudioHelper::PlaySample(filename, true, AudioHelper::BGMVolume);
 
     // Title
     AddNewObject(new Engine::Label("WELCOME TO THE LAST WARDEN", "RealwoodRegular.otf", 90, halfW, halfH - 250, 255, 255, 255, 255, 0.5, 0.5));
@@ -54,7 +68,6 @@ void AuthScene::Initialize()
 
 void AuthScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
     bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }

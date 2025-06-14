@@ -1,4 +1,5 @@
 #include "Archer.hpp"
+#include "Engine/AudioHelper.hpp"
 #include "Weapon/BowWeapon.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Engine/GameEngine.hpp"
@@ -8,9 +9,10 @@
 using Engine::Point;
 
 Archer::Archer(float x, float y)
-: Player("Characters/Archer/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f) {
+    : Player("Characters/Archer/Idle/image1x1.png", x, y, 100.0f, 100.0f, 190.0f)
+{
     bow = new BowWeapon(PositionWeapon(), this);
-    if (auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene()))
+    if (auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene()))
         scene->WeaponGroup->AddNewObject(bow);
 
     CollisionRadius = 32;
@@ -51,20 +53,25 @@ Archer::Archer(float x, float y)
     currentFrame = 0;
 }
 
-void Archer::Update(float dt) {
+void Archer::Update(float dt)
+{
     Player::Update(dt);
     bow->Update(dt);
 }
 
-void Archer::Draw() const {
+void Archer::Draw() const
+{
     Player::Draw();
 }
 
-void Archer::OnMouseDown(int button, int mx, int my) {
-    if (!(button & 1)) return;
+void Archer::OnMouseDown(int button, int mx, int my)
+{
+    if (!(button & 1))
+        return;
 
-    auto* scene = dynamic_cast<PlayScene*>(Engine::GameEngine::GetInstance().GetActiveScene());
-    if (!scene) return;
+    auto *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    if (!scene)
+        return;
 
     float worldX = scene->camera.x + mx;
     float worldY = scene->camera.y + my;
@@ -73,7 +80,8 @@ void Archer::OnMouseDown(int button, int mx, int my) {
     bow->Position = PositionWeapon();
 }
 
-Point Archer::PositionWeapon() const {
+Point Archer::PositionWeapon() const
+{
     float offX = FacingRight() ? 2 : -2;
     return Point{Position.x + offX, Position.y + 7};
 }

@@ -5,10 +5,8 @@
 
 #include "Engine/IScene.hpp"
 
-class ModeSelectScene final : public Engine::IScene {
-private:
-    std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE> bgmInstance;
-
+class ModeSelectScene final : public Engine::IScene
+{
 public:
     explicit ModeSelectScene() = default;
     void Initialize() override;
@@ -17,9 +15,9 @@ public:
     void ScoreboardOnClick();
     void SettingsOnClick();
     void BackOnClick(int stage);
-
+    bool stopBGMOnTerminate = false;
     void BGMSlideOnValueChanged(float value);
     void SFXSlideOnValueChanged(float value);
 };
 
-#endif   // MODESELECTSCENE_HPP
+#endif // MODESELECTSCENE_HPP

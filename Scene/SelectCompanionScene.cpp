@@ -14,7 +14,6 @@ void SelectCompanionScene::Initialize()
     int halfW = w / 2;
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
-    bgmInstance = AudioHelper::PlaySample("select.ogg", true, AudioHelper::BGMVolume);
 
     AddNewObject(new Engine::Label("CHOOSE YOUR COMPANION", "RealwoodRegular.otf", 72, halfW, 250, 255, 255, 255, 255, 0.5, 0.5));
 
@@ -84,6 +83,12 @@ void SelectCompanionScene::Initialize()
         const char* types[] = {"COMP1", "COMP2", "COMP3"};
         strncpy(companionType, types[pendingCompanionId], sizeof(companionType));
         companionType[sizeof(companionType) - 1] = '\0';
+        auto &engine = Engine::GameEngine::GetInstance();
+        if (engine.GlobalBGMInstance)
+        {
+            AudioHelper::StopSample(engine.GlobalBGMInstance);
+            engine.GlobalBGMInstance = nullptr;
+        }
         Engine::GameEngine::GetInstance().ChangeScene("play"); });
     confirmBtn->Visible = false;
     AddNewControlObject(confirmBtn);
@@ -137,7 +142,5 @@ void SelectCompanionScene::OnSelectClick(int compId)
 
 void SelectCompanionScene::Terminate()
 {
-    AudioHelper::StopSample(bgmInstance);
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }

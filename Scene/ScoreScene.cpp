@@ -23,6 +23,7 @@ void ScoreScene::Initialize()
     scoreTimer = 0;
 
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, screenW, screenH));
+    Engine::GameEngine::GetInstance().GlobalBGMInstance = AudioHelper::PlaySample("score-scene.mp3", true, AudioHelper::BGMVolume);
 
     PlayScene *play = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetScene("play"));
     int time = play ? static_cast<int>(play->matchTime) : 0;
@@ -77,7 +78,17 @@ void ScoreScene::Initialize()
     // Back Button
     backButton = new Engine::ImageButton("UI/button.png", "UI/button-transparant.png", centerX - 240, 770, 480, 115);
     backButton->SetOnClickCallback([]()
-                                   { Engine::GameEngine::GetInstance().ChangeScene("mode-select"); });
+                                   { 
+                                    cameFromScoreScene = true;
+                                    auto &engine = Engine::GameEngine::GetInstance();
+
+                                    if (engine.GlobalBGMInstance)
+                                    {
+                                        AudioHelper::StopSample(engine.GlobalBGMInstance);
+                                        engine.GlobalBGMInstance = nullptr;
+                                    }
+
+                                    Engine::GameEngine::GetInstance().ChangeScene("mode-select"); });
     AddNewControlObject(backButton);
     AddNewObject(new Engine::Label("BACK", "RealwoodRegular.otf", 56, centerX, 780 + 115 / 2, 255, 255, 255, 255, 0.5, 0.5));
 }

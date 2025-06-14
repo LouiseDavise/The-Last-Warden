@@ -49,7 +49,6 @@ void LeaderBoardScene::Initialize()
 void LeaderBoardScene::Terminate()
 {
     ClearPageLabels();
-    bgmInstance = std::shared_ptr<ALLEGRO_SAMPLE_INSTANCE>();
     IScene::Terminate();
 }
 

@@ -3,12 +3,14 @@
 #include "Enemy/Enemy.hpp"
 #include "Engine/Collider.hpp"
 #include "Engine/GameEngine.hpp"
+#include "Engine/AudioHelper.hpp"
 
 ArrowBullet::ArrowBullet(float x, float y, float damage, const Engine::Point &direction, float rotation, float maxDist)
     : Projectile("Projectiles/BowArrow.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr),
       maxDist(maxDist)
 {
     velocity = direction.Normalize() * speed;
+    AudioHelper::PlayAudio("archer-attack.mp3");
 }
 
 void ArrowBullet::Update(float deltaTime)
