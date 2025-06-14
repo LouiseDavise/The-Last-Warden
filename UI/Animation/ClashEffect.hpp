@@ -14,7 +14,7 @@ protected:
     PlayScene *getPlayScene();
     float timeTicks;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> bmps;
-    float timeSpan = 0.5;
+    float timeSpan = 1.5f;
 
 public:
     ClashEffect(float x, float y);
