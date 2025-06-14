@@ -554,10 +554,9 @@ void PlayScene::OnMouseMove(int mx, int my)
 
     if (preview && preview->IsSmashBone())
     {
-        preview->Position = Engine::Point{(float)mx, (float)my};
-
         int gx = (mx + camera.x) / BlockSize;
         int gy = (my + camera.y) / BlockSize;
+        preview->Position = Engine::Point{(float)gx, (float)gy};
         Structure *tgt = GetStructureAt(gx, gy);
         if (tgt != highlightedStructure)
         {
