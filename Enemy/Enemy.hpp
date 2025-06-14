@@ -29,7 +29,7 @@ protected:
     float atkcd;
     int money;
     State state;
-
+    
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> attackFrames;
@@ -40,6 +40,8 @@ protected:
     float deathInterval;
     float attackTimer;
     float attackInterval;
+    float cooldownTimer = 0;
+    int idleMark;
     float hurtTimer;
     float hurtInterval;
     int currentFrame;

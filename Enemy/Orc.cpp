@@ -10,6 +10,7 @@ Orc::Orc(float x, float y)
 {
     Size.x = 128;
     Size.y = 128;
+    idleMark = 6;
     for (int i = 1; i <= 8; ++i)
     {
         std::string path = "Enemies/Orc/Run/image" + std::to_string(i) + "x1.png";
@@ -22,9 +23,11 @@ Orc::Orc(float x, float y)
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 3; i <= 8; ++i)
+    for (int i = 1; i <= 10; ++i)
     {
-        std::string path = "Enemies/Orc/Attack/image" + std::to_string(i) + "x1.png";
+        std::string path;
+        if(i <= idleMark) path = "Enemies/Orc/Attack/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/Orc/Idle/image" + std::to_string(i-idleMark) + "x1.png";
         attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
@@ -44,7 +47,7 @@ Orc::Orc(float x, float y)
     deathTimer = 0;
     deathInterval = 0.12f;
     attackTimer = 0;
-    attackInterval = 0.07f;
+    attackInterval = 0.055f;
     hurtTimer = 0;
     hurtInterval = 0.05f;
     currentFrame = 0;

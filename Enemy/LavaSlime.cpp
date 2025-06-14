@@ -10,6 +10,7 @@ LavaSlime::LavaSlime(float x, float y)
 {
     Size.x = 128;
     Size.y = 128;
+    idleMark = 7;
     for (int i = 1; i <= 8; ++i)
     {
         std::string path = "Enemies/LavaSlime/Run/image" + std::to_string(i) + "x1.png";
@@ -22,9 +23,11 @@ LavaSlime::LavaSlime(float x, float y)
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 3; i <= 9; ++i)
+    for (int i = 1; i <= 13; ++i)
     {
-        std::string path = "Enemies/LavaSlime/Attack/image" + std::to_string(i) + "x1.png";
+        std::string path;
+        if(i <= idleMark) path = "Enemies/LavaSlime/Attack/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/LavaSlime/Idle/image" + std::to_string(i-idleMark) + "x1.png";
         attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 

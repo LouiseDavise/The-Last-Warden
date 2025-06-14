@@ -328,7 +328,7 @@ void PlayScene::Draw() const
     EnemyGroup->DrawCulled(camera.x, camera.y, screenSize.x, screenSize.y);
     PlayerGroup->Draw();
     WeaponGroup->Draw();
-    ProjectileGroup->Draw();
+    ProjectileGroup->DrawCulled(camera.x, camera.y, screenSize.x, screenSize.y);
     EffectGroup->Draw();
 
     al_identity_transform(&transform);

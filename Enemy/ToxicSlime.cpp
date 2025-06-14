@@ -10,7 +10,8 @@ ToxicSlime::ToxicSlime(float x, float y)
     : Enemy("Enemies/ToxicSlime/Run/image1x1.png", x, y, 32, 32, 60, 60, 5, 1.0f, 10)
 {
     Size.x = 128;
-    Size.y = 72;
+    Size.y = 128;
+    idleMark = 7;
     for (int i = 1; i <= 8; ++i)
     {
         std::string path = "Enemies/ToxicSlime/Run/image" + std::to_string(i) + "x1.png";
@@ -23,9 +24,11 @@ ToxicSlime::ToxicSlime(float x, float y)
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 4; i <= 11; ++i)
+    for (int i = 1; i <= 13; ++i)
     {
-        std::string path = "Enemies/ToxicSlime/Attack/image" + std::to_string(i) + "x1.png";
+        std::string path;
+        if(i <= idleMark) path = "Enemies/ToxicSlime/Attack/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/ToxicSlime/Idle/image" + std::to_string(i-idleMark) + "x1.png";
         attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 

@@ -66,6 +66,20 @@ void Enemy::Hit(float damage)
 
 void Enemy::Update(float deltaTime)
 {
+    auto* scene = getPlayScene();
+    auto* player = scene->GetPlayer();
+
+    bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius) && player->GetHP() > 0 && hp > 0;
+
+    Structure* collidedStructure = nullptr;
+    for (auto* obj : scene->StructureGroup->GetObjects()) {
+        Structure* structure = dynamic_cast<Structure*>(obj);
+        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius)) {
+            collidedStructure = structure;
+            break;
+        }
+    }
+
     if (state == State::Run)
     {
         runTimer += deltaTime;
@@ -98,32 +112,41 @@ void Enemy::Update(float deltaTime)
         bmp = deathFrames[currentFrame]; // Set death frame
         return;
     }
-    else if (state == State::Attacking)
-    {
+
+    else if (state == State::Attacking) {
         attackTimer += deltaTime;
-        if (attackTimer >= attackInterval && attackFrames.size() > 0)
-        {
+        cooldownTimer += deltaTime;
+        if(attackTimer >= attackInterval){
             attackTimer = 0;
-            currentFrame++;
-            if (currentFrame >= attackFrames.size())
-            {
-                auto *scene = getPlayScene();
-                auto *player = scene->GetPlayer();
-                if (player && !Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius))
-                {
+            if(currentFrame < idleMark - 1)currentFrame++;
+            if(currentFrame >= idleMark - 1){
+                if(!playerCollide && !collidedStructure){
                     state = State::Run;
                     currentFrame = 0;
-                    return;
                 }
-                else
-                {
-                    currentFrame = 0;
-                }
+                currentFrame++;
+                if (currentFrame >= attackFrames.size())
+                    currentFrame = idleMark;
+            }
+
+        }
+        
+        if (cooldownTimer >= atkcd) {
+            cooldownTimer = 0;
+            currentFrame = 0;
+
+            if (playerCollide) {
+                player->Hit(GetDamage(), Position);
+            } else if (collidedStructure) {
+                collidedStructure->Hit(GetDamage());
+            }else{
+                state = State::Run;
             }
         }
-        bmp = attackFrames[currentFrame];
+
         return;
     }
+
     else if (state == State::Hurt)
     {
         hurtTimer += deltaTime;
@@ -149,22 +172,6 @@ void Enemy::Update(float deltaTime)
             Position.y += slowVel.y * deltaTime;
         }
         return;
-    }
-
-    auto *scene = getPlayScene();
-    auto *player = scene->GetPlayer();
-
-    bool playerCollide = player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius) && player->GetHP() > 0 && hp > 0;
-
-    Structure *collidedStructure = nullptr;
-    for (auto *obj : getPlayScene()->StructureGroup->GetObjects())
-    {
-        Structure *structure = dynamic_cast<Structure *>(obj);
-        if (structure && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, structure->Position, structure->CollisionRadius))
-        {
-            collidedStructure = structure;
-            break;
-        }
     }
 
     if (playerCollide)

@@ -9,7 +9,8 @@ GreenSlime::GreenSlime(float x, float y)
     : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 30, 30, 2, 1.0f, 3)
 {
     Size.x = 128;
-    Size.y = 64;
+    Size.y = 128;
+    idleMark = 6;
     for (int i = 1; i <= 8; ++i)
     {
         std::string path = "Enemies/GreenSlime/Run/image" + std::to_string(i) + "x1.png";
@@ -22,9 +23,11 @@ GreenSlime::GreenSlime(float x, float y)
         deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
-    for (int i = 1; i <= 6; ++i)
-    {
-        std::string path = "Enemies/GreenSlime/Attack/image" + std::to_string(i) + "x1.png";
+    for (int i = 1; i <= 12; ++i)
+    {   
+        std::string path;
+        if(i <= idleMark) path = "Enemies/GreenSlime/Attack/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/GreenSlime/Idle/image" + std::to_string(i-idleMark) + "x1.png";
         attackFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
     }
 
