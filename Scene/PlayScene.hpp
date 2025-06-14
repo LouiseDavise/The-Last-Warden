@@ -170,6 +170,7 @@ public:
     Engine::Image *playButton = nullptr;
     bool paused = false;
     Engine::Image *playerProfileImage = nullptr;
+    Engine::Image *companionProfileImage = nullptr;
 
     // Home and Pause Buttons
     Engine::ImageButton *homeButton = nullptr;

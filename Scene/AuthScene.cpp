@@ -14,7 +14,7 @@ char nameInput[17] = "PLAYER";
 int nameInputLen = 6;
 char heroType[10] = "";
 char player_uid[20] = "";
-char companionType[10] = "";
+char companionType[10] = "NONE";
 bool cameFromScoreScene = false;
 char current_bgm[32] = "_";
 

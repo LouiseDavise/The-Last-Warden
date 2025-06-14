@@ -18,6 +18,7 @@
 
 void ModeSelectScene::Initialize()
 {
+    fadingToPlay = false;
     stopBGMOnTerminate = false;
     int w = Engine::GameEngine::GetInstance().GetScreenSize().x;
     int h = Engine::GameEngine::GetInstance().GetScreenSize().y;

@@ -166,12 +166,13 @@ void PlayScene::Initialize()
     structureInfoPanel->Visible = false;
     SidePanelGroup->AddNewObject(structureInfoPanel);
 
-    Engine::Label* label = new Engine::Label("", "pirulen.ttf", 22, w - 320 + 30, h/2 - 220 + 30, 255, 255, 255);
+    Engine::Label *label = new Engine::Label("", "pirulen.ttf", 22, w - 320 + 30, h / 2 - 220 + 30, 255, 255, 255);
     structureInfoLabels.push_back(label);
     SidePanelGroup->AddNewObject(label);
-    
-    for (int i = 0; i < 5; ++i) {
-        Engine::Label* label = new Engine::Label("", "pirulen.ttf", 18, w - 320 + 30, h/2 - 220 + 70 + i * 20, 255, 255, 255);
+
+    for (int i = 0; i < 5; ++i)
+    {
+        Engine::Label *label = new Engine::Label("", "pirulen.ttf", 18, w - 320 + 30, h / 2 - 220 + 70 + i * 20, 255, 255, 255);
         label->Visible = false;
         structureInfoLabels.push_back(label);
         SidePanelGroup->AddNewObject(label);
@@ -555,37 +556,49 @@ void PlayScene::OnMouseDown(int button, int mx, int my)
 
         if (paused)
             return; // Don't allow game actions while paused
-    }else if(button & 2){
+    }
+    else if (button & 2)
+    {
         int gx = (mx + camera.x) / BlockSize;
         int gy = (my + camera.y) / BlockSize;
-        Structure* s = GetStructureAt(gx, gy);
-        static Structure* lastClickedStructure = nullptr;
+        Structure *s = GetStructureAt(gx, gy);
+        static Structure *lastClickedStructure = nullptr;
 
-        if (s) {
-            if (structureInfoPanel->Visible && s == lastClickedStructure) {
+        if (s)
+        {
+            if (structureInfoPanel->Visible && s == lastClickedStructure)
+            {
                 // Toggle off if clicking the same structure again
                 structureInfoPanel->Visible = false;
-                for (auto* lbl : structureInfoLabels)
+                for (auto *lbl : structureInfoLabels)
                     lbl->Visible = false;
                 lastClickedStructure = nullptr;
-            } else {
+            }
+            else
+            {
                 // Show new structure info
                 std::vector<std::string> lines = s->GetInfoLines();
                 structureInfoPanel->Visible = true;
 
-                for (size_t i = 0; i < structureInfoLabels.size(); ++i) {
-                    if (i < lines.size()) {
+                for (size_t i = 0; i < structureInfoLabels.size(); ++i)
+                {
+                    if (i < lines.size())
+                    {
                         structureInfoLabels[i]->Text = lines[i];
                         structureInfoLabels[i]->Visible = true;
-                    } else {
+                    }
+                    else
+                    {
                         structureInfoLabels[i]->Visible = false;
                     }
                 }
                 lastClickedStructure = s;
             }
-        } else {
+        }
+        else
+        {
             structureInfoPanel->Visible = false;
-            for (auto* lbl : structureInfoLabels)
+            for (auto *lbl : structureInfoLabels)
                 lbl->Visible = false;
             lastClickedStructure = nullptr;
         }
@@ -1355,6 +1368,20 @@ void PlayScene::ConstructUI()
     playerProfileImage = new Engine::Image(profileImagePath, 20, 20, 64, 64);
     UIGroup->AddNewObject(playerProfileImage);
 
+    if (isTwoPlayer && std::string(companionType) != "NONE")
+    {
+        std::string companionProfilePath;
+
+        if (std::string(companionType) == "COMP1")
+            companionProfilePath = "Characters/Support-1/image1x1.png";
+        else if (std::string(companionType) == "COMP2")
+            companionProfilePath = "Characters/Support-2/image1x1.png";
+        else if (std::string(companionType) == "COMP3")
+            companionProfilePath = "Characters/Support-3/image1x1.png";
+
+        companionProfileImage = new Engine::Image(companionProfilePath, 60, 63, 40, 40); // adjust x = 100
+        UIGroup->AddNewObject(companionProfileImage);
+    }
     int screenW = al_get_display_width(al_get_current_display());
 
     pauseButton = new Engine::Image("UI/pause-button.png", screenW - 80, 20, 55, 55);
@@ -1379,8 +1406,7 @@ void PlayScene::ConstructUI()
     std::vector<BtnInfo> btns = {
         {w / 2 - 188 + 8 + 72 * 0, h - 94, BowTower::Price, 1, "Structures/BowTower.png", "Structures/tower-base.png", 0},
         {w / 2 - 188 + 8 + 72 * 1, h - 94, BasicWall::Price, 2, "Structures/BasicWall.png", "Structures/blank.png", 3},
-        {w / 2 - 188 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}
-    };
+        {w / 2 - 188 + 8 + 72 * 2, h - 94, Bonfire::Price, 3, "Structures/Bonfire.png", "Structures/blank.png", 8}};
 
     for (auto &b : btns)
     {
