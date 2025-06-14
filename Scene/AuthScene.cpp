@@ -7,6 +7,7 @@
 #include "UI/Component/Label.hpp"
 #include "player_data.h"
 #include <cstdlib>
+#include <string>
 #include <ctime>
 
 char nameInput[17] = "PLAYER";
@@ -15,7 +16,7 @@ char heroType[10] = "";
 char player_uid[20] = "";
 char companionType[10] = "";
 bool cameFromScoreScene = false;
-char current_bgm[32] = "";
+char current_bgm[32] = "_";
 
 void AuthScene::Initialize()
 {
@@ -27,18 +28,25 @@ void AuthScene::Initialize()
     AddNewObject(new Engine::Image("Backgrounds/01.png", 0, 0, w, h));
 
     // audio
-    std::srand(static_cast<unsigned>(std::time(nullptr)));
+    if (std::string(current_bgm) == "_")
+    {
+        std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    int randomIndex = std::rand() % 6 + 1;
+        int randomIndex = std::rand() % 6 + 1;
 
-    std::string filename = "scene-" + std::to_string(randomIndex) + ".ogg";
+        std::string filename = "scene-" + std::to_string(randomIndex) + ".ogg";
 
-    std::strncpy(current_bgm, filename.c_str(), sizeof(current_bgm));
-    current_bgm[sizeof(current_bgm) - 1] = '\0'; // null-terminate
+        std::strncpy(current_bgm, filename.c_str(), sizeof(current_bgm));
+        current_bgm[sizeof(current_bgm) - 1] = '\0'; // null-terminate
 
-    Engine::GameEngine::GetInstance().GlobalBGMInstance =
-        AudioHelper::PlaySample(filename, true, AudioHelper::BGMVolume);
-
+        Engine::GameEngine::GetInstance().GlobalBGMInstance =
+            AudioHelper::PlaySample(filename, true, AudioHelper::BGMVolume);
+    }
+    else
+    {
+        Engine::GameEngine::GetInstance().GlobalBGMInstance =
+            AudioHelper::PlaySample(current_bgm, true, AudioHelper::BGMVolume);
+    }
     // Title
     AddNewObject(new Engine::Label("WELCOME TO THE LAST WARDEN", "RealwoodRegular.otf", 90, halfW, halfH - 250, 255, 255, 255, 255, 0.5, 0.5));
     AddNewObject(new Engine::Label("Please select your option", "RealwoodRegular.otf", 45, halfW, halfH - 170, 160, 160, 160, 255, 0.5, 0.5));

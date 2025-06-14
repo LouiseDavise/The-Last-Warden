@@ -143,5 +143,13 @@ void LoginScene::OnSubmitClick(int)
 
 void LoginScene::OnBackClick(int)
 {
+    auto &engine = Engine::GameEngine::GetInstance();
+
+    if (engine.GlobalBGMInstance)
+    {
+        AudioHelper::StopSample(engine.GlobalBGMInstance);
+        engine.GlobalBGMInstance = nullptr;
+    }
+
     Engine::GameEngine::GetInstance().ChangeScene("auth-scene");
 }
