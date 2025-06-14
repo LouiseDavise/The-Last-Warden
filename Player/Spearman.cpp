@@ -91,7 +91,8 @@ void Spearman::OnMouseDown(int button, int mx, int my) {
     float worldY = scene->camera.y + my;
 
     // Play throw sound if spear is not already active
-    if (!spear->IsFlying() && !spear->IsSpinningBeforeReturn() && !spear->IsReturning()) {
+    if (!spear->IsFlying() && !spear->IsSpinningBeforeReturn() && !spear->IsReturning() &&
+    !spear->IsCoolingDown() && spear->GetQuota() > 0) {
         AudioHelper::PlayAudio("spearman-throw.mp3");
     }
 
