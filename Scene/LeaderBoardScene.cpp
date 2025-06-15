@@ -137,7 +137,7 @@ void LeaderBoardScene::RenderPage()
         {"NAME", col_name},
         {"SCORE", col_score},
         {"DURATION", col_time},
-        {"DATE", col_date}};
+        {"KILLS", col_date}};
 
     for (auto &header : headers)
     {

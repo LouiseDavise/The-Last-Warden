@@ -27,15 +27,14 @@ void SelectCompanionScene::Initialize()
     struct CompanionOption
     {
         std::string name;
-        std::string desc1;
-        std::string desc2;
+        std::string desc;
         std::string imagePath;
     };
 
     CompanionOption companions[count] = {
-        {"Wisp", "Playful Teleports", "", "Characters/Support-1/image1x1.png"},
+        {"Wisp", "Playful Teleports", "Characters/Support-1/image1x1.png"},
         {"Mochi", "Healing & Counterattack", "Characters/Support-2/image1x1.png"},
-        {"Zuko", "Knockback & Damage", "", "Characters/Support-3/image1x1.png"}};
+        {"Zuko", "Knockback & Damage", "Characters/Support-3/image1x1.png"}};
 
     for (int i = 0; i < count; ++i)
     {
@@ -48,9 +47,7 @@ void SelectCompanionScene::Initialize()
         AddNewObject(new Engine::Label(companions[i].name, "pirulen.ttf", 28, x + 75, compY + 160, 255, 255, 255, 255, 0.5, 0.0));
 
         // Description lines
-        AddNewObject(new Engine::Label(companions[i].desc1, "pirulen.ttf", 12, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
-        if (!companions[i].desc2.empty())
-            AddNewObject(new Engine::Label(companions[i].desc2, "pirulen.ttf", 12, x + 75, compY + 225, 200, 200, 200, 255, 0.5, 0.0));
+        AddNewObject(new Engine::Label(companions[i].desc, "pirulen.ttf", 12, x + 75, compY + 200, 200, 200, 200, 255, 0.5, 0.0));
 
         // Select button
         auto *btn = new Engine::ImageButton("UI/button.png", "UI/button.png", x + 10, compY + 250, 130, 60);
