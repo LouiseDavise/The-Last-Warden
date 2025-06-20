@@ -1,86 +1,91 @@
-# The Last Warden
+# 🛡️ The Last Warden
 
 **A 2D survival game built using Allegro.**  
 In a hostile world overrun by enemies, you are the last surviving warden. Build defenses, manage resources, and hold your ground as increasingly powerful enemy waves attack from all directions. Strategically place turrets, walls, and traps to survive as long as possible.
 
 ---
 
-## 👨‍💻 Detailed Division of Labor
+## 📝 Description
 
-| Module / Feature Area    | Louise Davise Contributions                                                                                                                                                                                                                                                                           | Amartyananda Chang Contributions                                                                                                                                                                                                             |
-|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **🧍 Player Mechanics**   | - Implemented player movement using keyboard (WASD & arrows)<br>- Designed camera to follow player within map bounds<br>- Added animation logic for walking/running<br>- Created new heroes: **Spearman**, **Archer**, **Mage**<br>- Developed throwable and retrievable spear system<br>- Fixed bugs in spear return logic and hero weapon aiming | - Refined player animation states<br>- Added knockback and dying animations with lose scene integration<br>- Created weapon base/derived class for spear<br>- Helped debug player/map resolution and movement interaction issues<br>-Developed throwable and retrievable spear system<br>         |
-| **🧠 AI & Enemies**       | - Developed wave-spawning logic and file-based wave reading<br>- Implemented enemy pathfinding system<br>- Fixed movement bugs causing enemies to overshoot or freeze                                                                                                                                        | - Fully implemented **GreenSlime** enemy including logic and animations<br>- Designed visual effects for enemy hits and death<br>- Implemented enemy collision handling and attack cooldown logic<br>- Developed enemy variation system |
-| **🛠 Build System**       | - Enabled dynamic structure spawning<br>- Implemented SmashBone structure removal logic<br>- Rebuilt wall and turret placement system                                                                                                                                                                      | - Implemented tower/structure logic and inheritance<br>- Built wall HP and damage system<br>- Fixed tile occupancy and building placement issues                                               |
-| **🧱 Map & Environment**  | - Designed forest, river, and bridge tilesets<br>- Fixed camera bounds and map scrolling limits<br>- Resolved placement and collision bugs in map layouts                                                                                                                                                   | - Created large 200×200 map draft<br>- Optimized tile culling for performance<br>- Implemented night mode for biome variation                                                                 |
-| **🎮 UI / UX**           | - Created Welcome, SelectHero, and SelectCompanion scenes<br>- Implemented UI buttons, hover logic, and scene transitions<br>- Designed companion profile visuals<br>- Created score display and leaderboard UI                                                                                              | - Designed and implemented side panel UI and layout<br>- Added resource and structural menus<br>- Polished structural panel and fade/transition animations                                     |
-| **💬 Companion System**  | - Implemented all 3 companion skills: Wisp (swap), Mochi (heal), Zuko (shockwave)<br>- Integrated cooldown visuals into side panel<br>- Developed companion cooldown bar logic and fixed reset bugs<br>- Added movement and profile UI for companions                                                                                                         | - Designed companion vision logic<br>-  Helped resolve UI alignment and positioning bugs                                                       |
-| **🧪 Gameplay Systems**  | - Built game end logic (win/lose states)<br>- Created pause/play logic and UI<br>- Developed score calculation and display<br>- Added fade effects for smoother scene transitions                                                                                                                            | - Implemented wave FIFO queue system<br>- Fixed bugs in death animations and game reset<br>- Adjusted balance and timing for resources and systems                                              |
-| **🎨 Visuals & VFX**     | - Designed spear throw/return animation<br>- Resized hero and weapon assets<br>- Polished general UI and in-game visual consistency                                                                                                                                                                       | - Created clash, toxic, and hit visual effects<br>- Designed bonfire lighting logic<br>- Added slime dying animations                                                                         |
-| **🔊 Audio System**      | - Integrated audio for game scenes and actions<br>- Fixed playback and overlapping audio bugs                                                                                                                                                                                                               | - Helped debug and merge audio transitions                                                                                                               |
-| **🧾 Project & GitHub**  | - Set up initial GitHub repo and project structure<br>- Merged branches and organized folders                                                                                                                                                                      |- Resolved merge conflicts and scene refactors<br>- Helped with bugfix commits and transitions                                                                Helped with bugfix commits and transitions                                                                 |
+**The Last Warden** is a handcrafted 2D open-world survival game built in C++ using the Allegro 5 graphics library.  
+You play as the last protector of a ruined realm, fighting off endless waves of monsters while building your defenses and managing limited resources.
 
+⚔️ **Combine fast-paced combat, real-time building, and companion strategy** in a dynamic battlefield where every second counts. Place turrets, build walls, throw your spear, and survive the night—if you can.
+
+Whether you're fending off slimes or facing elite orcs and vampires, **The Last Warden** challenges you to think, fight, and adapt to survive longer than ever before.
+
+---
+
+### 🧩 Highlights
+
+- 🎮 Smooth WASD-based movement with camera follow  
+- 🗡️ Throwable and retrievable spear weapon  
+- 🧱 Real-time building: turrets, walls, traps, and utility tools  
+- 🧠 Smart enemy with pathfinding and wave escalation  
+- 💥 Companion skills with cooldowns (swap, heal, knockback)  
+- 🌙 Atmospheric day-night cycle with limited night vision  
+- 🔥 Dynamic tile-based world with biomes and build zones
+
+---
+
+## 🎥 Gameplay Video
+
+Watch our full gameplay showcase here:  
+📺 **[YouTube - The Last Warden Gameplay Demo](https://youtu.be/nb0SRaiFAUs)**
+
+See the full system in action, including:
+- Player and companion skills  
+- Wave-based enemy spawns  
+- Buildable defenses and walls  
+- Night mode with limited visibility  
+- Beautiful tile-based world design  
+- Polished UI and SFX
+
+---
 
 ## 🎮 Game Features
 
 ### 🧍 Player
-- Free movement using **WASD** or arrow keys
-- Camera follows the player
+- Free movement using **WASD** or arrow keys  
+- Camera follows the player  
 - Spawns at the center of the map
 
 ### ⚔️ Combat & Weapons
-- **Spear** (throwable & retrievable)
-- **Ranged weapons** (staffs, bows, guns)
+- **Spear** (throwable & retrievable)  
+- **Ranged weapons** (staffs, bows, guns)  
 - **Landmines**, **spike walls**, and other damaging structures
 
 ### 🧱 Buildables
-- **Turrets** that auto-attack within a radius
-- **Walls** with limited HP
-- **Mud leak** to slow enemies
+- **Turrets** that auto-attack within a radius  
+- **Walls** with limited HP  
+- **Mud leak** to slow enemies  
 - **SmashBone** to remove structures
 
 ### 👾 Enemies
-- Spawn from map edges
-- Scale in strength and type over time
+- Spawn from map edges  
+- Scale in strength and type over time  
+- Types include: `GreenSlime`, `ToxicSlime`, `LavaSlime`, `Orc`, `HighOrc`, `Vampire`
+
+### 🧠 Companion System
+- Companion support with unique skills:
+  - **Wisp**: Teleport-swap with player  
+  - **Mochi**: Healing field  
+  - **Zuko**: Shockwave knockback  
+- Cooldown bars and UI indicators
 
 ### 🌎 World Features
-- **Day-night cycle** (reduced visibility at night)
-- **Biomes & tiles** (e.g., mud, water)
-- **Mini-map** (optional)
-- **Flag system** for territory control and income generation
-
----
-
-## 📅 Development Schedule
-
-| Date        | Goal                                                                 |
-|-------------|----------------------------------------------------------------------|
-| June 2      | Project setup, basic map, player movement & camera                   |
-| June 3–5    | Enemy spawn, AI, death logic, currency system, basic buildables      |
-| June 6–9    | Advanced buildables, biomes, scaling difficulty                      |
-| June 10     | UI setup (score, health, build menu), optional mini-map              |
-| June 11     | Territory/flag system, upgrade mechanics                             |
-| June 12–14  | Polishing, SFX, balance testing, bug fixes, README & final packaging |
-| June 15     | Project Demo                                                         |
----
-
-## 👨‍💻 Division of Labor
-
-Detailed contributions (features owned, modules implemented) will be documented in the final `README.md` update upon project completion. Each team member will be credited based on actual implementation and work logs.
+- **Day-night cycle** (reduced visibility at night)  
+- **Biomes & tiles** (e.g., mud, water)  
+- **Mini-map** (optional)  
+- **Flag system** for territory control and income
 
 ---
 
 ## 🛠 Technologies Used
 
-- **Language**: C/C++
-- **Library**: [Allegro 5](https://liballeg.org/)
+- **Language**: C/C++  
+- **Library**: [Allegro 5](https://liballeg.org/)  
 - **Platform**: Desktop (Windows/Linux)
-
----
-
-## 🚧 Disclaimer
-
-This is a student project developed as part of a course assignment. Game features and implementation details may change during development based on time constraints, feedback, and feasibility.
 
 ---
 
@@ -90,5 +95,3 @@ This is a student project developed as part of a course assignment. Game feature
    ```bash
    git clone https://github.com/yourusername/The-Last-Warden.git
    cd The-Last-Warden
-
-© 2025 Louise Davise & Amartyananda Chang. All rights reserved.
