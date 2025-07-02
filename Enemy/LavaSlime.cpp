@@ -11,7 +11,7 @@
 #include <cmath>
 
 LavaSlime::LavaSlime(float x, float y)
-    : Enemy("Enemies/LavaSlime/Run/image1x1.png", x, y, 32, 140, 50, 50, 20, 1.0f, 30)
+    : Enemy("Enemies/LavaSlime/Run/image1x1.png", x, y, 32, 140, 200, 200, 20, 1.0f, 30)
 {
     Size.x = 128;
     Size.y = 128;

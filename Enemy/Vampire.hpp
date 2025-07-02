@@ -14,9 +14,9 @@ public:
     Vampire(float x, float y);
     virtual void Update(float deltaTime) override;
         
-    float attackCooldown;      // Time between shots
-    float attackCooldownTimer; // Timer to manage cooldown
-    float attackRange;         // 700 units
+    float attackCooldown = 1.5f;      
+    float attackCooldownTimer = 0.0f;
+    float attackRange = 700.0f;
 };
 
 #endif // Vampire_HPP

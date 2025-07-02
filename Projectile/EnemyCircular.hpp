@@ -1,15 +1,8 @@
-#pragma once
 #include "Projectile.hpp"
 
-class EnemyCircular : public Projectile
-{
+class EnemyCircular : public Projectile {
 public:
-    EnemyCircular(float x, float y, float damage, const Engine::Point &direction, float rotation, float maxDist);
-    void Update(float dt) override;
-
-private:
-    Engine::Point velocity;
-    float flightDist = 0.0f;
-    float maxDist = 450.0f;
-    float speed = 800.0f;
+    EnemyCircular(float x, float y, float vx, float vy, float damage = 10, float radius = 4.0f);
+    void Update(float deltaTime) override;
+    void OnExplode(Enemy* enemy) override;
 };

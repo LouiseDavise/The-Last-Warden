@@ -1,46 +1,46 @@
 #include "EnemyCircular.hpp"
+#include "Engine/Point.hpp"
+#include "Engine/Collider.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Enemy/Enemy.hpp"
-#include "Engine/Collider.hpp"
-#include "Engine/GameEngine.hpp"
-#include "Engine/AudioHelper.hpp"
+#include "Structure/Structure.hpp"
+#include "Player/Player.hpp"
 
-EnemyCircular::EnemyCircular(float x, float y, float damage, const Engine::Point &direction, float rotation, float maxDist)
-    : Projectile("Projectiles/Enemy_bullet.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr),
-      maxDist(maxDist)
-{
-    velocity = direction.Normalize() * speed;
+EnemyCircular::EnemyCircular(float x, float y, float vx, float vy, float damage, float radius)
+    : Projectile("Projectiles/Enemy_bullet.png", std::sqrt(vx * vx + vy * vy), damage, Engine::Point(x, y), Engine::Point(vx, vy).Normalize(), 0, nullptr) {
+    CollisionRadius = radius;
+    Velocity = Engine::Point(vx, vy);
 }
 
-void EnemyCircular::Update(float deltaTime)
-{
+void EnemyCircular::Update(float deltaTime) {
     Sprite::Update(deltaTime);
+    PlayScene* scene = getPlayScene();
 
-    PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
-    if (!scene)
+    // Explode if it hits player
+    Player* player = scene->GetPlayer();
+    if (player && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, player->Position, player->CollisionRadius)) {
+        player->Hit(damage, Position);
+        OnExplode(nullptr);  // You can pass nullptr or implement custom behavior
         return;
+    }
 
-    Engine::Point displacement = velocity * deltaTime;
-    Position = Position + displacement;
-    flightDist += displacement.Magnitude();
-
-    for (auto *obj : scene->EnemyGroup->GetObjects())
-    {
-        auto *enemy = dynamic_cast<Enemy *>(obj);
-        if (!enemy || !enemy->Visible)
-            continue;
-
-        if (Engine::Collider::IsCircleOverlap(Position, 8.0f, enemy->Position, enemy->CollisionRadius))
-        {
-            enemy->Hit(damage);
-            scene->ProjectileGroup->RemoveObject(objectIterator);
+    // Explode if it hits any structure
+    for (auto& it : scene->StructureGroup->GetObjects()) {
+        Structure* s = dynamic_cast<Structure*>(it);
+        if (s && s->GetHP() > 0 && Engine::Collider::IsCircleOverlap(Position, CollisionRadius, s->Position, s->CollisionRadius)) {
+            s->Hit(damage);
+            OnExplode(nullptr);
             return;
         }
     }
 
-    if (flightDist >= maxDist)
-    {
-        scene->ProjectileGroup->RemoveObject(objectIterator);
-        return;
+    // Remove if out of bounds
+    if (Position.x < 0 || Position.x > scene->MapWidth * PlayScene::BlockSize ||
+        Position.y < 0 || Position.y > scene->MapHeight * PlayScene::BlockSize) {
+        OnExplode(nullptr);
     }
+}
+
+void EnemyCircular::OnExplode(Enemy* enemy) {
+    getPlayScene()->ProjectileGroup->RemoveObject(objectIterator);
 }

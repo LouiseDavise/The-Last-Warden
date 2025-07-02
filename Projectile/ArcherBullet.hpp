@@ -1,4 +1,3 @@
-#pragma once
 #include "Projectile.hpp"
 
 class ArcherBullet : public Projectile

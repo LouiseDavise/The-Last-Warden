@@ -8,7 +8,7 @@
 #include <cmath>
 
 Vampire::Vampire(float x, float y)
-    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 200, 200, 20, 0.6f, 35)
+    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 700, 700, 20, 0.6f, 35)
 {
     Size.x = 192;
     Size.y = 192;
@@ -49,7 +49,7 @@ Vampire::Vampire(float x, float y)
     deathTimer = 0;
     deathInterval = 0.12f;
     attackTimer = 0;
-    attackInterval = 0.055f;
+    attackInterval = 0.12f;
     hurtTimer = 0;
     hurtInterval = 0.05f;
     currentFrame = 0;
@@ -57,6 +57,7 @@ Vampire::Vampire(float x, float y)
 
 void Vampire::Update(float deltaTime)
 {
+    attackCooldownTimer += deltaTime;
     auto* scene = getPlayScene();
     auto* player = scene->GetPlayer();
 
@@ -154,72 +155,92 @@ void Vampire::Update(float deltaTime)
         return;
     }
 
-    if (playerCollide)
-    {
-        if (state != State::Attacking)
-        {
-            state = State::Attacking;
-            currentFrame = 0;
-            attackTimer = 0;
-            Velocity = Engine::Point(0, 0); // Stop movement
-        }
-        player->Hit(GetDamage(), Position);
+    Engine::Point targetPos;
+    bool hasTarget = false;
+
+    // Target player if in range and alive
+    if (player && player->GetHP() > 0 && Engine::Collider::IsCircleOverlap(Position, attackRange, player->Position, player->CollisionRadius)) {
+        targetPos = player->Position;
+        hasTarget = true;
     }
-    else if (scene->validLine(Position, player->Position))
-    {
-        state = State::Run;
-        Engine::Point dir = (player->Position - Position).Normalize();
-        Velocity = dir * speed;
-    }
-    else
-    {
-        state = State::Run;
-        int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
-        int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
 
-        if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
-            return;
-
-        int currDist = scene->mapDistance[gy][gx];
-        if (currDist <= 0)
-            return;
-
-        Engine::Point avgDir(0, 0);
-        int count = 0;
-
-        for (const auto &dir : PlayScene::directions)
-        {
-            int nx = gx + dir.x;
-            int ny = gy + dir.y;
-            if (nx < 0 || nx >= PlayScene::MapWidth || ny < 0 || ny >= PlayScene::MapHeight)
-                continue;
-            if (!scene->IsWalkable(nx, ny))
-                continue;
-
-            int neighborDist = scene->mapDistance[ny][nx];
-            if (neighborDist >= 0 && neighborDist < currDist)
-            {
-                avgDir.x += dir.x;
-                avgDir.y += dir.y;
-                count++;
+    // Target structure if no player found
+    if (!hasTarget) {
+        for (auto& it : scene->StructureGroup->GetObjects()) {
+            Structure* s = dynamic_cast<Structure*>(it);
+            if (!s || s->GetHP() <= 0) continue;
+            if (Engine::Collider::IsCircleOverlap(Position, attackRange, s->Position, s->CollisionRadius)) {
+                targetPos = s->Position;
+                hasTarget = true;
+                break;
             }
         }
+    }
 
-        if (count > 0)
+    // Attack logic
+    if (hasTarget && attackCooldownTimer >= attackCooldown) {
+        attackCooldownTimer = 0;
+        
+        // Create and shoot bullet
+        Engine::Point dir = (targetPos - Position).Normalize();
+        float bulletSpeed = 400.0f; // example speed
+        scene->ProjectileGroup->AddNewObject(new EnemyCircular(Position.x, Position.y, dir.x * bulletSpeed, dir.y * bulletSpeed));
+        
+        // Optionally set attack animation
+        state = State::Attacking;
+        currentFrame = 0;
+        attackTimer = 0;
+        Velocity = Engine::Point(0, 0);
+        
+        return; // Skip movement
+    }
+
+    state = State::Run;
+    int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
+    int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
+
+    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
+        return;
+
+    int currDist = scene->mapDistance[gy][gx];
+    if (currDist <= 0)
+        return;
+
+    Engine::Point avgDir(0, 0);
+    int count = 0;
+
+    for (const auto &dir : PlayScene::directions)
+    {
+        int nx = gx + dir.x;
+        int ny = gy + dir.y;
+        if (nx < 0 || nx >= PlayScene::MapWidth || ny < 0 || ny >= PlayScene::MapHeight)
+            continue;
+        if (!scene->IsWalkable(nx, ny))
+            continue;
+
+        int neighborDist = scene->mapDistance[ny][nx];
+        if (neighborDist >= 0 && neighborDist < currDist)
         {
-            avgDir.x /= count;
-            avgDir.y /= count;
+            avgDir.x += dir.x;
+            avgDir.y += dir.y;
+            count++;
+        }
+    }
 
-            float len = std::sqrt(avgDir.x * avgDir.x + avgDir.y * avgDir.y);
-            if (len > 0)
-            {
-                Engine::Point norm = avgDir / len;
-                Velocity = norm * speed;
-            }
-            else
-            {
-                Velocity = Engine::Point(0, 0);
-            }
+    if (count > 0)
+    {
+        avgDir.x /= count;
+        avgDir.y /= count;
+
+        float len = std::sqrt(avgDir.x * avgDir.x + avgDir.y * avgDir.y);
+        if (len > 0)
+        {
+            Engine::Point norm = avgDir / len;
+            Velocity = norm * speed;
+        }
+        else
+        {
+            Velocity = Engine::Point(0, 0);
         }
     }
 

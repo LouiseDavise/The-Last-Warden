@@ -18,9 +18,12 @@ public:
     Structure(std::string img, float x, float y, int price, float hp, float MAXhp, float radius);
     virtual ~Structure() = default;
     virtual void Hit(float damage);
+
     virtual bool IsSmashBone() const { return false; }
     virtual bool IsAxe() const { return false; }
+
     int GetPrice() const {return price;}
+    int GetHP() const {return hp;}
     virtual std::vector<std::string> GetInfoLines() const {
         return {"Structure", "HP: ?", "Price: ?"};
     }
