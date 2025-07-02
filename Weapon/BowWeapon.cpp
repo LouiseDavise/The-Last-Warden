@@ -1,7 +1,7 @@
 #include "BowWeapon.hpp"
 #include <allegro5/allegro_primitives.h>
 #include "Scene/PlayScene.hpp"
-#include "Projectile/ArrowBullet.hpp"
+#include "Projectile/ArcherBullet.hpp"
 #include "Engine/GameEngine.hpp"
 
 using Engine::Point;
@@ -29,7 +29,7 @@ void BowWeapon::Use(float tx, float ty)
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (scene)
     {
-        ArrowBullet *bullet = new ArrowBullet(Position.x, Position.y, damage, direction, rotation, maxDistance);
+        ArcherBullet *bullet = new ArcherBullet(Position.x, Position.y, damage, direction, rotation, maxDistance);
         scene->ProjectileGroup->AddNewObject(static_cast<Engine::IObject *>(bullet));
 
         if (!scene->IsMochiHealing())

@@ -1,4 +1,4 @@
-#include "MagicBullet.hpp"
+#include "MageBullet.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Enemy/Enemy.hpp"
 #include "Engine/GameEngine.hpp"
@@ -7,15 +7,15 @@
 #include "UI/Animation/AreaEffect.hpp"
 #include "Engine/AudioHelper.hpp"
 
-MagicBullet::MagicBullet(float x, float y, float damage, const Engine::Point &direction, float rotation)
-    : Projectile("Projectiles/MagicBullet.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr)
+MageBullet::MageBullet(float x, float y, float damage, const Engine::Point &direction, float rotation)
+    : Projectile("Projectiles/MageBullet.png", 0.0f, damage, Engine::Point(x, y), direction, rotation, nullptr)
 {
     float speed = 600.0f;
     velocity = direction.Normalize() * speed;
     AudioHelper::PlayAudio("mage-attack.mp3");
 }
 
-void MagicBullet::Update(float deltaTime)
+void MageBullet::Update(float deltaTime)
 {
     Sprite::Update(deltaTime);
 
@@ -55,7 +55,7 @@ void MagicBullet::Update(float deltaTime)
     }
 }
 
-void MagicBullet::OnExplode()
+void MageBullet::OnExplode()
 {
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (!scene)

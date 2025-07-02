@@ -1,10 +1,10 @@
 #pragma once
 #include "Projectile.hpp"
 
-class ArrowBullet : public Projectile
+class EnemyCircular : public Projectile
 {
 public:
-    ArrowBullet(float x, float y, float damage, const Engine::Point &direction, float rotation, float maxDist);
+    EnemyCircular(float x, float y, float damage, const Engine::Point &direction, float rotation, float maxDist);
     void Update(float dt) override;
 
 private:

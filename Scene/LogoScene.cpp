@@ -1,9 +1,9 @@
-#include "SplashScene.hpp"
+#include "LogoScene.hpp"
 #include "Engine/GameEngine.hpp"
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
-void SplashScene::Initialize()
+void LogoScene::Initialize()
 {
     timer = 0.0f;
     logoBitmap = al_load_bitmap("Resource/images/Logo/logo.png");
@@ -13,7 +13,7 @@ void SplashScene::Initialize()
     }
 }
 
-void SplashScene::Terminate()
+void LogoScene::Terminate()
 {
     if (logoBitmap)
     {
@@ -22,7 +22,7 @@ void SplashScene::Terminate()
     }
 }
 
-void SplashScene::Update(float deltaTime)
+void LogoScene::Update(float deltaTime)
 {
     timer += deltaTime;
 
@@ -51,7 +51,7 @@ void SplashScene::Update(float deltaTime)
     }
 }
 
-void SplashScene::Draw() const
+void LogoScene::Draw() const
 {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 

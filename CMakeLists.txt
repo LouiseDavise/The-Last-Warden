@@ -37,10 +37,12 @@ add_executable(The_Last_Warden
     Projectile/Projectile.hpp
     Projectile/Arrow.cpp 
     Projectile/Arrow.hpp 
-    Projectile/MagicBullet.cpp 
-    Projectile/MagicBullet.hpp 
-    Projectile/ArrowBullet.cpp 
-    Projectile/ArrowBullet.hpp 
+    Projectile/MageBullet.cpp 
+    Projectile/MageBullet.hpp 
+    Projectile/ArcherBullet.cpp 
+    Projectile/ArcherBullet.hpp 
+    Projectile/EnemyCircular.cpp 
+    Projectile/EnemyCircular.hpp 
 
     Enemy/Enemy.cpp
     Enemy/Enemy.hpp
@@ -102,8 +104,8 @@ add_executable(The_Last_Warden
     Scene/SelectCompanionScene.hpp
     Scene/ScoreScene.cpp
     Scene/ScoreScene.hpp
-    Scene/SplashScene.cpp
-    Scene/SplashScene.hpp
+    Scene/LogoScene.cpp
+    Scene/LogoScene.hpp
 
     Structure/Structure.cpp 
     Structure/Structure.hpp

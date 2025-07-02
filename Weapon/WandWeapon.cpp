@@ -7,7 +7,7 @@
 #include "Engine/Collider.hpp"
 #include "Engine/IObject.hpp"
 #include "Engine/LOG.hpp"
-#include "Projectile/MagicBullet.hpp"
+#include "Projectile/MageBullet.hpp"
 
 using Engine::Point;
 static constexpr float PI = 3.1415926f;
@@ -36,7 +36,7 @@ void WandWeapon::Use(float tx, float ty)
     PlayScene *scene = dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
     if (scene)
     {
-        MagicBullet *bullet = new MagicBullet(Position.x, Position.y, damage, direction, rotation);
+        MageBullet *bullet = new MageBullet(Position.x, Position.y, damage, direction, rotation);
         scene->ProjectileGroup->AddNewObject(static_cast<Engine::IObject *>(bullet));
 
         if (!scene->IsMochiHealing())
