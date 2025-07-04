@@ -14,8 +14,6 @@ public:
     Vampire(float x, float y);
     virtual void Update(float deltaTime) override;
         
-    float attackCooldown = 1.5f;      
-    float attackCooldownTimer = 0.0f;
     float attackRange = 700.0f;
 };
 

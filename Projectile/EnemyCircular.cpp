@@ -14,6 +14,12 @@ EnemyCircular::EnemyCircular(float x, float y, float vx, float vy, float damage,
 
 void EnemyCircular::Update(float deltaTime) {
     Sprite::Update(deltaTime);
+    float distanceStep = Velocity.Magnitude() * deltaTime;
+    traveledDistance += distanceStep;
+    if (traveledDistance >= maxTravelDistance) {
+        OnExplode(nullptr);
+        return;
+    }
     PlayScene* scene = getPlayScene();
 
     // Explode if it hits player
