@@ -8,7 +8,7 @@
 #include <cmath>
 
 Vampire::Vampire(float x, float y)
-    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 700, 700, 20, 0.6f, 35)
+    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 700, 700, 20, 1.7f, 35)
 {
     Size.x = 192;
     Size.y = 192;
@@ -49,7 +49,7 @@ Vampire::Vampire(float x, float y)
     deathTimer = 0;
     deathInterval = 0.12f;
     attackTimer = 0;
-    attackInterval = 0.12f;
+    attackInterval = 0.06f;
     hurtTimer = 0;
     hurtInterval = 0.05f;
     currentFrame = 0;
@@ -78,6 +78,14 @@ void Vampire::Update(float deltaTime)
                 break;
             }
         }
+    }
+
+    if (hasTargetCollide) {
+        faceRight = damageTargetPos.x > Position.x;
+    }
+    else if (Velocity.x != 0)
+    {
+        faceRight = Velocity.x > 0;
     }
 
     if (state == State::Run)
@@ -137,7 +145,7 @@ void Vampire::Update(float deltaTime)
 
             if (hasTargetCollide) {
                 Engine::Point dir = (damageTargetPos - Position).Normalize();
-                float bulletSpeed = 400.0f; // example speed
+                float bulletSpeed = 300.0f; 
                 scene->ProjectileGroup->AddNewObject(new EnemyCircular(Position.x, Position.y, dir.x * bulletSpeed, dir.y * bulletSpeed));
             }else{
                 state = State::Run;
@@ -164,7 +172,7 @@ void Vampire::Update(float deltaTime)
         bmp = hurtFrames[currentFrame];
         auto *scene = getPlayScene();
         auto *player = scene->GetPlayer();
-        if (player)
+        if (player && wasRunning)
         {
             Engine::Point dir = (player->Position - Position).Normalize();
             Engine::Point slowVel = dir * speed * 0.675f;
@@ -181,11 +189,9 @@ void Vampire::Update(float deltaTime)
             state = State::Attacking;
             currentFrame = 0;
             attackTimer = 0;
+            cooldownTimer = atkcd;
             Velocity = Engine::Point(0, 0); // Stop movement
         }
-        Engine::Point dir = (damageTargetPos - Position).Normalize();
-        float bulletSpeed = 400.0f; // example speed
-        scene->ProjectileGroup->AddNewObject(new EnemyCircular(Position.x, Position.y, dir.x * bulletSpeed, dir.y * bulletSpeed));
     }
     else{
         state = State::Run;
@@ -275,9 +281,4 @@ void Vampire::Update(float deltaTime)
 
     if (!moved)
         Velocity = Engine::Point(0, 0);
-
-    if (Velocity.x != 0)
-    {
-        faceRight = Velocity.x > 0;
-    }
 }

@@ -29,6 +29,7 @@ protected:
     float atkcd;
     int money;
     State state;
+    bool wasRunning = false;
     
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> runFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;

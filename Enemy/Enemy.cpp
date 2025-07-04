@@ -35,6 +35,7 @@ void Enemy::Hit(float damage)
     Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
     if (state != State::Hurt)
     {
+        wasRunning = (state == State::Run);
         state = State::Hurt;
     }
     hp -= damage;
@@ -162,7 +163,7 @@ void Enemy::Update(float deltaTime)
         bmp = hurtFrames[currentFrame];
         auto *scene = getPlayScene();
         auto *player = scene->GetPlayer();
-        if (player)
+        if (player && wasRunning)
         {
             Engine::Point dir = (player->Position - Position).Normalize();
             Engine::Point slowVel = dir * speed * 0.675f;
