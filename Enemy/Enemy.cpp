@@ -326,6 +326,12 @@ void Enemy::Draw() const
     case State::Hurt:
         frame = hurtFrames[currentFrame].get();
         break;
+    case State::Charging:
+        frame = chargeFrames[currentFrame].get();
+        break;
+    case State::Blinking:
+        frame = blinkFrames[currentFrame].get();
+        break;
     }
     float cx = Anchor.x * al_get_bitmap_width(frame);
     float cy = Anchor.y * al_get_bitmap_height(frame);

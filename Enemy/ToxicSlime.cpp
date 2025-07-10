@@ -7,7 +7,7 @@
 #include <cmath>
 
 ToxicSlime::ToxicSlime(float x, float y)
-    : Enemy("Enemies/ToxicSlime/Run/image1x1.png", x, y, 32, 32, 60, 60, 5, 1.0f, 10)
+    : Enemy("Enemies/ToxicSlime/Run/image1x1.png", x, y, 32, 100, 60, 60, 5, 1.0f, 10)
 {
     Size.x = 128;
     Size.y = 128;

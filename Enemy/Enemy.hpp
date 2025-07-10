@@ -15,7 +15,9 @@ enum class State {
     Run,
     Dying,
     Attacking,
-    Hurt
+    Hurt,
+    Charging,
+    Blinking
 };
 
 class Enemy : public Engine::Sprite
@@ -35,6 +37,8 @@ protected:
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> deathFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> attackFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> hurtFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> chargeFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> blinkFrames;
     float runTimer;
     float runInterval;
     float deathTimer;
@@ -42,10 +46,15 @@ protected:
     float attackTimer;
     float attackInterval;
     float cooldownTimer = 0;
-    int idleMark;
     float hurtTimer;
     float hurtInterval;
+    float chargeTimer;
+    float chargeInterval;
+    float blinkTimer;
+    float blinkInterval;
+
     int currentFrame;
+    int idleMark;
     bool faceRight;
 
     PlayScene *getPlayScene();

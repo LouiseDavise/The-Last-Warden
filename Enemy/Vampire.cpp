@@ -8,7 +8,7 @@
 #include <cmath>
 
 Vampire::Vampire(float x, float y)
-    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 175, 700, 700, 20, 1.7f, 35)
+    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 100, 1000, 1000, 25, 1.7f, 10)
 {
     Size.x = 192;
     Size.y = 192;
