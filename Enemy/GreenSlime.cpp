@@ -6,7 +6,7 @@
 #include <cmath>
 
 GreenSlime::GreenSlime(float x, float y)
-    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 30, 30, 2, 1.0f, 3)
+    : Enemy("Enemies/GreenSlime/Run/image1x1.png", x, y, 32, 40, 30, 30, 2, 1.0f, 5)
 {
     Size.x = 128;
     Size.y = 128;
