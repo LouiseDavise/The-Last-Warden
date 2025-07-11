@@ -225,7 +225,7 @@ void Player::Draw() const
         Rotation, 0);
 
     if (PlayScene::DebugMode) {
-        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(180, 0, 255), 2);
+        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(200, 255, 200), 2);
     }
 }
 
