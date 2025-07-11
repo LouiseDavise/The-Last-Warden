@@ -122,7 +122,7 @@ void ModeSelectScene::PlayOnClick(int mode)
                 AudioHelper::StopSample(engine.GlobalBGMInstance);
                 engine.GlobalBGMInstance = nullptr;
             }
-            scene->SetMapFile("Resource/map1.txt");
+            scene->SetMapFile("Resource/forest_map.txt");
             scene->SetWaveFile("Resource/single_wave.txt");
             scene->SetTwoPlayerMode(false);
             if (!fadingToPlay)
@@ -133,7 +133,7 @@ void ModeSelectScene::PlayOnClick(int mode)
         }
         else if (mode == 2)
         {
-            scene->SetMapFile("Resource/map2.txt");
+            scene->SetMapFile("Resource/forest_map.txt");
             scene->SetWaveFile("Resource/duo_wave.txt");
             scene->SetTwoPlayerMode(true);
             engine.ChangeScene("select-companion");

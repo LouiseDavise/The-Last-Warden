@@ -9,7 +9,7 @@
 #include <cmath>
 
 HighOrc::HighOrc(float x, float y)
-    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 48, 60, 800, 800, 35, 0.75f, 10)
+    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 48, 60, 800, 800, 25, 0.75f, 20)
 {
     Size.x = 192;
     Size.y = 192;

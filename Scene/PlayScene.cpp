@@ -260,7 +260,7 @@ void PlayScene::Update(float deltaTime)
 
     matchTime += deltaTime;
     nightCycleTimer += deltaTime;
-    if (nightCycleTimer >= 100.0f)
+    if (nightCycleTimer >= 180.0f)
     {
         isNight = !isNight;
         nightCycleTimer = 0.0f;
@@ -758,10 +758,20 @@ void PlayScene::OnKeyDown(int keyCode)
     }
     if (keyCode >= ALLEGRO_KEY_0 && keyCode <= ALLEGRO_KEY_9)
         SpeedMult = keyCode - ALLEGRO_KEY_0;
-    else if ((keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsSmashBone()) || (keyCode == ALLEGRO_KEY_ESCAPE && preview && preview->IsAxe()))
+    else if (keyCode == ALLEGRO_KEY_ESCAPE)
     {
-        UIGroup->RemoveObject(preview->GetObjectIterator());
-        preview = nullptr;
+        paused = !paused;
+        pauseButton->Visible = !pauseButton->Visible;
+        playButton->Visible = !playButton->Visible;
+        return;
+    }
+    else if (keyCode == ALLEGRO_KEY_DELETE)
+    {
+        if (preview)
+        {
+            UIGroup->RemoveObject(preview->GetObjectIterator());
+            preview = nullptr;
+        }
         return;
     }
     else if (keyCode == ALLEGRO_KEY_H)
@@ -1254,10 +1264,10 @@ void PlayScene::LoadEnemyWaves(const std::string &filename)
     }
 
     int type;
-    float timestamp, count;
-    while (fin >> timestamp >> type >> count)
+    float timestamp, count, distFromEdge;
+    while (fin >> timestamp >> type >> count >> distFromEdge)
     {
-        enemyWaves.push(EnemyWave{timestamp, type, count});
+        enemyWaves.push(EnemyWave{timestamp, type, count, distFromEdge});
     }
 }
 
@@ -1265,13 +1275,14 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
 {
     static std::default_random_engine rng((std::random_device())());
     std::uniform_int_distribution<int> edgeDist(0, 3); // 0: top, 1: bottom, 2: left, 3: right
-    std::uniform_int_distribution<int> xDist(2, MapWidth - 3);
-    std::uniform_int_distribution<int> yDist(2, MapHeight - 3);
 
     for (int i = 0; i < wave.count; ++i)
     {
         int gx = 0, gy = 0;
         bool valid = false;
+        int p = wave.distFromEdge;
+        std::uniform_int_distribution<int> xDist(p, MapWidth - 1 - p);
+        std::uniform_int_distribution<int> yDist(p, MapHeight - 1 - p);
 
         // Try multiple times in case edge tile is not walkable
         for (int attempt = 0; attempt < 100 && !valid; ++attempt)
@@ -1281,18 +1292,18 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
             {
             case 0: // Top edge
                 gx = xDist(rng);
-                gy = 2;
+                gy = p;
                 break;
             case 1: // Bottom edge
                 gx = xDist(rng);
-                gy = MapHeight - 3;
+                gy = MapHeight - 1 - p;
                 break;
             case 2: // Left edge
-                gx = 2;
+                gx = p;
                 gy = yDist(rng);
                 break;
             case 3: // Right edge
-                gx = MapWidth - 3;
+                gx = MapWidth - 1 - p;
                 gy = yDist(rng);
                 break;
             }

@@ -6,7 +6,7 @@
 #include <cmath>
 
 Orc::Orc(float x, float y)
-    : Enemy("Enemies/Orc/Run/image1x1.png", x, y, 48, 120, 250, 250, 15, 0.6f, 10)
+    : Enemy("Enemies/Orc/Run/image1x1.png", x, y, 48, 100, 250, 250, 15, 0.6f, 10)
 {
     Size.x = 192;
     Size.y = 192;

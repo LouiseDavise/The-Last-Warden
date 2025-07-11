@@ -17,6 +17,7 @@ struct EnemyWave
     float timestamp;
     int type;
     float count;
+    float distFromEdge;
 };
 
 class Structure;
@@ -164,7 +165,7 @@ public:
     void UpdateBFSFromPlayer();
     void GenerateFlowField();
     bool validLine(Engine::Point from, Engine::Point to);
-    std::string mapFile = "Resource/map1.txt";
+    std::string mapFile = "Resource/forest_map.txt";
     void SetMapFile(const std::string &filename);
     std::string waveFile = "Resource/single_wave.txt";
     void SetWaveFile(const std::string &filename);
