@@ -780,6 +780,7 @@ void PlayScene::OnKeyDown(int keyCode)
         EffectGroup->AddNewObject(new Cheat());
         AudioHelper::PlaySample("gun.wav");
         AddMoney(1000);
+        isNight = !isNight;
     }
 }
 

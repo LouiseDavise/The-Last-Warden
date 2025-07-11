@@ -33,11 +33,7 @@ void Enemy::Hit(float damage)
     if (state == State::Dying)
         return;
     Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
-    if (state != State::Hurt)
-    {
-        wasRunning = (state == State::Run);
-        state = State::Hurt;
-    }
+
     hp -= damage;
     if (hp <= 0)
     {
@@ -55,8 +51,9 @@ void Enemy::Hit(float damage)
         getPlayScene()->AddMoney(money);
         getPlayScene()->IncreaseKillCount();
     }
-    else
+    else if(state != State::Hurt && state != State::Charging && state != State::Blinking)
     {
+        wasRunning = (state == State::Run);
         state = State::Hurt;
         currentFrame = 0;
         hurtTimer = 0;
@@ -338,8 +335,14 @@ void Enemy::Draw() const
     float scaleX = Size.x / al_get_bitmap_width(frame);
     float scaleY = Size.y / al_get_bitmap_height(frame);
     int flags = faceRight ? ALLEGRO_FLIP_HORIZONTAL : 0;
+    ALLEGRO_COLOR finalTint = Tint;
+    if (state == State::Blinking) {
+        // Make blinking sprite dim with pulsing brightness (0.5–0.85 range)
+        float pulse = 0.5f + 0.35f * std::sin(al_get_time() * 12);
+        finalTint = al_map_rgba_f(pulse, pulse, pulse, 1.0f);    // RGB dimmed, alpha = 1
+    }
 
-    al_draw_tinted_scaled_rotated_bitmap(frame, Tint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
+    al_draw_tinted_scaled_rotated_bitmap(frame, finalTint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
 
     if (hp > 0)
     {

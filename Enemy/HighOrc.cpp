@@ -9,7 +9,7 @@
 #include <cmath>
 
 HighOrc::HighOrc(float x, float y)
-    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 48, 50, 800, 800, 40, 0.75f, 10)
+    : Enemy("Enemies/HighOrc/Run/image1x1.png", x, y, 48, 60, 800, 800, 35, 0.75f, 10)
 {
     Size.x = 192;
     Size.y = 192;
@@ -60,7 +60,7 @@ HighOrc::HighOrc(float x, float y)
     runTimer = 0;
     runInterval = 0.12f;
     chargeTimer = 0;
-    chargeInterval = 0.12f;
+    chargeInterval = 0.09f;
     blinkTimer = 0;
     blinkInterval = 0.12f;
     deathTimer = 0;
@@ -100,7 +100,6 @@ void HighOrc::Update(float deltaTime)
             state = State::Charging;
             currentFrame = 0;
             chargeTimer = 0;
-            chargeDurationTimer = 0;
             speed = chargeSpeed;
             chargeCooldownTimer = 0;
             blinkCooldownTimer = 0;
@@ -110,7 +109,10 @@ void HighOrc::Update(float deltaTime)
         return;
     }
 
+    if(state == State::Run || state == State::Hurt) chargeCooldownTimer += deltaTime;
+
     if (state == State::Run) {
+        speed = normalSpeed;
         runTimer += deltaTime;
         if (runTimer >= runInterval) {
             runTimer = 0;
@@ -140,11 +142,29 @@ void HighOrc::Update(float deltaTime)
         if(shouldCharge){
             faceRight = chargeTargetPos.x > Position.x;
             state = State::Blinking;
+            chargeOrigin = Position;
+            Engine::Point dir = (chargeTargetPos - Position).Normalize();
+            Engine::Point testPos = Position;
+            float maxDist = stopRange;
+            float step = 8.0f;
+            float traveled = 0;
+
+            while (traveled < maxDist) {
+                Engine::Point next = testPos + dir * step;
+                int tileX = static_cast<int>(next.x) / PlayScene::BlockSize;
+                int tileY = static_cast<int>(next.y) / PlayScene::BlockSize;
+
+                if (!scene->IsWalkable(tileX, tileY))
+                    break;
+
+                testPos = next;
+                traveled += step;
+            }
+            chargeDestination = testPos;
             currentFrame = 0;
             Velocity = Engine::Point(0, 0);
             return;
         }else{
-            chargeCooldownTimer += deltaTime;
             faceRight = Velocity.x > 0;
         }
     }
@@ -152,7 +172,6 @@ void HighOrc::Update(float deltaTime)
     // Charging logic
     else if (state == State::Charging) {
         chargeTimer += deltaTime;
-        chargeDurationTimer += deltaTime;
 
         if (chargeTimer >= chargeInterval) {
             chargeTimer = 0;
@@ -182,7 +201,11 @@ void HighOrc::Update(float deltaTime)
         Position.x += Velocity.x * deltaTime;
         Position.y += Velocity.y * deltaTime;
 
-        if (chargeDurationTimer >= chargeDuration) {
+        float dx = Position.x - chargeDestination.x;
+        float dy = Position.y - chargeDestination.y;
+        float distance = std::sqrt(dx * dx + dy * dy);
+        if (distance <= speed * deltaTime) { // close enough
+            Position = chargeDestination; // snap to final spot to avoid overshooting
             state = State::Run;
             speed = normalSpeed;
             currentFrame = 0;
@@ -263,15 +286,6 @@ void HighOrc::Update(float deltaTime)
             }
         }
         bmp = hurtFrames[currentFrame];
-        auto *scene = getPlayScene();
-        auto *player = scene->GetPlayer();
-        if (player && wasRunning)
-        {
-            Engine::Point dir = (player->Position - Position).Normalize();
-            Engine::Point slowVel = dir * speed * 0.675f;
-            Position.x += slowVel.x * deltaTime;
-            Position.y += slowVel.y * deltaTime;
-        }
         return;
     }
 
@@ -385,4 +399,103 @@ void HighOrc::Update(float deltaTime)
 
     if (!moved)
         Velocity = Engine::Point(0, 0);
+}
+
+void HighOrc::Draw() const
+{
+    ALLEGRO_BITMAP *frame;
+    switch (state)
+    {
+    case State::Run:
+        frame = runFrames[currentFrame].get();
+        break;
+    case State::Dying:
+        frame = deathFrames[currentFrame].get();
+        break;
+    case State::Attacking:
+        frame = attackFrames[currentFrame].get();
+        break;
+    case State::Hurt:
+        frame = hurtFrames[currentFrame].get();
+        break;
+    case State::Charging:
+        frame = chargeFrames[currentFrame].get();
+        break;
+    case State::Blinking:
+        frame = blinkFrames[currentFrame].get();
+        break;
+    }
+    float cx = Anchor.x * al_get_bitmap_width(frame);
+    float cy = Anchor.y * al_get_bitmap_height(frame);
+    float scaleX = Size.x / al_get_bitmap_width(frame);
+    float scaleY = Size.y / al_get_bitmap_height(frame);
+    int flags = faceRight ? ALLEGRO_FLIP_HORIZONTAL : 0;
+    ALLEGRO_COLOR finalTint = Tint;
+
+    if (state == State::Blinking) {
+        // Make blinking sprite dim with pulsing brightness (0.5–0.85 range)
+        float pulse = 0.5f + 0.35f * std::sin(al_get_time() * 12);
+        finalTint = al_map_rgba_f(pulse, pulse, pulse, 1.0f);    // RGB dimmed, alpha = 1
+
+        ALLEGRO_COLOR pathColor = al_map_rgba(255, 120, 120, 80);
+
+        float dx = chargeDestination.x - chargeOrigin.x;
+        float dy = chargeDestination.y - chargeOrigin.y;
+        float length = std::sqrt(dx * dx + dy * dy);
+        float angle = std::atan2(dy, dx);
+        float width = 100.0f;
+        float hw = width * 0.5f;
+        float cosA = std::cos(angle);
+        float sinA = std::sin(angle);
+
+        Engine::Point offsets[4] = {
+            Engine::Point(0, -hw),
+            Engine::Point(length, -hw),
+            Engine::Point(length, hw),
+            Engine::Point(0, hw),
+        };
+
+        ALLEGRO_VERTEX verts[4];
+        for (int i = 0; i < 4; ++i) {
+            float lx = offsets[i].x;
+            float ly = offsets[i].y;
+            verts[i].x = chargeOrigin.x + lx * cosA - ly * sinA;
+            verts[i].y = chargeOrigin.y + lx * sinA + ly * cosA;
+            verts[i].z = 0;
+            verts[i].color = pathColor;
+            verts[i].u = 0;
+            verts[i].v = 0;
+        }
+
+        al_draw_prim(verts, nullptr, nullptr, 0, 4, ALLEGRO_PRIM_TRIANGLE_FAN);
+    }
+
+    al_draw_tinted_scaled_rotated_bitmap(frame, finalTint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
+
+    if (hp > 0)
+    {
+        const float barW = 40;                   // width  of the bar (pixels)
+        const float barH = 6;                    // height of the bar
+        const float yOff = CollisionRadius + 12; // 12 px above sprite
+        const float left = Position.x - barW / 2;
+        const float right = Position.x + barW / 2;
+        const float top = Position.y - yOff;
+        const float fillW = barW * (hp / MAXhp);
+
+        // background (dark grey)
+        al_draw_filled_rectangle(left, top, right, top + barH,
+                                 al_map_rgb(40, 40, 40));
+        // foreground (green → red as HP drops)
+        float ratio = hp / MAXhp;
+        ALLEGRO_COLOR col = al_map_rgb(255 * (1 - ratio), 255 * ratio, 0);
+        al_draw_filled_rectangle(left, top, left + fillW, top + barH, col);
+
+        // thin white border
+        al_draw_rectangle(left, top, right, top + barH,
+                          al_map_rgb(255, 255, 255), 1);
+    }
+    if (PlayScene::DebugMode)
+    {
+        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(255, 0, 0), 2);
+    }
 }

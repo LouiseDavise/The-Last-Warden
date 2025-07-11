@@ -8,10 +8,10 @@
 #include <cmath>
 
 Vampire::Vampire(float x, float y)
-    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 48, 100, 1000, 1000, 25, 1.7f, 10)
+    : Enemy("Enemies/Vampire/Run/image1x1.png", x, y, 32, 100, 1000, 1000, 25, 1.7f, 10)
 {
-    Size.x = 192;
-    Size.y = 192;
+    Size.x = 128;
+    Size.y = 128;
     idleMark = 12;
     for (int i = 1; i <= 8; ++i)
     {
