@@ -48,6 +48,7 @@
 #include "Enemy/Orc.hpp"
 #include "Enemy/HighOrc.hpp"
 #include "Enemy/Vampire.hpp"
+#include "Enemy/StoneGolem.hpp"
 #include "Player/Companion.hpp"
 
 bool PlayScene::DebugMode = false;
@@ -1338,6 +1339,9 @@ void PlayScene::SpawnEnemy(const EnemyWave &wave)
             break;
         case 6:
             toSpawn = new Vampire(spawnX, spawnY);
+            break;
+        case 7:
+            toSpawn = new StoneGolem(spawnX, spawnY);
             break;
         }
 

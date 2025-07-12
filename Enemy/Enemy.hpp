@@ -17,7 +17,10 @@ enum class State {
     Attacking,
     Hurt,
     Charging,
-    Blinking
+    Blinking,
+
+    BOSS_Range,
+    BOSS_Melee
 };
 
 class Enemy : public Engine::Sprite
@@ -39,6 +42,15 @@ protected:
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> hurtFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> chargeFrames;
     std::vector<std::shared_ptr<ALLEGRO_BITMAP>> blinkFrames;
+
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> idleFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> immuneFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> armorFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> laser1Frames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> laser2Frames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> rangeFrames;
+    std::vector<std::shared_ptr<ALLEGRO_BITMAP>> meleeFrames;
+
     float runTimer;
     float runInterval;
     float deathTimer;
@@ -52,6 +64,11 @@ protected:
     float chargeInterval;
     float blinkTimer;
     float blinkInterval;
+
+    float rangeTimer;
+    float rangeInterval;
+    float meleeTimer;
+    float meleeInterval;
 
     int currentFrame;
     int idleMark;

@@ -1,38 +1,78 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/color.h>
-#include <cmath>
-#include <random>
-#include <string>
-#include <vector>
-
-#include "Projectile/Projectile.hpp"
-#include "Enemy.hpp"
-#include "Engine/AudioHelper.hpp"
-#include "Engine/GameEngine.hpp"
-#include "Engine/Group.hpp"
-#include "Engine/IScene.hpp"
+#include "StoneGolem.hpp"
+#include "Engine/Resources.hpp"
 #include "Engine/LOG.hpp"
 #include "Engine/Collider.hpp"
 #include "Scene/PlayScene.hpp"
 #include "Structure/Structure.hpp"
 #include "Structure/Offense/Tower.hpp"
-#include "UI/Animation/ExplosionEffect.hpp"
+#include "Projectile/Projectile.hpp"
+#include <cmath>
 
-PlayScene *Enemy::getPlayScene()
+int idleMarkRange = 9;
+int idleMarkMelee = 7;
+StoneGolem::StoneGolem(float x, float y)
+    : Enemy("Enemies/StoneGolem/Run/image1x1.png", x, y, 300, 70, 2000, 2000, 1, 2.0f, 10)
 {
-    return dynamic_cast<PlayScene *>(Engine::GameEngine::GetInstance().GetActiveScene());
+    Size.x = 1000;
+    Size.y = 1000;
+    for (int i = 1; i <= 4; ++i)
+    {
+        std::string path = "Enemies/StoneGolem/Idle/image" + std::to_string(i) + "x1.png";
+        runFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+    for (int i = 1; i <= 4; ++i)
+    {
+        std::string path = "Enemies/StoneGolem/Idle/image" + std::to_string(i) + "x1.png";
+        idleFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+    for (int i = 1; i <= 12; ++i)
+    {
+        std::string path = "Enemies/StoneGolem/Death/image" + std::to_string(i) + "x1.png";
+        deathFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+    for (int i = 1; i <= 13; ++i)
+    {
+        std::string path;
+        if(i <= idleMarkRange) path = "Enemies/StoneGolem/Range/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/StoneGolem/Idle/image" + std::to_string(i-idleMarkRange) + "x1.png";
+        rangeFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+    
+    for (int i = 1; i <= 11; ++i)
+    {
+        std::string path;
+        if(i <= idleMarkMelee) path = "Enemies/StoneGolem/Melee/image" + std::to_string(i) + "x1.png";
+        else path = "Enemies/StoneGolem/Idle/image" + std::to_string(i-idleMarkMelee) + "x1.png";
+        meleeFrames.push_back(Engine::Resources::GetInstance().GetBitmap(path));
+    }
+
+
+    // Initial image
+    bmp = runFrames[0];
+    Velocity = Engine::Point(0, 0);
+    state = State::Run;
+    runTimer = 0;
+    runInterval = 0.12f;
+    deathTimer = 0;
+    deathInterval = 0.12f;
+    meleeTimer = 0;
+    meleeInterval = 0.055f;
+    rangeTimer = 0;
+    rangeInterval = 0.055f;
+    currentFrame = 0;
 }
 
-Enemy::Enemy(std::string img, float x, float y, float radius, float speed, float hp, float MAXhp, float damage, float atkcd, int money) : Engine::Sprite(img, x, y), speed(speed), hp(hp), MAXhp(MAXhp), damage(damage), atkcd(atkcd), money(money)
-{
-    CollisionRadius = radius;
-}
-
-void Enemy::Hit(float damage)
+void StoneGolem::Hit(float damage)
 {
     if (state == State::Dying)
         return;
-    Engine::LOG(Engine::INFO) << "Enemy got hit: " << damage;
+    Engine::LOG(Engine::INFO) << "BOSS got hit: " << damage;
 
     hp -= damage;
     if (hp <= 0)
@@ -54,13 +94,11 @@ void Enemy::Hit(float damage)
     else if(state != State::Hurt && state != State::Charging && state != State::Blinking)
     {
         wasRunning = (state == State::Run);
-        state = State::Hurt;
-        currentFrame = 0;
-        hurtTimer = 0;
+        currentFrame = 0;GO
     }
 }
 
-void Enemy::Update(float deltaTime)
+void StoneGolem::Update(float deltaTime)
 {
     auto* scene = getPlayScene();
     auto* player = scene->GetPlayer();
@@ -109,20 +147,20 @@ void Enemy::Update(float deltaTime)
         return;
     }
 
-    else if (state == State::Attacking) {
-        attackTimer += deltaTime;
+    else if (state == State::BOSS_Range) {
+        rangeTimer += deltaTime;
         cooldownTimer += deltaTime;
-        if(attackTimer >= attackInterval){
-            attackTimer = 0;
-            if(currentFrame < idleMark - 1)currentFrame++;
-            if(currentFrame >= idleMark - 1){
+        if(rangeTimer >= rangeInterval){
+            rangeTimer = 0;
+            if(currentFrame < idleMarkRange - 1)currentFrame++;
+            if(currentFrame >= idleMarkRange - 1){
                 if(!playerCollide && !collidedStructure){
                     state = State::Run;
                     currentFrame = 0;
                 }
                 currentFrame++;
-                if (currentFrame >= attackFrames.size())
-                    currentFrame = idleMark;
+                if (currentFrame >= rangeFrames.size())
+                    currentFrame = idleMarkRange;
             }
 
         }
@@ -143,38 +181,45 @@ void Enemy::Update(float deltaTime)
         return;
     }
 
-    else if (state == State::Hurt)
-    {
-        hurtTimer += deltaTime;
-        if (hurtTimer >= hurtInterval)
-        {
-            hurtTimer = 0;
-            currentFrame++;
-            if (currentFrame >= hurtFrames.size())
-            {
+    else if (state == State::BOSS_Melee) {
+        meleeTimer += deltaTime;
+        cooldownTimer += deltaTime;
+        if(meleeTimer >= meleeInterval){
+            meleeTimer = 0;
+            if(currentFrame < idleMarkMelee - 1)currentFrame++;
+            if(currentFrame >= idleMarkMelee - 1){
+                if(!playerCollide && !collidedStructure){
+                    state = State::Run;
+                    currentFrame = 0;
+                }
+                currentFrame++;
+                if (currentFrame >= meleeFrames.size())
+                    currentFrame = idleMarkMelee;
+            }
+
+        }
+        
+        if (cooldownTimer >= atkcd) {
+            cooldownTimer = 0;
+            currentFrame = 0;
+
+            if (playerCollide) {
+                player->Hit(GetDamage(), Position);
+            } else if (collidedStructure) {
+                collidedStructure->Hit(GetDamage());
+            }else{
                 state = State::Run;
-                currentFrame = 0;
-                return;
             }
         }
-        bmp = hurtFrames[currentFrame];
-        auto *scene = getPlayScene();
-        auto *player = scene->GetPlayer();
-        if (player && wasRunning)
-        {
-            Engine::Point dir = (player->Position - Position).Normalize();
-            Engine::Point slowVel = dir * speed * 0.675f;
-            Position.x += slowVel.x * deltaTime;
-            Position.y += slowVel.y * deltaTime;
-        }
+
         return;
     }
 
     if (playerCollide)
     {
-        if (state != State::Attacking)
+        if (state != State::BOSS_Melee)
         {
-            state = State::Attacking;
+            state = State::BOSS_Melee;
             currentFrame = 0;
             attackTimer = 0;
             Velocity = Engine::Point(0, 0); // Stop movement
@@ -183,9 +228,9 @@ void Enemy::Update(float deltaTime)
     }
     else if (collidedStructure)
     {
-        if (state != State::Attacking)
+        if (state != State::BOSS_Melee)
         {
-            state = State::Attacking;
+            state = State::BOSS_Melee;
             currentFrame = 0;
             attackTimer = 0;
             Velocity = Engine::Point(0, 0); // Stop movement
@@ -291,89 +336,7 @@ void Enemy::Update(float deltaTime)
 
     if (Velocity.x != 0)
     {
-        faceRight = Velocity.x > 0;
+        faceRight = Velocity.x <= 0;
     }
 }
 
-void Enemy::UpdatePath(const std::vector<std::vector<int>> &mapDistance)
-{
-    int gx = static_cast<int>(Position.x) / PlayScene::BlockSize;
-    int gy = static_cast<int>(Position.y) / PlayScene::BlockSize;
-
-    if (gx < 0 || gx >= PlayScene::MapWidth || gy < 0 || gy >= PlayScene::MapHeight)
-        return;
-    if (mapDistance[gy][gx] == -1)
-        return;
-}
-
-void Enemy::Draw() const
-{
-    ALLEGRO_BITMAP *frame;
-    switch (state)
-    {
-    case State::Run:
-        frame = runFrames[currentFrame].get();
-        break;
-    case State::Dying:
-        frame = deathFrames[currentFrame].get();
-        break;
-    case State::Attacking:
-        frame = attackFrames[currentFrame].get();
-        break;
-    case State::Hurt:
-        frame = hurtFrames[currentFrame].get();
-        break;
-    case State::Charging:
-        frame = chargeFrames[currentFrame].get();
-        break;
-    case State::Blinking:
-        frame = blinkFrames[currentFrame].get();
-        break;
-    case State::BOSS_Range:
-        frame = rangeFrames[currentFrame].get();
-        break;
-    case State::BOSS_Melee:
-        frame = meleeFrames[currentFrame].get();
-        break;
-    }
-    float cx = Anchor.x * al_get_bitmap_width(frame);
-    float cy = Anchor.y * al_get_bitmap_height(frame);
-    float scaleX = Size.x / al_get_bitmap_width(frame);
-    float scaleY = Size.y / al_get_bitmap_height(frame);
-    int flags = faceRight ? ALLEGRO_FLIP_HORIZONTAL : 0;
-    ALLEGRO_COLOR finalTint = Tint;
-    if (state == State::Blinking) {
-        // Make blinking sprite dim with pulsing brightness (0.5–0.85 range)
-        float pulse = 0.5f + 0.35f * std::sin(al_get_time() * 12);
-        finalTint = al_map_rgba_f(pulse, pulse, pulse, 1.0f);    // RGB dimmed, alpha = 1
-    }
-
-    al_draw_tinted_scaled_rotated_bitmap(frame, finalTint, cx, cy, Position.x, Position.y, scaleX, scaleY, Rotation, flags);
-
-    if (hp > 0)
-    {
-        const float barW = 40;                   // width  of the bar (pixels)
-        const float barH = 6;                    // height of the bar
-        const float yOff = CollisionRadius + 12; // 12 px above sprite
-        const float left = Position.x - barW / 2;
-        const float right = Position.x + barW / 2;
-        const float top = Position.y - yOff;
-        const float fillW = barW * (hp / MAXhp);
-
-        // background (dark grey)
-        al_draw_filled_rectangle(left, top, right, top + barH,
-                                 al_map_rgb(40, 40, 40));
-        // foreground (green → red as HP drops)
-        float ratio = hp / MAXhp;
-        ALLEGRO_COLOR col = al_map_rgb(255 * (1 - ratio), 255 * ratio, 0);
-        al_draw_filled_rectangle(left, top, left + fillW, top + barH, col);
-
-        // thin white border
-        al_draw_rectangle(left, top, right, top + barH,
-                          al_map_rgb(255, 255, 255), 1);
-    }
-    if (PlayScene::DebugMode)
-    {
-        al_draw_circle(Position.x, Position.y, CollisionRadius, al_map_rgb(255, 0, 0), 2);
-    }
-}
